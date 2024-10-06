@@ -3,7 +3,7 @@ const { db } = require('../config/db');
 const isInUsers = async(username, password) => {
     try {
         const result = await db.query(
-            'SELECT COUNT(*) FROM users WHERE username = $1 and password = $2', 
+            'SELECT * FROM users WHERE username = $1 and password = $2', 
             [username, password]
         );
         
