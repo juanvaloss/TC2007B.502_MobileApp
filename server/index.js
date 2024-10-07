@@ -6,18 +6,15 @@ const app = express();
 const port = 3000;
 
 //Routes
-const loginRoutes = require("./routes/loginRoutes")
+const userRoutes = require("./routes/userRoutes")
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // testing
-app.get("/", (req, res) => {
-    res.json({info: "Hello World! from Node.js, Express, and PostgreSQL!"});
-});
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 });
 
-app.use("/users",loginRoutes)
+app.use("/users",userRoutes)
