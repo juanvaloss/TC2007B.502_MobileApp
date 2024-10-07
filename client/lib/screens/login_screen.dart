@@ -21,7 +21,7 @@ class LoginScreen extends StatelessWidget {
     // Create the JSON data
     Map<String, dynamic> jsonData = {
       'username': username,
-      'password': password,
+      'plainPassword': password,
     };
 
     try {
