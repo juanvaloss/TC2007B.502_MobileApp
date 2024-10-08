@@ -39,7 +39,6 @@ const isInUsers = async(username, plainPassword) => {
     }
 }
 
-  
 //Basic register, more info abt the user needs to be added.
 const createUser = async(name, email, plainPassword) =>{
     try{
@@ -55,5 +54,33 @@ const createUser = async(name, email, plainPassword) =>{
     }
 }
 
+//For personal profile
+const getUserInfo = async(userId) =>{
+    try{
+        const query = 'SELECT name, email FROM users WHERE id = $1;';
+        const userInfo = await db.query(query, [userId]);
+        return userInfo.rows[0];
 
-module.exports = {isInUsers, createUser}
+    }catch(err){
+        console.error(err)
+        console.error('Error executing query', err.stack);
+        throw err;
+    }
+}
+
+//Might get changed to a single query ...
+const getUserCenters = async(userId) =>{
+    try{
+        const query = 'SELECT name, address,latitude,longitude  FROM centers WHERE administrator = $1;';
+        const userInfo = await db.query(query, [userId]);
+        return userInfo.rows[0];
+
+    }catch(err){
+        console.error(err)
+        console.error('Error executing query', err.stack);
+        throw err;
+    }
+}
+
+
+module.exports = {isInUsers, createUser, getUserInfo, getUserCenters}

@@ -30,6 +30,30 @@ const createUser = async(req, res) =>{
     }
 }
 
+const getUserInfo = async(req, res) =>{
+    const { userId } = req.body;
+    try{
+        const response = await userModel.getUserInfo(userId);
+        res.json(response);
+
+    }catch(err){
+        console.error('Error in creation of users controller', err);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+}
+
+const getUserCenters = async(req, res) =>{
+    const { userId } = req.body;
+    try{
+        const response = await userModel.getUserCenters(userId);
+        res.json(response);
+
+    }catch(err){
+        console.error('Error in creation of users controller', err);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+}
 
 
-module.exports = {loginUser, createUser}
+
+module.exports = {loginUser, createUser, getUserInfo, getUserCenters}
