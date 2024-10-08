@@ -2,7 +2,7 @@ import 'dart:convert'; // For converting data to JSON format
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'home_screen_user.dart';
+import 'user_profile.dart';
 
 class LoginScreen extends StatelessWidget {
 
@@ -16,12 +16,12 @@ class LoginScreen extends StatelessWidget {
     final url = Uri.parse('http://#.#.#.#:3000/users/login');
 
     // Get the text from the TextField using the controller
-    String username = usernameController.text;
+    String email = usernameController.text;
     String password = passwordController.text;
 
     // Create the JSON data
     Map<String, dynamic> jsonData = {
-      'username': username,
+      'email': email,
       'plainPassword': password,
     };
 
@@ -35,9 +35,16 @@ class LoginScreen extends StatelessWidget {
       );
 
       if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        final int userIdResponse = responseData['id'];
+        print(responseData);
+
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomeScreenUser()),
+          MaterialPageRoute(
+              builder: (context) => UserProfileScreen(userId: userIdResponse)
+          ),
+
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
