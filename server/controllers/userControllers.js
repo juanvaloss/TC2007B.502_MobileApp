@@ -18,9 +18,9 @@ const loginUser = async (req, res) => {
 };
 
 const createUser = async(req, res) =>{
-    const { username, plainPassword } = req.body;
+    const { name, email, plainPassword } = req.body;
     try {
-        const response = await userModel.createUser(username, plainPassword);
+        const response = await userModel.createUser(name, email, plainPassword);
         res.json(response);
 
         

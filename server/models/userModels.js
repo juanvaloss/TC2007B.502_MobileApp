@@ -41,11 +41,11 @@ const isInUsers = async(username, plainPassword) => {
 
   
 //Basic register, more info abt the user needs to be added.
-const createUser = async(username, plainPassword) =>{
+const createUser = async(name, email, plainPassword) =>{
     try{
         const hashedPassword = await hashPassword(plainPassword);
-        const query = 'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *;';
-        const response = await db.query(query, [username, hashedPassword]);
+        const query = 'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *;';
+        const response = await db.query(query, [name, email, hashedPassword]);
         return response.rows[0];
         
     }catch(err){

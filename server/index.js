@@ -7,14 +7,15 @@ const port = 3000;
 
 //Routes
 const userRoutes = require("./routes/userRoutes")
+const centerRoutes = require("./routes/centerRoutes")
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// testing
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 });
 
 app.use("/users",userRoutes)
+app.use("/centers",centerRoutes)
