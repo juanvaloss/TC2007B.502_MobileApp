@@ -1,13 +1,13 @@
 const userModel = require("../models/userModels");
 
 const loginUser = async (req, res) => {
-    const { username, plainPassword } = req.body;
+    const { email, plainPassword } = req.body;
 
     try {
-        const users = await userModel.isInUsers(username, plainPassword);
+        const userInfo = await userModel.isInUsers(email, plainPassword);
 
-        if (users === true) {
-            res.status(200).json({ success: true, message: 'Login successful' });
+        if (userInfo.isMatch === true) {
+            res.status(200).json(userInfo.user);
         } else {
             res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
@@ -17,18 +17,18 @@ const loginUser = async (req, res) => {
     }
 };
 
-const createUser = async(req, res) =>{
+const createUser = async (req, res) => {
     const { name, email, plainPassword } = req.body;
+    
     try {
         const response = await userModel.createUser(name, email, plainPassword);
-        res.json(response);
-
-        
-    } catch (err) {
+        res.status(201).json(response); // 201 for resource creation success
+      } catch (err) {
         console.error('Error in creation of users controller', err);
         res.status(500).json({ success: false, message: 'Server error' });
-    }
-}
+      }
+};
+  
 
 const getUserInfo = async(req, res) =>{
     const { userId } = req.body;
@@ -56,4 +56,4 @@ const getUserCenters = async(req, res) =>{
 
 
 
-module.exports = {loginUser, createUser, getUserInfo, getUserCenters}
+module.exports = { createUser, loginUser, getUserInfo, getUserCenters };

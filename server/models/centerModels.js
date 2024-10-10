@@ -1,30 +1,38 @@
-const { db } = require('../config/db');
+const supabase = require('../config/db'); 
 
-const createCenter = async(adminId, centerName, centerAddress, lat, lon) => {
-    try{
-        const query = 'INSERT INTO centers (administrator, name, address, latitude, longitude) VALUES ($1, $2, $3, $4, $5) RETURNING *;';
-        const response = await db.query(query, [adminId, centerName, centerAddress, lat, lon]);
-        return response.rows[0];
-        
-    }catch(err){
-        console.error(err)
-        console.error('Error executing query', err.stack);
-        throw err;
+const createCenter = async (adminId, centerName, centerAddress, lat, lon) => {
+  try {
+    const { data, error } = await supabase
+      .from('centers')
+      .insert([{ administrator: adminId, name: centerName, address: centerAddress, latitude: lat, longitude: lon }])
+      .select();
+
+    if (error) {
+      throw new Error(`Error executing query: ${error.message}`);
     }
-}
 
-const getAllCoordinates = async() =>{
-    try{
-        const query = 'SELECT latitude, longitude FROM centers;';
-        const { rows } = await db.query(query);
-        return rows;
-        
-    }catch(err){
-        console.error(err)
-        console.error('Error executing query', err.stack);
-        throw err;
+    return data[0]; // Return the created center data
+  } catch (err) {
+    console.error('Error creating center:', err);
+    throw err;
+  }
+};
+
+const getAllCoordinates = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('centers')
+      .select('latitude, longitude');
+
+    if (error) {
+      throw new Error(`Error executing query: ${error.message}`);
     }
-}
 
+    return data; // Return the array of coordinates
+  } catch (err) {
+    console.error('Error fetching coordinates:', err);
+    throw err;
+  }
+};
 
-module.exports = {createCenter, getAllCoordinates}
+module.exports = { createCenter, getAllCoordinates };

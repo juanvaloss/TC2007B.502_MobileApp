@@ -1,12 +1,9 @@
-const Pool = require("pg").Pool;
-const db = new Pool({
-    user: 'mobileadmin',
-    host: 'localhost',
-    database: 'mobileapp',
-    password: 'password',
-    port: 5432,
-  });
-  
+const { createClient } = require('@supabase/supabase-js');
+require('dotenv').config();
 
-module.exports = { db };
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+module.exports = {supabase};
