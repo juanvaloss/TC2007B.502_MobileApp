@@ -57,14 +57,14 @@ const createAdmin = async (name, email, plainPassword) => {
           throw new Error(`Error executing query: ${error.message}`);
         }
     
-        return data[0]; // Return the created user data
+        return data[0];
       } catch (err) {
         console.error('Error creating user:', err);
         throw err;
       }
 };
 
-
+//
 const getAdminApprovedCenters = async(adminId) => {
     try {
         const { data, error } = await supabase

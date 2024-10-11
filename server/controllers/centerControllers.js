@@ -1,9 +1,9 @@
 const centerModel = require("../models/centerModels")
 
 const createCenter = async(req, res) =>{
-    const { adminId, centerName, centerAddress, lat, lon } = req.body;
+    const { userId, adminId, centerNa, centerAdd, currentCapac ,totalCapac, acceptsM, acceptsV, acceptsC, lat, lon } = req.body;
     try {
-        const response = await centerModel.createCenter( adminId, centerName, centerAddress, lat, lon );
+        const response = await centerModel.createCenter( userId, adminId, centerNa, centerAdd, currentCapac ,totalCapac, acceptsM, acceptsV, acceptsC, lat, lon );
         res.json(response);
 
         

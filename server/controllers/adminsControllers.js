@@ -22,7 +22,7 @@ const createAdmin = async (req, res) => {
     
     try {
         const response = await adminModel.createAdmin(name, email, plainPassword);
-        res.status(201).json(response); // 201 for resource creation success
+        res.status(201).json(response);
       } catch (err) {
         console.error('Error in creation of users controller', err);
         res.status(500).json({ success: false, message: 'Server error' });

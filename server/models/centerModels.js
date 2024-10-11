@@ -1,10 +1,11 @@
 const { supabase } = require('../config/db'); 
 
-const createCenter = async (adminId, centerName, centerAddress, lat, lon) => {
+//New center creation
+const createCenter = async (userId, adminId, centerNa, centerAdd, currentCapac ,totalCapac, acceptsM, acceptsV, acceptsC, lat, lon) => {
   try {
     const { data, error } = await supabase
       .from('centers')
-      .insert([{ administrator: adminId, name: centerName, address: centerAddress, latitude: lat, longitude: lon }])
+      .insert([{ approvedBy: adminId, centerName: centerNa ,centerAddress: centerAdd, currentCapacity: currentCapac, totalCapacity: totalCapac, acceptsMeat: acceptsM, acceptsVegetables: acceptsV, acceptsCans: acceptsC,latitude: lat, longitude: lon, centerAdmin: userId}])
       .select();
 
     if (error) {
@@ -18,11 +19,12 @@ const createCenter = async (adminId, centerName, centerAddress, lat, lon) => {
   }
 };
 
+//For mapping all the centers
 const getAllCoordinates = async () => {
   try {
     const { data, error } = await supabase
       .from('centers')
-      .select('latitude, longitude');
+      .select('id, latitude, longitude');
 
     if (error) {
       throw new Error(`Error executing query: ${error.message}`);
