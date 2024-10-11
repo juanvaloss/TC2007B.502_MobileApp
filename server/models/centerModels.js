@@ -1,4 +1,4 @@
-const supabase = require('../config/db'); 
+const { supabase } = require('../config/db'); 
 
 const createCenter = async (adminId, centerName, centerAddress, lat, lon) => {
   try {

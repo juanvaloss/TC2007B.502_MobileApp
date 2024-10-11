@@ -15,10 +15,10 @@ const hashPassword = async (plainPassword) => {
 };
 
 //Login with encrypted password
-const isInUsers = async (email, plainPassword) => {
+const isInAdmins = async (email, plainPassword) => {
     try {
       const { data, error } = await supabase
-        .from('users')
+        .from('admins')
         .select('id, password')
         .eq('email', email);
   
@@ -42,14 +42,14 @@ const isInUsers = async (email, plainPassword) => {
     }
 };
 
-//Basic register, more info abt the user needs to be added.
-const createUser = async (name, email, plainPassword) => {
+//Won't be available to the end user
+const createAdmin = async (name, email, plainPassword) => {
     try {
         const hashedPassword = await hashPassword(plainPassword);
         
         // Insert into the Supabase database
         let { data, error } = await supabase
-          .from('users')
+          .from('admins')
           .insert([{ name, email, password: hashedPassword }])
           .select();
     
@@ -64,44 +64,23 @@ const createUser = async (name, email, plainPassword) => {
       }
 };
 
-//For personal profile
-const getUserInfo = async (userId) => {
-    try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('name, email, isCenterAdmin')
-        .eq('id', userId)
-        .single();
-  
-      if (error) {
-        throw new Error(`Error fetching user info: ${error.message}`);
-      }
-  
-      return data;
-    } catch (err) {
-      console.error('Error fetching user info:', err);
-      throw err;
-    }
-};
 
-//Might get changed to a single query ...
-const getUserCenters = async (userId) => {
+const getAdminApprovedCenters = async(adminId) => {
     try {
-      const { data, error } = await supabase
-        .from('centers')
-        .select('*')
-        .eq('administrator', userId);
-  
-      if (error) {
-        throw new Error(`Error fetching user centers: ${error.message}`);
+        const { data, error } = await supabase
+          .from('centers')
+          .select('*')
+          .eq('administrator', adminId);
+    
+        if (error) {
+          throw new Error(`Error fetching user centers: ${error.message}`);
+        }
+    
+        return data;
+      } catch (err) {
+        console.error('Error fetching user centers:', err);
+        throw err;
       }
-  
-      return data;
-    } catch (err) {
-      console.error('Error fetching user centers:', err);
-      throw err;
-    }
-};
-  
+}
 
-module.exports = { createUser, isInUsers, getUserInfo, getUserCenters };
+module.exports = {isInAdmins, createAdmin, getAdminApprovedCenters}

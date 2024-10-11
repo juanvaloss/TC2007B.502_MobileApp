@@ -6,8 +6,11 @@ const app = express();
 const port = 3000;
 
 //Routes
-const userRoutes = require("./routes/userRoutes")
-const centerRoutes = require("./routes/centerRoutes")
+const userRoutes = require("./routes/userRoutes");
+const centerRoutes = require("./routes/centerRoutes");
+const adminRoutes = require("./routes/adminsRoutes");
+const requestRoutes = require("./routes/requestsRoutes");
+
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -19,3 +22,6 @@ app.listen(port, () => {
 
 app.use("/users",userRoutes)
 app.use("/centers",centerRoutes)
+app.use("/admins",adminRoutes)
+app.use("/requests",requestRoutes)
+
