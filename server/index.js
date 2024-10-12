@@ -10,6 +10,7 @@ const userRoutes = require("./routes/userRoutes");
 const centerRoutes = require("./routes/centerRoutes");
 const adminRoutes = require("./routes/adminsRoutes");
 const requestRoutes = require("./routes/requestsRoutes");
+const donationRoutes = require("./routes/donationsRoutes");
 
 
 app.use(cors());
@@ -24,4 +25,6 @@ app.use("/users",userRoutes)
 app.use("/centers",centerRoutes)
 app.use("/admins",adminRoutes)
 app.use("/requests",requestRoutes)
+app.use("/donations",donationRoutes)
+
 

@@ -4,7 +4,6 @@ const userModel = require("../models/userModels")
 const createRequest = async(req, res) => {
     const {userId, centerName, centerAddress, capac, acceptsM, acceptsV, acceptsC} = req.body;
 
-    console.log(userId, centerName, centerAddress, capac, acceptsM, acceptsV, acceptsC);
     try {
         
         const userInfo = await userModel.getUserInfo(userId);
@@ -21,5 +20,16 @@ const createRequest = async(req, res) => {
     }
 }
 
+const deleteRequest = async(req, res) =>{
+    const { requestId } = req.body;
+    try {
+        const response = await requestModel.deleteRequest( requestId );
+        res.json(response);
+       
+    } catch (err) {
+        console.error('Error in creation of users controller', err);
+        res.status(500).json({ success: false, message: 'Server error' });
+    } 
+}
 
-module.exports = {createRequest}
+module.exports = {createRequest, deleteRequest}

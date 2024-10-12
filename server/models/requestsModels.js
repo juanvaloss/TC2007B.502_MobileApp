@@ -12,9 +12,28 @@ const createRequest = async (userId, centerNa, centerAdd, capac, acceptsM, accep
 
     return data[0]; // Return the created center data
   } catch (err) {
-    console.error('Error creating center:', err);
+    console.error('Error creating request:', err);
     throw err;
   }
 };
 
-module.exports = { createRequest };
+const deleteRequest = async(requestId) =>{
+  try{
+    const { data, error } = await supabase
+    .from('requests')
+    .delete()
+    .eq('id', requestId);
+
+    if(error){
+      throw new Error(`Error executing query: ${error.message}`);
+    }
+
+    return data
+
+  }catch(err){
+    console.error('Error deleting request:', err);
+    throw err;
+  }
+}
+
+module.exports = { createRequest, deleteRequest };

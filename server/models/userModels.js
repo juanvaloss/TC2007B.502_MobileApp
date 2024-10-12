@@ -89,8 +89,9 @@ const getUserCenters = async (userId) => {
     try {
       const { data, error } = await supabase
         .from('centers')
-        .select('*')
-        .eq('administrator', userId);
+        .select('centerName, centerAddress, latitude, longitude')
+        .eq('centerAdmin', userId)
+        .single();
   
       if (error) {
         throw new Error(`Error fetching user centers: ${error.message}`);
@@ -102,6 +103,25 @@ const getUserCenters = async (userId) => {
       throw err;
     }
 };
+
+const updateAdminValue = async(userId, value) => {
+  try{
+    const {data, error} = await supabase
+    .from('users')
+    .update({'isCenterAdmin': value})
+    .eq('id', userId);
+
+    if (error) {
+      throw new Error(`Error updating value user centers: ${error.message}`);
+    }
+
+    return data;
+
+  }catch(err){
+    console.error('Error fetching user centers:', err)
+    throw err;
+  }
+}
   
 
-module.exports = { createUser, isInUsers, getUserInfo, getUserCenters };
+module.exports = { createUser, isInUsers, getUserInfo, getUserCenters, updateAdminValue};

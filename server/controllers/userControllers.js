@@ -54,6 +54,18 @@ const getUserCenters = async(req, res) =>{
     }
 }
 
+const updateAdminValue = async(req, res) =>{
+    const { userId, value } = req.body;
+    try{
+        const response = await userModel.updateAdminValue(userId, value);
+        res.json(response);
+
+    }catch(err){
+        console.error('Error in creation of users controller', err);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+}
 
 
-module.exports = { createUser, loginUser, getUserInfo, getUserCenters };
+
+module.exports = { createUser, loginUser, getUserInfo, getUserCenters, updateAdminValue};
