@@ -34,7 +34,7 @@ class _UserInfoScreenState extends State<UserProfileScreen> {
 
   Future<void> fetchUserInfo() async {
     try {
-      // Replace these with your actual endpoints
+      // Replace the # with ur actual ip
       final url1 = Uri.parse('http://#.#.#.#:3000/users/userInfo');
       final url2 = Uri.parse('http://#.#.#.#:3000/users/userCenters');
 
@@ -58,7 +58,6 @@ class _UserInfoScreenState extends State<UserProfileScreen> {
       if (response1.statusCode == 200 && response1.body.isNotEmpty) {
 
         final responseData1 = json.decode(response1.body);
-
         setState(() {
           userInfo = {
             ...responseData1,

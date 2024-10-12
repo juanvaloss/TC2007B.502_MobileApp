@@ -12,7 +12,7 @@ class LoginScreen extends StatelessWidget {
   void sendJsonData(context) async {
     //Replace the # symbols with the actual numbers of your IP address
 
-    //If the connection keeps failing, try turning off the emulated device's Wi-Fi.
+    //If the connection keeps failing, try turning on the emulated device's Wi-Fi.
     final url = Uri.parse('http://#.#.#.#:3000/users/login');
 
     // Get the text from the TextField using the controller
