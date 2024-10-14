@@ -9,6 +9,8 @@ class LoginScreen extends StatelessWidget {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  LoginScreen({super.key});
+
   void sendJsonData(context) async {
     //Replace the # symbols with the actual numbers of your IP address
 
