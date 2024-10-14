@@ -2,7 +2,7 @@ import 'dart:convert'; // For converting data to JSON format
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'user_profile.dart';
+import '../user_profile.dart';
 
 class LoginScreen extends StatelessWidget {
 

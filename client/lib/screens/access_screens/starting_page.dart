@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'login_screen.dart';
+import '../access_screens/login_screen.dart';
+import '../access_screens/register_screen.dart';
 
 class StartingPage extends StatelessWidget{
 
@@ -8,7 +9,7 @@ class StartingPage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+    //double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       body: Center(
@@ -47,6 +48,9 @@ class StartingPage extends StatelessWidget{
             ), //iniciar sesion
              ElevatedButton(
               onPressed: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>  RegisterScreen()));
 
               },
               style: ElevatedButton.styleFrom(
