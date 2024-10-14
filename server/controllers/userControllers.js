@@ -14,7 +14,7 @@ const loginUser = async (req, res) => {
             const assignCodeOk = await tfaModel.assignCode(userInfo.user.id, otpCode);
 
             if(assignCodeOk === true){
-                res.status(200).json({ success: true, message: 'Login succesful!' });
+                res.status(200).json({ success: true, message: 'Login succesful!', userId: userInfo.user.id});
             }
             
         } else {

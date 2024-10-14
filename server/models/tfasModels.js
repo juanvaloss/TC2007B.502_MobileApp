@@ -53,7 +53,7 @@ const eraseAllUserCodes = async(userId) =>{
     
         if (!data || data.length === 0) {
           console.warn('No codes found to delete.');
-          return false; // Handle cases where no codes were found
+          return false;
         }
     
         return true;
