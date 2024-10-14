@@ -1,13 +1,22 @@
 const userModel = require("../models/userModels");
+const tfaModel = require("../models/tfasModels");
+const {sendOTP} = require("../config/mg")
+
 
 const loginUser = async (req, res) => {
     const { email, plainPassword } = req.body;
 
     try {
         const userInfo = await userModel.isInUsers(email, plainPassword);
-
+    
         if (userInfo.isMatch === true) {
-            res.status(200).json(userInfo.user);
+            const otpCode = await sendOTP(email);
+            const assignCodeOk = await tfaModel.assignCode(userInfo.user.id, otpCode);
+
+            if(assignCodeOk === true){
+                res.status(200).json({ success: true, message: 'Login succesful!' });
+            }
+            
         } else {
             res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
