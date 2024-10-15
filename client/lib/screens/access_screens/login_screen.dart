@@ -2,7 +2,7 @@ import 'dart:convert'; // For converting data to JSON format
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import '../user_profile.dart';
+import '../main_screens/user_main_screen.dart';
 
 class LoginScreen extends StatelessWidget {
 
@@ -38,13 +38,12 @@ class LoginScreen extends StatelessWidget {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        final int userIdResponse = responseData['id'];
         print(responseData);
 
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => UserProfileScreen(userId: userIdResponse)
+              builder: (context) => MapScreen()
           ),
 
         );
