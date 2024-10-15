@@ -50,7 +50,7 @@ class LoginScreen extends StatelessWidget {
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Invalid Credentials!. Please check the mail and password and try again.'),
             backgroundColor: Colors.red,  // You can style it to look like a warning
             duration: Duration(seconds: 3),
@@ -66,7 +66,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login Screen')),
+      appBar: AppBar(title: const Text('Login Screen')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -74,23 +74,23 @@ class LoginScreen extends StatelessWidget {
           children: <Widget>[
             TextField(
               controller: usernameController,
-              decoration: InputDecoration(hintText: 'Email'),
+              decoration: const InputDecoration(hintText: 'Email'),
               //Regular expressions for preventing SQL Injections
               inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9_.@]'))],
             ),
             TextField(
               obscureText: true,
               controller: passwordController,
-              decoration: InputDecoration(hintText: 'Password'),
+              decoration: const InputDecoration(hintText: 'Password'),
               //Regular expressions for preventing SQL Injections
               inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9_.]'))],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 sendJsonData(context);
               },
-              child: Text('Login'),
+              child: const Text('Login'),
             ),
           ],
         ),

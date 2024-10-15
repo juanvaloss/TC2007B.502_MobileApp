@@ -50,7 +50,7 @@ class StartingPage extends StatelessWidget{
               onPressed: (){
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) =>  RegisterScreen()));
+                  MaterialPageRoute(builder: (context) =>  const RegisterScreen()));
 
               },
               style: ElevatedButton.styleFrom(

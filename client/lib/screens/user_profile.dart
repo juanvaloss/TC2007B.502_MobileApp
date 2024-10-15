@@ -5,7 +5,7 @@ import 'dart:convert';
 class UserProfileScreen extends StatefulWidget{
   final int userId;
 
-  UserProfileScreen({required this.userId});
+  const UserProfileScreen({super.key, required this.userId});
 
   @override
   _UserInfoScreenState createState() => _UserInfoScreenState();
@@ -91,38 +91,38 @@ class _UserInfoScreenState extends State<UserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('User Info')),
+      appBar: AppBar(title: const Text('User Info')),
       body: userInfo != null && centerInfo != null
           ? Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
             // Separator for userInfo
-            Text(
+            const Text(
               'User Information:',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             ...userInfo!.entries.map((entry) {
               return ListTile(
                 title: Text(_capitalizeFirstLetter(entry.key)),
                 subtitle: Text(entry.value.toString()),
               );
-            }).toList(),
+            }),
 
             // Separator for centerInfo
-            SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 16),
+            const Text(
               'Center Information:',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
 
             // Display each center's information
             ...centerInfo!.map((center) {
@@ -131,14 +131,14 @@ class _UserInfoScreenState extends State<UserProfileScreen> {
                 children: [
                   Text(
                     "Name: ${center['name']}",
-                    style: TextStyle(fontSize: 16), // Set the font size for uniformity
+                    style: const TextStyle(fontSize: 16), // Set the font size for uniformity
                   ),
-                  SizedBox(height: 4), // Space between name and address
+                  const SizedBox(height: 4), // Space between name and address
                   Text(
                     "Address: ${center['address']}",
-                    style: TextStyle(fontSize: 16), // Same font size as the name
+                    style: const TextStyle(fontSize: 16), // Same font size as the name
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Center(
                     child: Image.network(
                       _generateMapUrl(
@@ -151,19 +151,19 @@ class _UserInfoScreenState extends State<UserProfileScreen> {
 
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                 ],
               );
-            }).toList(),
+            }),
           ],
         ),
       )
           : Center(
         child: errorMessage.isEmpty
-            ? CircularProgressIndicator()
+            ? const CircularProgressIndicator()
             : Text(
           errorMessage,
-          style: TextStyle(color: Colors.red, fontSize: 16),
+          style: const TextStyle(color: Colors.red, fontSize: 16),
         ),
       ),
     );
