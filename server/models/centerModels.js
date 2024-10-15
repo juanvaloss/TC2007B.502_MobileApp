@@ -1,11 +1,11 @@
 const { supabase } = require('../config/db'); 
 
 //New center creation
-const createCenter = async (userId, adminId, centerNa, centerAdd, currentCapac ,totalCapac, acceptsM, acceptsV, acceptsC, lat, lon) => {
+const createCenter = async (userId, adminId, centerNa, centerAdd, currentCapac ,totalCapac, acceptsM, acceptsV, acceptsC, lat, lng) => {
   try {
     const { data, error } = await supabase
       .from('centers')
-      .insert([{ approvedBy: adminId, centerName: centerNa ,centerAddress: centerAdd, currentCapacity: currentCapac, totalCapacity: totalCapac, acceptsMeat: acceptsM, acceptsVegetables: acceptsV, acceptsCans: acceptsC,latitude: lat, longitude: lon, centerAdmin: userId}])
+      .insert([{ approvedBy: adminId, centerName: centerNa ,centerAddress: centerAdd, currentCapacity: currentCapac, totalCapacity: totalCapac, acceptsMeat: acceptsM, acceptsVegetables: acceptsV, acceptsCans: acceptsC,latitude: lat, longitude: lng, centerAdmin: userId}])
       .select();
 
     if (error) {

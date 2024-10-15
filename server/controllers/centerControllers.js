@@ -1,12 +1,13 @@
 const centerModel = require("../models/centerModels")
 const userModel = require("../models/userModels")
+const getCoordinatesBAddress = require("./coordinatesControllers");
 
 const createCenter = async(req, res) =>{
-    const { userId, adminId, centerNa, centerAdd, currentCapac ,totalCapac, acceptsM, acceptsV, acceptsC, lat, lon } = req.body;
+    const { userId, adminId, centerNa, centerAdd, currentCapac ,totalCapac, acceptsM, acceptsV, acceptsC } = req.body;
     try {
-        const modifyUser = await userModel.updateAdminValue(userId, True);
-        
-        const response = await centerModel.createCenter( userId, adminId, centerNa, centerAdd, currentCapac ,totalCapac, acceptsM, acceptsV, acceptsC, lat, lon );
+        const modifyUser = await userModel.updateAdminValue(userId, true);
+        const {lat, lng } = await getCoordinatesBAddress(centerAdd);
+        const response = await centerModel.createCenter( userId, adminId, centerNa, centerAdd, currentCapac ,totalCapac, acceptsM, acceptsV, acceptsC, lat, lng);
         res.json(response);
 
         
