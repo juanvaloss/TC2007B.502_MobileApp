@@ -49,13 +49,25 @@ class _GuestContractState extends State<GuestContract> {
                   },
                 ),
                 const SizedBox(width: 10),
-                const Text.rich(
-                  TextSpan(
+                RichText(
+                  text: TextSpan(
                     text: "He leído y acepto la ",
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: "\npolítica de privacidad",
-                        style: TextStyle(color: Color(0xFFEF3030)),
+                    style: TextStyle(color: Colors.black),
+                    children: [
+                      WidgetSpan(
+                        child: GestureDetector(
+                          onTap: () {
+                            // Acción cuando se presiona el botón de "política de privacidad"
+                            print('Política de privacidad presionada');
+                          },
+                          child: Text(
+                            "política de privacidad",
+                            style: TextStyle(
+                              color: Color(0xFFEF3030),
+                              decoration: TextDecoration.underline, // Subrayar el texto
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -79,6 +91,7 @@ class _GuestContractState extends State<GuestContract> {
               ),
               child: const Text('Aceptar'),
             ),
+
           ],
         ),
       ),
