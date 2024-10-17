@@ -3,28 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import '../user_profile.dart';
+import '../access_screens/login_screen.dart';
+import '../access_screens/register_screen.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
+
+  @override
+  _RegisterScreenState createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  bool isChecked = false;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  RegisterScreen({super.key});
-
   void sendJsonData(context) async {
-    //Replace the # symbols with the actual numbers of your IP address
-
-    //If the connection keeps failing, try turning on the emulated device's Wi-Fi.
     final url = Uri.parse('http://#.#.#.#:3000/users/create');
 
-    // Get the text from the TextField using the controller
     String name = nameController.text;
     String email = emailController.text;
     String password = passwordController.text;
 
-
-    // Create the JSON data
     Map<String, dynamic> jsonData = {
       'name': name,
       'email': email,
@@ -48,37 +50,42 @@ class RegisterScreen extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => UserProfileScreen(userId: userIdResponse)
-          ),
-
+              builder: (context) => UserProfileScreen(userId: userIdResponse)),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Algo salió mal, inténtalo de nuevo."),
-            backgroundColor: Colors.red,  // You can style it to look like a warning
+            backgroundColor: Colors.red,
             duration: Duration(seconds: 3),
           ),
         );
       }
-    } catch(e){
+    } catch (e) {
       print('Error: $e');
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF121223),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop(); // Acción del botón de regreso
+          },
+        ),
+        elevation: 0, // Sin sombra para el AppBar
+      ),
       body: Stack(
         children: [
           // Top Section
           Container(
             width: screenWidth,
-            color: const Color(0xFF1d1d37),
+            color: const Color(0xFF121223),
             child: const Padding(
               padding: EdgeInsets.only(top: 50.0),
               child: Column(
@@ -128,7 +135,7 @@ class RegisterScreen extends StatelessWidget {
                         // Username
                         const Text(
                           "Nombre",
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: 10),
                         ),
                         const SizedBox(height: 10),
                         TextField(
@@ -144,6 +151,7 @@ class RegisterScreen extends StatelessWidget {
                             ),
                             filled: true,
                             fillColor: const Color(0xFFF0F5FA),
+                            isDense: true,
                           ),
                           style: const TextStyle(
                             color: Color(0xFFA0A5BA),
@@ -157,7 +165,7 @@ class RegisterScreen extends StatelessWidget {
                         const SizedBox(height: 10),
                         const Text(
                           "Correo electrónico",
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: 10),
                         ),
                         const SizedBox(height: 10),
                         TextField(
@@ -173,6 +181,7 @@ class RegisterScreen extends StatelessWidget {
                             ),
                             filled: true,
                             fillColor: const Color(0xFFF0F5FA),
+                            isDense: true,
                           ),
                           style: const TextStyle(
                             color: Color(0xFFA0A5BA),
@@ -186,7 +195,7 @@ class RegisterScreen extends StatelessWidget {
                         const SizedBox(height: 10),
                         const Text(
                           "Contraseña",
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: 10),
                         ),
                         const SizedBox(height: 10),
                         TextField(
@@ -203,6 +212,7 @@ class RegisterScreen extends StatelessWidget {
                             ),
                             filled: true,
                             fillColor: const Color(0xFFF0F5FA),
+                            isDense: true,
                           ),
                           style: const TextStyle(
                             color: Color(0xFFA0A5BA),
@@ -212,21 +222,63 @@ class RegisterScreen extends StatelessWidget {
                           ],
                         ),
 
-                        // Button
+                        //Checkbox and policies
                         const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: () {
-                            sendJsonData(context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFEF3030),
-                            foregroundColor: Colors.white,
-                            minimumSize: const Size(200, 40),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
+                        Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Checkbox(
+                                    value: isChecked,
+                                    onChanged: (bool? value) {
+                                      setState(() {
+                                        isChecked = value ?? false;
+                                      });
+                                    },
+                                  ),
+                                  const SizedBox(width: 20),
+                                  const Text.rich(
+                                    TextSpan(
+                                      text: "He leído y acepto la ",
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                          text: "\npolítica de privacidad",
+                                          style: TextStyle(
+                                              color: Color(0xFFEF3030)),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              //Button
+                              const SizedBox(height: 20),
+                              ElevatedButton(
+                                onPressed: () {
+                                  if (isChecked){
+                                  sendJsonData(context);
+                                  }
+                                  else {
+                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Debes aceptar las políticas de privacidad')));
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFFEF3030),
+                                  foregroundColor: Colors.white,
+                                  minimumSize: const Size(270, 50),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                ),
+                                child: const Text('Registrarse',
+                                style: TextStyle(fontSize: 20)),
+                              ),
+                            ],
                           ),
-                          child: const Text('Registrarse'),
                         ),
                       ],
                     ),

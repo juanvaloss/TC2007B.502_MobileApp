@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../access_screens/login_screen.dart';
 import '../access_screens/register_screen.dart';
+import '../access_screens/guestContract.dart';
 
 class StartingPage extends StatelessWidget{
 
@@ -65,7 +66,9 @@ class StartingPage extends StatelessWidget{
             ), //Registrarse
              OutlinedButton(
               onPressed: (){
-
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => GuestContract()));
               },
               style: OutlinedButton.styleFrom(
                 foregroundColor: const Color(0xFFEF3030),
