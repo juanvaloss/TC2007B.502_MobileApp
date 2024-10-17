@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import '../user_profile.dart';
+import '../access_screens/login_screen.dart';
+import '../access_screens/register_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -67,8 +69,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF121223),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop(); // Acción del botón de regreso
+          },
+        ),
+        elevation: 0, // Sin sombra para el AppBar
+      ),
       body: Stack(
         children: [
           // Top Section

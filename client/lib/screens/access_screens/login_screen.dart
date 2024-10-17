@@ -3,25 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import '../main_screens/user_main_screen.dart';
+import '../access_screens/register_screen.dart';
 
 class LoginScreen extends StatelessWidget {
-
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  bool obscurePassword = true;
 
   LoginScreen({super.key});
 
   void sendJsonData(context) async {
-    //Replace the # symbols with the actual numbers of your IP address
+    final url = Uri.parse('http://192.168.101.120:3000/users/login');
 
-    //If the connection keeps failing, try turning on the emulated device's Wi-Fi.
-    final url = Uri.parse('http://#.#.#.#:3000/users/login');
-
-    // Get the text from the TextField using the controller
     String email = usernameController.text;
     String password = passwordController.text;
 
-    // Create the JSON data
     Map<String, dynamic> jsonData = {
       'email': email,
       'plainPassword': password,
@@ -42,57 +38,206 @@ class LoginScreen extends StatelessWidget {
 
         Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) => MapScreen()
-          ),
-
+          MaterialPageRoute(builder: (context) => MapScreen()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Invalid Credentials!. Please check the mail and password and try again.'),
+            content: Text(
+                'Invalid Credentials!. Please check the email and password and try again.'),
             backgroundColor: Colors.red,  // You can style it to look like a warning
             duration: Duration(seconds: 3),
           ),
         );
       }
-    } catch(e){
+    } catch (e) {
       print('Error: $e');
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(title: const Text('Login Screen')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            TextField(
-              controller: usernameController,
-              decoration: const InputDecoration(hintText: 'Email'),
-              //Regular expressions for preventing SQL Injections
-              inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9_.@]'))],
-            ),
-            TextField(
-              obscureText: true,
-              controller: passwordController,
-              decoration: const InputDecoration(hintText: 'Password'),
-              //Regular expressions for preventing SQL Injections
-              inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9_.]'))],
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                sendJsonData(context);
-              },
-              child: const Text('Login'),
-            ),
-          ],
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF121223),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop(); // Acción del botón de regreso
+          },
         ),
+        elevation: 0, // Sin sombra para el AppBar
+      ),
+      body: Stack(
+        children: [
+          Container(
+            width: screenWidth,
+            color: const Color(0xFF121223),
+            child: const Padding(
+              padding: EdgeInsets.only(top: 70.0),
+              child: Column(
+                children: [
+                  Text(
+                    "Log in",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "Por favor ingresa los datos de tu cuenta",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Sección inferior con formulario
+          Column(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Container(),
+              ),
+              Expanded(
+                flex: 3,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30.0),
+                      topRight: Radius.circular(30.0),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 20),
+                        const Text(
+                          "Mail",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Color(0xFFB0B0B0),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        TextField(
+                          controller: usernameController,
+                          style: const TextStyle(color: Color(0xFFA0A5BA)),
+                          decoration: InputDecoration(
+                            hintText: 'example@gmail.com',
+                            hintStyle: const TextStyle(color: Color(0xFFA0A5BA)),
+                            fillColor: const Color(0xFFF0F5FA),
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9_.@]')),
+                          ],
+                        ),
+                        const SizedBox(height: 35),
+                        const Text(
+                          "Contraseña",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Color(0xFFB0B0B0),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        TextField(
+                          obscureText: true,
+                          controller: passwordController,
+                          style: const TextStyle(color: Color(0xFFA0A5BA)),
+                          decoration: InputDecoration(
+                            hintText: 'Contraseña',
+                            hintStyle: const TextStyle(color: Color(0xFFA0A5BA)),
+                            fillColor: const Color(0xFFF0F5FA),
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9_.]')),
+                          ],
+                        ),
+                        const SizedBox(height: 40),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 50,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                            onPressed: () {
+                              sendJsonData(context);
+                            },
+                            child: const Text(
+                              'INGRESAR',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 50),
+                        Center(
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    "¿No tienes una cuenta?",
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: (){
+                                    Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => RegisterScreen()));
+                                    },
+
+                                    child: const Text(
+                                      "REGÍSTRATE",
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
