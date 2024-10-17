@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import '../user_profile.dart';
-import '../access_screens/login_screen.dart';
-import '../access_screens/register_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -50,7 +48,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => UserProfileScreen(userId: userIdResponse)),
+            builder: (context) => UserProfileScreen(userId: userIdResponse),
+          ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -69,6 +68,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF121223),
@@ -87,7 +87,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             width: screenWidth,
             color: const Color(0xFF121223),
             child: const Padding(
-              padding: EdgeInsets.only(top: 50.0),
+              padding: EdgeInsets.only(top: 12.5),
               child: Column(
                 children: [
                   Text(
@@ -144,6 +144,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             labelText: "Ingresa tu nombre completo",
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
+                              borderSide: BorderSide.none,
                             ),
                             hintText: 'Ingresa tu nombre completo:',
                             hintStyle: const TextStyle(
@@ -174,6 +175,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             labelText: "Email",
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
+                              borderSide: BorderSide.none,
                             ),
                             hintText: 'Ingresa tu correo electrónico:',
                             hintStyle: const TextStyle(
@@ -205,6 +207,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             labelText: "Contraseña",
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
+                              borderSide: BorderSide.none,
                             ),
                             hintText: 'Ingresa tu contraseña:',
                             hintStyle: const TextStyle(
@@ -222,8 +225,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ],
                         ),
 
-                        //Checkbox and policies
-                        const SizedBox(height: 20),
+                        // Checkbox and policies
+                        const SizedBox(height: 10),
                         Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -255,27 +258,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ],
                               ),
 
-                              //Button
-                              const SizedBox(height: 20),
-                              ElevatedButton(
-                                onPressed: () {
-                                  if (isChecked){
-                                  sendJsonData(context);
-                                  }
-                                  else {
-                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Debes aceptar las políticas de privacidad')));
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFFEF3030),
-                                  foregroundColor: Colors.white,
-                                  minimumSize: const Size(270, 50),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
+                              // Button
+                              const SizedBox(height: 0),
+                              SizedBox(
+                                width: double.infinity,
+                                height: 50,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFEF3030),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    if (isChecked) {
+                                      sendJsonData(context);
+                                    } else {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                              'Debes aceptar las políticas de privacidad'),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  child: const Text(
+                                    'INGRESAR',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
-                                child: const Text('Registrarse',
-                                style: TextStyle(fontSize: 20)),
                               ),
                             ],
                           ),
