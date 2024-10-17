@@ -16,6 +16,15 @@ class _GuestContractState extends State<GuestContract> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.of(context).pop(); // Acción del botón de regreso
+          },
+        ),
+        elevation: 0, // Sin sombra para el AppBar
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
