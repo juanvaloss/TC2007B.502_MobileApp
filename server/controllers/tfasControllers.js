@@ -9,7 +9,7 @@ const verifyOTP = async ( savedOtp, userSentOtp, codeTimestamp) => {
     }
   
     const now = Date.now();
-    const date = new Date(timestamp);
+    const date = new Date(codeTimestamp);
     console.log(now)
     const tenMinutes = 10 * 60 * 1000;
   

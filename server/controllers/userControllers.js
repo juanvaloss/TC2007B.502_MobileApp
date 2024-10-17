@@ -30,8 +30,22 @@ const createUser = async (req, res) => {
     const { name, email, plainPassword } = req.body;
     
     try {
-        const response = await userModel.createUser(name, email, plainPassword);
-        res.status(201).json(response); // 201 for resource creation success
+        const userInfo = await userModel.isInUsers(email, plainPassword);
+    
+        if (userInfo.isMatch === true) {
+            const otpCode = await sendOTP(email);
+            const assignCodeOk = await tfaModel.assignCode(userInfo.user.id, otpCode);
+
+            if(assignCodeOk === true){
+                const response = await userModel.createUser(name, email, plainPassword);
+                res.status(200).json({ success: true, message: 'Creation succesful!', userId: response.id});
+            }
+            
+        } else {
+            res.status(401).json({ success: false, message: 'Invalid credentials' });
+        }
+
+        
       } catch (err) {
         console.error('Error in creation of users controller', err);
         res.status(500).json({ success: false, message: 'Server error' });
