@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../access_screens/login_screen.dart';
 
 class GuestContract extends StatefulWidget {
   const GuestContract({super.key});
@@ -13,7 +12,7 @@ class _GuestContractState extends State<GuestContract> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    //double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar: AppBar(
@@ -34,7 +33,7 @@ class _GuestContractState extends State<GuestContract> {
               width: 200,
               height: 200,
             ),
-            Center(
+            const Center(
               child: Text(
                 "Acepta nuestras políticas de privacidad",
                 textAlign: TextAlign.center,
@@ -69,7 +68,7 @@ class _GuestContractState extends State<GuestContract> {
                             // Acción cuando se presiona el botón de "política de privacidad"
                             print('Política de privacidad presionada');
                           },
-                          child: Text(
+                          child: const Text(
                             "política de privacidad",
                             style: TextStyle(
                               color: Color(0xFFEF3030),
