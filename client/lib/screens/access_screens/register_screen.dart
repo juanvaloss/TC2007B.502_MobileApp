@@ -17,6 +17,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
 
   void sendJsonData(context) async {
     final url = Uri.parse('http://#.#.#.#:3000/users/create');
@@ -67,6 +68,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String name = nameController.text;
+    String email = emailController.text;
+    String password = passwordController.text;
+    String confirmPassword = confirmPasswordController.text;
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -129,172 +134,227 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Username
-                        const Text(
-                          "Nombre",
-                          style: TextStyle(fontSize: 10),
-                        ),
-                        const SizedBox(height: 10),
-                        TextField(
-                          controller: nameController,
-                          decoration: InputDecoration(
-                            labelText: "Ingresa tu nombre completo",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide.none,
-                            ),
-                            hintText: 'Ingresa tu nombre completo:',
-                            hintStyle: const TextStyle(
-                              color: Color(0xFFA0A5BA),
-                            ),
-                            filled: true,
-                            fillColor: const Color(0xFFF0F5FA),
-                            isDense: true,
+                    child: SingleChildScrollView(
+                      physics: const ClampingScrollPhysics(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Username
+                          const Text(
+                            "Nombre",
+                            style: TextStyle(fontSize: 10),
                           ),
-                          style: const TextStyle(
-                            color: Color(0xFFA0A5BA),
-                          ),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9_. ]'))
-                          ],
-                        ),
-
-                        // Email
-                        const SizedBox(height: 10),
-                        const Text(
-                          "Correo electrónico",
-                          style: TextStyle(fontSize: 10),
-                        ),
-                        const SizedBox(height: 10),
-                        TextField(
-                          controller: emailController,
-                          decoration: InputDecoration(
-                            labelText: "Email",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide.none,
-                            ),
-                            hintText: 'Ingresa tu correo electrónico:',
-                            hintStyle: const TextStyle(
-                              color: Color(0xFFA0A5BA),
-                            ),
-                            filled: true,
-                            fillColor: const Color(0xFFF0F5FA),
-                            isDense: true,
-                          ),
-                          style: const TextStyle(
-                            color: Color(0xFFA0A5BA),
-                          ),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9_.@ ]'))
-                          ],
-                        ),
-
-                        // Password
-                        const SizedBox(height: 10),
-                        const Text(
-                          "Contraseña",
-                          style: TextStyle(fontSize: 10),
-                        ),
-                        const SizedBox(height: 10),
-                        TextField(
-                          controller: passwordController,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            labelText: "Contraseña",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide.none,
-                            ),
-                            hintText: 'Ingresa tu contraseña:',
-                            hintStyle: const TextStyle(
-                              color: Color(0xFFA0A5BA),
-                            ),
-                            filled: true,
-                            fillColor: const Color(0xFFF0F5FA),
-                            isDense: true,
-                          ),
-                          style: const TextStyle(
-                            color: Color(0xFFA0A5BA),
-                          ),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9_. ]'))
-                          ],
-                        ),
-
-                        // Checkbox and policies
-                        const SizedBox(height: 10),
-                        Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Checkbox(
-                                    value: isChecked,
-                                    onChanged: (bool? value) {
-                                      setState(() {
-                                        isChecked = value ?? false;
-                                      });
-                                    },
-                                  ),
-                                  const SizedBox(width: 20),
-                                  const Text.rich(
-                                    TextSpan(
-                                      text: "He leído y acepto la ",
-                                      children: <TextSpan>[
-                                        TextSpan(
-                                          text: "\npolítica de privacidad",
-                                          style: TextStyle(
-                                              color: Color(0xFFEF3030)),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                          const SizedBox(height: 10),
+                          TextField(
+                            controller: nameController,
+                            decoration: InputDecoration(
+                              labelText: "Ingresa tu nombre completo",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: BorderSide.none,
                               ),
+                              hintText: 'Ingresa tu nombre completo:',
+                              hintStyle: const TextStyle(
+                                color: Color(0xFFA0A5BA),
+                              ),
+                              filled: true,
+                              fillColor: const Color(0xFFF0F5FA),
+                              isDense: true,
+                            ),
+                            style: const TextStyle(
+                              color: Color(0xFFA0A5BA),
+                            ),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9_. ]'))
+                            ],
+                          ),
 
-                              // Button
-                              const SizedBox(height: 0),
-                              SizedBox(
-                                width: double.infinity,
-                                height: 50,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFFEF3030),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
+                          // Email
+                          const SizedBox(height: 10),
+                          const Text(
+                            "Correo electrónico",
+                            style: TextStyle(fontSize: 10),
+                          ),
+                          const SizedBox(height: 10),
+                          TextField(
+                            controller: emailController,
+                            decoration: InputDecoration(
+                              labelText: "Email",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: BorderSide.none,
+                              ),
+                              hintText: 'Ingresa tu correo electrónico:',
+                              hintStyle: const TextStyle(
+                                color: Color(0xFFA0A5BA),
+                              ),
+                              filled: true,
+                              fillColor: const Color(0xFFF0F5FA),
+                              isDense: true,
+                            ),
+                            style: const TextStyle(
+                              color: Color(0xFFA0A5BA),
+                            ),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9_.@ ]'))
+                            ],
+                          ),
+
+                          // Password
+                          const SizedBox(height: 10),
+                          const Text(
+                            "Contraseña",
+                            style: TextStyle(fontSize: 10),
+                          ),
+                          const SizedBox(height: 10),
+                          TextField(
+                            controller: passwordController,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              labelText: "Contraseña",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: BorderSide.none,
+                              ),
+                              hintText: 'Ingresa tu contraseña:',
+                              hintStyle: const TextStyle(
+                                color: Color(0xFFA0A5BA),
+                              ),
+                              filled: true,
+                              fillColor: const Color(0xFFF0F5FA),
+                              isDense: true,
+                            ),
+                            style: const TextStyle(
+                              color: Color(0xFFA0A5BA),
+                            ),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9_. ]'))
+                            ],
+                          ),
+
+                          // Confirm Password
+                          const SizedBox(height: 10),
+                          const Text(
+                            "Confirmar contraseña",
+                            style: TextStyle(fontSize: 10),
+                          ),
+                          const SizedBox(height: 10),
+                          TextField(
+                            controller: confirmPasswordController,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              labelText: "Confirma tu contraseña",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: BorderSide.none,
+                              ),
+                              hintText: 'Ingresa tu contraseña nuevamente:',
+                              hintStyle: const TextStyle(
+                                color: Color(0xFFA0A5BA),
+                              ),
+                              filled: true,
+                              fillColor: const Color(0xFFF0F5FA),
+                              isDense: true,
+                            ),
+                            style: const TextStyle(
+                              color: Color(0xFFA0A5BA),
+                            ),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9_. ]'))
+                            ],
+                          ),
+
+                          // Checkbox and policies
+                          const SizedBox(height: 10),
+                          Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Checkbox(
+                                      value: isChecked,
+                                      onChanged: (bool? value) {
+                                        setState(() {
+                                          isChecked = value ?? false;
+                                        });
+                                      },
                                     ),
-                                  ),
-                                  onPressed: () {
-                                    if (isChecked) {
-                                      sendJsonData(context);
-                                    } else {
+                                    const SizedBox(width: 20),
+                                    const Text.rich(
+                                      TextSpan(
+                                        text: "He leído y acepto la ",
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                            text: "\npolítica de privacidad",
+                                            style: TextStyle(
+                                                color: Color(0xFFEF3030)),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                // Button
+                                const SizedBox(height: 10),
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 50,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFFEF3030),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                    if(password.isEmpty  || email.isEmpty || name.isEmpty || confirmPassword.isEmpty){
                                       ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                              'Debes aceptar las políticas de privacidad'),
-                                        ),
-                                      );
+                                          const SnackBar(
+                                            content: Text(
+                                                'Por favor llena todos los campos requeridos'),
+                                          ),
+                                          );
                                     }
-                                  },
-                                  child: const Text(
-                                    'INGRESAR',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.white,
+                                    else{
+                                      if (isChecked) {
+                                        if (password != confirmPassword){
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                                'Las contraseñas no coinciden'),
+                                          ),
+                                          );
+                                        }
+                                        else{
+                                        sendJsonData(context);
+                                        }
+                                      } else {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                                'Debes aceptar las políticas de privacidad'),
+                                          ),
+                                        );
+                                      }
+                                    }
+                                    },
+                                    child: const Text(
+                                      'INGRESAR',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
