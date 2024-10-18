@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import './screens/access_screens/starting_page.dart';
 import './screens/home_screen_user.dart';
-import './screens/main_screens/user_main_screen.dart';
+import 'screens/user_screens/user_main_screen.dart';
 
 Future<void> main() async {
   runApp(const MyApp());

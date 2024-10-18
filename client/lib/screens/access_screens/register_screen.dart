@@ -2,7 +2,7 @@ import 'dart:convert'; // For converting data to JSON format
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import '../user_profile.dart';
+//import '../user_profile.dart';
 import '../access_screens/code_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -44,13 +44,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        final int userIdResponse = responseData['userId'];
+        //final int userIdResponse = responseData['userId'];
         print(responseData);
 
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => UserProfileScreen(userId: userIdResponse),
+            builder: (context) => MfaScreen(),
           ),
         );
       } else {

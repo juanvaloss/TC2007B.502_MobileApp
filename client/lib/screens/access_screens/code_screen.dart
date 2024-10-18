@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import '../user_profile.dart';
+import '../user_screens/user_home_screen.dart';
 
 class MfaScreen extends StatelessWidget {
   MfaScreen({super.key});
@@ -35,7 +35,7 @@ class MfaScreen extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => UserProfileScreen(userId: userIdResponse),
+            builder: (context) => UserHomeScreen(),
           ),
         );
       } else {

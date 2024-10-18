@@ -2,8 +2,9 @@ import 'dart:convert'; // For converting data to JSON format
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import '../main_screens/user_main_screen.dart';
+//import '../user_screens/user_main_screen.dart';
 import '../access_screens/register_screen.dart';
+import '../access_screens/code_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController usernameController = TextEditingController();
@@ -38,7 +39,7 @@ class LoginScreen extends StatelessWidget {
 
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MapScreen()),
+          MaterialPageRoute(builder: (context) => MfaScreen()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
