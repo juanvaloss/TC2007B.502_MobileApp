@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../access_screens/code_screen.dart';
 
 class GuestContract extends StatefulWidget {
   const GuestContract({super.key});
@@ -86,7 +87,10 @@ class _GuestContractState extends State<GuestContract> {
             ElevatedButton(
               onPressed: isChecked
                   ? () {
-                // Acción cuando el botón es presionado (solo si el checkbox está marcado)
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MfaScreen())
+                );
               }
                   : null, // Deshabilitado si el checkbox no está marcado
               style: ElevatedButton.styleFrom(
