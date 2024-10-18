@@ -13,7 +13,7 @@ class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
   void sendJsonData(context) async {
-    final url = Uri.parse('http://x.x.x.x:3000/users/login');
+    final url = Uri.parse('http://192.168.101.120:3000/users/login');
 
     String email = usernameController.text;
     String password = passwordController.text;
@@ -45,7 +45,7 @@ class LoginScreen extends StatelessWidget {
           const SnackBar(
             content: Text(
                 'Invalid Credentials!. Please check the email and password and try again.'),
-            backgroundColor: Colors.red,  // You can style it to look like a warning
+            backgroundColor: Colors.red,
             duration: Duration(seconds: 3),
           ),
         );
@@ -64,10 +64,10 @@ class LoginScreen extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.of(context).pop(); // Acción del botón de regreso
+            Navigator.of(context).pop();
           },
         ),
-        elevation: 0, // Sin sombra para el AppBar
+        elevation: 0,
       ),
       body: Stack(
         children: [
@@ -98,8 +98,6 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
           ),
-
-          // Sección inferior con formulario
           Column(
             children: [
               Expanded(
@@ -116,121 +114,121 @@ class LoginScreen extends StatelessWidget {
                       topRight: Radius.circular(30.0),
                     ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 20),
-                        const Text(
-                          "Mail",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Color(0xFFB0B0B0),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        TextField(
-                          controller: usernameController,
-                          style: const TextStyle(color: Color(0xFFA0A5BA)),
-                          decoration: InputDecoration(
-                            hintText: 'example@gmail.com',
-                            hintStyle: const TextStyle(color: Color(0xFFA0A5BA)),
-                            fillColor: const Color(0xFFF0F5FA),
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide.none,
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 20),
+                          const Text(
+                            "Mail",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Color(0xFFB0B0B0),
                             ),
                           ),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9_.@]')),
-                          ],
-                        ),
-                        const SizedBox(height: 35),
-                        const Text(
-                          "Contraseña",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Color(0xFFB0B0B0),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        TextField(
-                          obscureText: true,
-                          controller: passwordController,
-                          style: const TextStyle(color: Color(0xFFA0A5BA)),
-                          decoration: InputDecoration(
-                            hintText: 'Contraseña',
-                            hintStyle: const TextStyle(color: Color(0xFFA0A5BA)),
-                            fillColor: const Color(0xFFF0F5FA),
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9_.]')),
-                          ],
-                        ),
-                        const SizedBox(height: 40),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 50,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFEF3030),
-                              shape: RoundedRectangleBorder(
+                          const SizedBox(height: 20),
+                          TextField(
+                            controller: usernameController,
+                            style: const TextStyle(color: Color(0xFFA0A5BA)),
+                            decoration: InputDecoration(
+                              hintText: 'example@gmail.com',
+                              hintStyle: const TextStyle(color: Color(0xFFA0A5BA)),
+                              fillColor: const Color(0xFFF0F5FA),
+                              filled: true,
+                              border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
+                                borderSide: BorderSide.none,
                               ),
                             ),
-                            onPressed: () {
-                              sendJsonData(context);
-                            },
-                            child: const Text(
-                              'INGRESAR',
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 50),
-                        Center(
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Text(
-                                    "¿No tienes una cuenta?",
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: (){
-                                    Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => RegisterScreen()));
-                                    },
-
-                                    child: const Text(
-                                      "REGÍSTRATE",
-                                      style: TextStyle(
-                                        color: Colors.red,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9_.@]')),
                             ],
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 35),
+                          const Text(
+                            "Contraseña",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Color(0xFFB0B0B0),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          TextField(
+                            obscureText: true,
+                            controller: passwordController,
+                            style: const TextStyle(color: Color(0xFFA0A5BA)),
+                            decoration: InputDecoration(
+                              hintText: 'Contraseña',
+                              hintStyle: const TextStyle(color: Color(0xFFA0A5BA)),
+                              fillColor: const Color(0xFFF0F5FA),
+                              filled: true,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9_.]')),
+                            ],
+                          ),
+                          const SizedBox(height: 40),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFEF3030),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                              ),
+                              onPressed: () {
+                                sendJsonData(context);
+                              },
+                              child: const Text(
+                                'INGRESAR',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 50),
+                          Center(
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Text(
+                                      "¿No tienes una cuenta?",
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: (){
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => RegisterScreen()));
+                                      },
+                                      child: const Text(
+                                        "REGÍSTRATE",
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
