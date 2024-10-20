@@ -13,6 +13,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+
   bool isChecked = false;
 
   final TextEditingController nameController = TextEditingController();
@@ -21,7 +22,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController confirmPasswordController = TextEditingController();
 
   void sendJsonData(context) async {
-    final url = Uri.parse('http://#.#.#.#:3000/users/create');
+    final url = Uri.parse('http://192.168.101.107:3000/users/create');
 
     String name = nameController.text;
     String email = emailController.text;
@@ -44,13 +45,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        //final int userIdResponse = responseData['userId'];
+        final int userIdResponse = responseData['userId'];
         print(responseData);
 
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MfaScreen(),
+            builder: (context) => MfaScreen(userId: userIdResponse),
           ),
         );
       } else {

@@ -5,12 +5,14 @@ import 'package:http/http.dart' as http;
 import '../user_screens/user_home_screen.dart';
 
 class MfaScreen extends StatelessWidget {
-  MfaScreen({super.key});
+
+  final int userId;
+  MfaScreen({super.key, required this.userId});
 
   final TextEditingController mfaController = TextEditingController();
 
   void sendJsonData(context) async {
-    final url = Uri.parse('http://#.#.#.#:3000/users/create');
+    final url = Uri.parse('http://192.168.101.107:3000/users/create');
 
     String mfaCode = mfaController.text;
 
