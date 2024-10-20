@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 //import '../user_profile.dart';
 import '../access_screens/code_screen.dart';
+import '../access_screens/privacyNoticeScreen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -268,70 +269,71 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                           // Checkbox and policies
                           const SizedBox(height: 10),
-                          Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Checkbox(
+                                value: isChecked,
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    isChecked = value ?? false;
+                                  });
+                                },
+                              ),
+                              const SizedBox(width: 10),
+                              RichText(
+                                text: TextSpan(
+                                  text: "He leído y acepto la ",
+                                  style: TextStyle(color: Colors.black),
                                   children: [
-                                    Checkbox(
-                                      value: isChecked,
-                                      onChanged: (bool? value) {
-                                        setState(() {
-                                          isChecked = value ?? false;
-                                        });
-                                      },
-                                    ),
-                                    const SizedBox(width: 20),
-                                    const Text.rich(
-                                      TextSpan(
-                                        text: "He leído y acepto la ",
-                                        children: <TextSpan>[
-                                          TextSpan(
-                                            text: "\npolítica de privacidad",
-                                            style: TextStyle(
-                                                color: Color(0xFFEF3030)),
-                                          )
-                                        ],
+                                    WidgetSpan(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => PrivacyNoticeScreen()));
+                                        },
+                                        child: const Text(
+                                          "política de privacidad",
+                                          style: TextStyle(
+                                            color: Color(0xFFEF3030),
+                                            decoration: TextDecoration.underline, // Subrayar el texto
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
-
-                                // Button
-                                const SizedBox(height: 10),
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 50,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFFEF3030),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10.0),
-                                      ),
-                                    ),
-                                    onPressed: () {
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                                child: ElevatedButton(
+                                  onPressed: isChecked
+                                      ? () {
                                     if(password.isEmpty  || email.isEmpty || name.isEmpty || confirmPassword.isEmpty){
                                       ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                                'Por favor llena todos los campos requeridos'),
-                                          ),
-                                          );
+                                        const SnackBar(
+                                          content: Text(
+                                              'Por favor llena todos los campos requeridos'),
+                                        ),
+                                      );
                                     }
                                     else{
                                       if (isChecked) {
                                         if (password != confirmPassword){
                                           ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                                'Las contraseñas no coinciden'),
-                                          ),
+                                            const SnackBar(
+                                              content: Text(
+                                                  'Las contraseñas no coinciden'),
+                                            ),
                                           );
                                         }
                                         else{
-                                        sendJsonData(context);
+                                          sendJsonData(context);
                                         }
                                       } else {
                                         ScaffoldMessenger.of(context).showSnackBar(
@@ -342,19 +344,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         );
                                       }
                                     }
-                                    },
-                                    child: const Text(
-                                      'INGRESAR',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.white,
-                                      ),
+                                  }
+                                      : null, // Deshabilitado si el checkbox no está marcado
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFEF3030),
+                                    foregroundColor: Colors.white,
+                                    minimumSize: const Size(200, 40),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
                                     ),
                                   ),
+                                  child: const Text('Registrarme',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+
                                 ),
-                              ],
-                            ),
+
                           ),
+
                         ],
                       ),
                     ),

@@ -32,17 +32,19 @@ const createUser = async (req, res) => {
     try {
         const userInfo = await userModel.isInUsers(email, plainPassword);
     
-        if (userInfo.isMatch === true) {
+        if (userInfo.isMatch === false) {
             const otpCode = await sendOTP(email);
             const assignCodeOk = await tfaModel.assignCode(userInfo.user.id, otpCode);
 
             if(assignCodeOk === true){
                 const response = await userModel.createUser(name, email, plainPassword);
                 res.status(200).json({ success: true, message: 'Creation succesful!', userId: response.id});
+            }else{
+                throw false;
             }
             
         } else {
-            res.status(401).json({ success: false, message: 'Invalid credentials' });
+            res.status(401).json({ success: false, message: 'Already in database, login please.' });
         }
 
         

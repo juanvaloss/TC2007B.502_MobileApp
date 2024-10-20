@@ -90,8 +90,7 @@ const getUserCenters = async (userId) => {
       const { data, error } = await supabase
         .from('centers')
         .select('centerName, centerAddress, latitude, longitude')
-        .eq('centerAdmin', userId)
-        .single();
+        .eq('centerAdmin', userId);
   
       if (error) {
         throw new Error(`Error fetching user centers: ${error.message}`);

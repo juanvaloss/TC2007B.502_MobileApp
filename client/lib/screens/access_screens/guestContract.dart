@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import '../access_screens/privacyNoticeScreen.dart';
 
 class GuestContract extends StatefulWidget {
   const GuestContract({super.key});
@@ -65,8 +67,9 @@ class _GuestContractState extends State<GuestContract> {
                       WidgetSpan(
                         child: GestureDetector(
                           onTap: () {
-                            // Acción cuando se presiona el botón de "política de privacidad"
-                            print('Política de privacidad presionada');
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => PrivacyNoticeScreen()));
                           },
                           child: const Text(
                             "política de privacidad",
