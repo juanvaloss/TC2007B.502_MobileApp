@@ -26,16 +26,22 @@ const isInUsers = async (email, plainPassword) => {
         throw new Error(`Error executing query: ${error.message}`);
       }
   
-      if (data.length === 0) {
+      if (data.length > 0) {
+        console.log('User found');
+        const user = data[0];
+        const storedHashedPassword = user.password; 
+        const isMatch = await bcrypt.compare(plainPassword, storedHashedPassword);
+        return {isMatch, user}
+      }
+
+      else{
+        const user = 0;
+        isMatch = false;
         console.log('User not found');
-        return false;
+        return {isMatch, user}
       }
   
-      const user = data[0];
-      const storedHashedPassword = user.password;
-  
-      const isMatch = await bcrypt.compare(plainPassword, storedHashedPassword);
-      return { isMatch, user };
+      
     } catch (err) {
       console.error('Error fetching user:', err);
       throw err;
