@@ -5,17 +5,20 @@ import 'package:http/http.dart' as http;
 import '../user_screens/user_home_screen.dart';
 
 class MfaScreen extends StatelessWidget {
-  MfaScreen({super.key});
+
+  final int userId;
+  MfaScreen({super.key, required this.userId});
 
   final TextEditingController mfaController = TextEditingController();
 
   void sendJsonData(context) async {
-    final url = Uri.parse('http://#.#.#.#:3000/users/create');
+    final url = Uri.parse('http://x.x.x.x:3000/tfa/');
 
     String mfaCode = mfaController.text;
 
     Map<String, dynamic> jsonData = {
-      'code': mfaCode
+      'userId':  userId,
+      'codeSentForVeri': mfaCode
     };
 
     try {
@@ -126,6 +129,7 @@ class MfaScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 20),
                           TextField(
+                            controller: mfaController,
                             decoration: InputDecoration(
                               labelText: "Escribe el código",
                               border: OutlineInputBorder(
@@ -143,9 +147,8 @@ class MfaScreen extends StatelessWidget {
                             style: const TextStyle(
                               color: Color(0xFFA0A5BA),
                             ),
-                            keyboardType: TextInputType.number,
                             inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
+                              FilteringTextInputFormatter.allow(RegExp('[0-9]'))
                             ],
                           ),
                           const SizedBox(height: 30),
