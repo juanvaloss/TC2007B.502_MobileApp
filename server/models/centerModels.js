@@ -24,7 +24,7 @@ const getAllCoordinates = async () => {
   try {
     const { data, error } = await supabase
       .from('centers')
-      .select('id, latitude, longitude');
+      .select('id, centerName ,latitude, longitude');
 
     if (error) {
       throw new Error(`Error executing query: ${error.message}`);
