@@ -75,7 +75,7 @@ const getUserInfo = async (userId) => {
     try {
       const { data, error } = await supabase
         .from('users')
-        .select('name, email, isCenterAdmin')
+        .select('*')
         .eq('id', userId)
         .single();
   
