@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const StartingPage(),
-        '/homeUser': (context) => HomeScreenUser(),
+        //'/homeUser': (context) => UserHomeScreen(),
         '/map': (context) => MapScreen(),  // Add the map screen to routes
       },
     );

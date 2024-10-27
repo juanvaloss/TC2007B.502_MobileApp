@@ -32,14 +32,12 @@ class MfaScreen extends StatelessWidget {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        final int userIdResponse = responseData['userId'];
+        final int userIdResponse = responseData['id'];
         print(responseData);
 
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => UserHomeScreen(),
-          ),
+          MaterialPageRoute(builder: (context) => UserHomeScreen(userId: userIdResponse)),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
