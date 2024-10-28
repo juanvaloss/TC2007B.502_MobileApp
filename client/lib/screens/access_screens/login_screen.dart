@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import '../access_screens/register_screen.dart';
 import '../access_screens/code_screen.dart';
+import '../user_profile.dart';
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController usernameController = TextEditingController();
@@ -13,7 +14,7 @@ class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
   void sendJsonData(context) async {
-    final url = Uri.parse('http://192.168.101.111:3000/users/login');
+    final url = Uri.parse('http://192.168.100.9:3000/users/login');
 
     String email = usernameController.text;
     String password = passwordController.text;
@@ -40,6 +41,7 @@ class LoginScreen extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => MfaScreen(userId: userIdResponse)),
+
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

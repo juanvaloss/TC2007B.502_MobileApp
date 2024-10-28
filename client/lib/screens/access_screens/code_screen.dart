@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import '../user_screens/user_home_screen.dart';
+import '../user_profile.dart';
 
 class MfaScreen extends StatelessWidget {
 
@@ -12,7 +13,7 @@ class MfaScreen extends StatelessWidget {
   final TextEditingController mfaController = TextEditingController();
 
   void sendJsonData(context) async {
-    final url = Uri.parse('http://192.168.101.111:3000/tfa/');
+    final url = Uri.parse('http://192.168.100.9:3000/tfa/');
 
     String mfaCode = mfaController.text;
 
@@ -37,6 +38,7 @@ class MfaScreen extends StatelessWidget {
 
         Navigator.push(
           context,
+          //MaterialPageRoute(builder: (context) => UserProfileScreen(userId: userIdResponse)),
           MaterialPageRoute(builder: (context) => UserHomeScreen(userId: userIdResponse)),
         );
       } else {
