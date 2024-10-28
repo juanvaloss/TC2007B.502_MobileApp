@@ -17,8 +17,8 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       initialRoute: '/',
       routes: {
-        '/': (context) => const StartingPage(),
-        //'/': (context) => UserHomeScreen(userId: 0),
+        //'/': (context) => const StartingPage(),
+        '/': (context) => UserHomeScreen(userId: 0),
         //'/homeUser': (context) => UserHomeScreen(),
         '/map': (context) => MapScreen(),  // Add the map screen to routes
       },
