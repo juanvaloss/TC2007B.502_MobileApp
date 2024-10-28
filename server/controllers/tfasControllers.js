@@ -1,5 +1,6 @@
 const tfaModel = require("../models/tfasModels")
 const userModel = require("../models/userModels")
+const {sendOTP} = require("../config/mg")
 
 const verifyOTP = async ( savedOtp, userSentOtp, codeTimestamp) => {
   
@@ -49,5 +50,28 @@ const twoFactAuthVerification = async(req, res) => {
     }
 }
 
+const getNewCode = async(req, res) =>{
+    const { userId, email } = req.body;
+    
+
+    try{
+        const otpCode = await sendOTP(email);
+        if(otpCode === null){
+            console.error('Error in assigning new code.', err);
+            res.status(500).json({ success: false, message: 'Server error' });
+        }
+
+        const assignCodeOk = await tfaModel.assignCode(userId, otpCode);
+
+        res.status(200).json({ success: true, message: 'New code was sent succesfully!', userId: userId});
+        
+
+    }catch(err){
+        console.error('Error in assigning new code.', err);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+
+}
+
   
-module.exports = {twoFactAuthVerification}
+module.exports = {twoFactAuthVerification, getNewCode}

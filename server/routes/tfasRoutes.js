@@ -3,5 +3,7 @@ const router = express.Router();
 const tfaController = require("../controllers/tfasControllers");
 
 router.post('/', tfaController.twoFactAuthVerification);
+router.post('/newCode', tfaController.getNewCode);
+
 
 module.exports = router;
