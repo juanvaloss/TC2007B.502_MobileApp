@@ -14,6 +14,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "form-data": "^4.0.1",
+    "lru-cache": "^11.0.1",
     "mailgun.js": "^10.2.3",
     "node-fetch": "^3.3.2",
     "nodemailer": "^6.9.15",
