@@ -37,4 +37,22 @@ const getAllCoordinates = async () => {
   }
 };
 
-module.exports = { createCenter, getAllCoordinates };
+const getAdminApprovedCenters = async(adminId) => {
+  try {
+      const { data, error } = await supabase
+        .from('centers')
+        .select('*')
+        .eq('approvedBy', adminId);
+  
+      if (error) {
+        throw new Error(`Error fetching admin approved centers: ${error.message}`);
+      }
+  
+      return data;
+    } catch (err) {
+      console.error('Error fetching admin approved centers:', err);
+      throw err;
+    }
+}
+
+module.exports = { createCenter, getAllCoordinates, getAdminApprovedCenters };

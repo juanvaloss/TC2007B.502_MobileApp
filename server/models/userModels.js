@@ -76,11 +76,19 @@ const getUserInfo = async (userId) => {
       const { data, error } = await supabase
         .from('users')
         .select('id, name, email, isCenterAdmin')
-        .eq('id', userId)
-        .single();
+        .eq('id', userId);
   
-      if (error) {
-        throw new Error(`Error fetching user info: ${error.message}`);
+      if (data.length > 0) {
+          console.log('User found');
+          const user = data[0];
+          return user;
+      }
+  
+      else{
+          const user = 0;
+          isMatch = false;
+          console.log('User not found in table users');
+          return user;
       }
   
       return data;

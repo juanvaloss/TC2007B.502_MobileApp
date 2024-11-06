@@ -11,14 +11,16 @@ const loginUser = async (req, res) => {
     
         if (userInfo.isMatch === true) {
             const otpCode = await sendOTP(email);
-            const assignCodeOk = await tfaModel.assignCode(userInfo.user.id, otpCode);
+            const assignCodeOk = await tfaModel.assignCodetoUser(userInfo.user.id, otpCode);
 
             if(assignCodeOk === true){
-                res.status(200).json({ success: true, message: 'Login succesful!', userId: userInfo.user.id});
+                res.status(200).json({ success: true, message: 'User login succesful!', userId: userInfo.user.id});
+                return true;
             }
             
         } else {
             res.status(401).json({ success: false, message: 'Invalid credentials' });
+            return false;
         }
     } catch (err) {
         console.error('Error in loginStudent controller', err);
@@ -62,7 +64,7 @@ const getUserInfo = async(req, res) =>{
         res.json(response);
 
     }catch(err){
-        console.error('Error in creation of users controller', err);
+        console.error('Error in getting user info', err);
         res.status(500).json({ success: false, message: 'Server error' });
     }
 }

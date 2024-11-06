@@ -1,6 +1,8 @@
 const tfaModel = require("../models/tfasModels")
 const userModel = require("../models/userModels")
-const {sendOTP} = require("../config/mg")
+const adminModel = require("../models/adminsModels")
+const {sendOTP} = require("../config/mg");
+const e = require("express");
 
 const verifyOTP = async ( savedOtp, userSentOtp, codeTimestamp) => {
   
@@ -31,16 +33,33 @@ const verifyOTP = async ( savedOtp, userSentOtp, codeTimestamp) => {
 const twoFactAuthVerification = async(req, res) => {
     const { userId, codeSentForVeri } = req.body;
     try{
-        const response1 = await tfaModel.getLatestCode(userId);
+
+        let response1 = await tfaModel.getLatestCodeUser(userId);
+
+        if (!response1) {
+            response1 = await tfaModel.getLatestCodeAdmin(userId);
+            console.log(response1)
+        }
+
         const savedOtpCode = response1.code;
         const codeTimestamp = response1.createdAt;
         const verificationStatus = await verifyOTP(savedOtpCode, codeSentForVeri, codeTimestamp);
 
         if(verificationStatus === true){
+
             const userInfo = await userModel.getUserInfo(userId);
-            res.status(200).json(userInfo)
-            await tfaModel.eraseAllUserCodes(userId);
+            const adminInfo = await adminModel.getAdminInfo(userId);
+
             
+            if(adminInfo){
+                res.status(200).json({adminInfo, isBamxAdmin: true})
+                await tfaModel.eraseAllAdminCodes(userId);
+            }
+            else{
+                res.status(200).json({userInfo, isBamxAdmin: false})
+                await tfaModel.eraseAllUserCodes(userId);
+            }
+            return true;
         }
         return false;
     }catch(err){

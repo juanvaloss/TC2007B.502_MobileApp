@@ -1,6 +1,5 @@
 const centerModel = require("../models/centerModels")
 const userModel = require("../models/userModels")
-const getCoordinatesBAddress = require("./coordinatesControllers");
 
 const createCenter = async(req, res) =>{
     const { userId, adminId, centerNa, centerAdd, currentCapac ,totalCapac, acceptsM, acceptsV, acceptsC } = req.body;

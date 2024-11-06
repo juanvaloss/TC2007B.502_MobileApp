@@ -65,22 +65,32 @@ const createAdmin = async (name, email, plainPassword) => {
 };
 
 //
-const getAdminApprovedCenters = async(adminId) => {
-    try {
-        const { data, error } = await supabase
-          .from('centers')
-          .select('*')
-          .eq('administrator', adminId);
-    
-        if (error) {
-          throw new Error(`Error fetching user centers: ${error.message}`);
-        }
-    
-        return data;
-      } catch (err) {
-        console.error('Error fetching user centers:', err);
-        throw err;
+const getAdminInfo = async (userId) => {
+  try {
+    const { data, error } = await supabase
+      .from('admins')
+      .select('id, name, email')
+      .eq('id', userId);
+  
+      if (data.length > 0) {
+        console.log('Admin found');
+        const user = data[0];
+        return user;
       }
-}
 
-module.exports = {isInAdmins, createAdmin, getAdminApprovedCenters}
+      else{
+          const user = 0;
+          isMatch = false;
+          console.log('Admin not found in table admins');
+          return user;
+      }
+  
+      return data;
+  } catch (err) {
+    console.error('Error fetching admin info:', err);
+    throw err;
+  }
+};
+
+
+module.exports = {isInAdmins, createAdmin, getAdminInfo};
