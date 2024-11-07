@@ -55,4 +55,22 @@ const getAdminApprovedCenters = async(adminId) => {
     }
 }
 
-module.exports = { createCenter, getAllCoordinates, getAdminApprovedCenters };
+const getCenterInfo = async (centerId) => {
+  try {
+    const { data, error } = await supabase
+      .from('centers')
+      .select('*')
+      .eq('id', centerId);
+
+    if (error) {
+      throw new Error(`Error fetching center info: ${error.message}`);
+    }
+
+    return data[0];
+  } catch (err) {
+    console.error('Error fetching center info:', err);
+    throw err;
+  }
+};
+
+module.exports = { createCenter, getAllCoordinates, getAdminApprovedCenters, getCenterInfo };
