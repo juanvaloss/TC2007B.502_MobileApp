@@ -27,7 +27,7 @@ const getAllCoordinates = async(req, res) =>{
 }
 
 const getCenterInfo = async(req, res) =>{
-    const {centerId} = req.params.id;
+    const {centerId} = req.body;
     try{
         const center = await centerModel.getCenterInfo(centerId);
         res.json(center);

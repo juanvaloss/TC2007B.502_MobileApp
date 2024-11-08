@@ -66,7 +66,7 @@ const getCenterInfo = async (centerId) => {
       throw new Error(`Error fetching center info: ${error.message}`);
     }
 
-    return data[0];
+    return data;
   } catch (err) {
     console.error('Error fetching center info:', err);
     throw err;
