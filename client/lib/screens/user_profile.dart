@@ -34,8 +34,8 @@ class _UserInfoScreenState extends State<UserProfileScreen> {
 
   Future<void> fetchUserInfo() async {
     try {
-      final url1 = Uri.parse('http://192.168.100.9:3000/users/userInfo');
-      final url2 = Uri.parse('http://192.168.100.9:3000/users/userCenters');
+      final url1 = Uri.parse('http://192.168.101.125:3000/users/userInfo');
+      final url2 = Uri.parse('http://192.168.101.125:3000/users/userCenters');
 
       Map<String, dynamic> jsonData = {
         'userId': widget.userId,

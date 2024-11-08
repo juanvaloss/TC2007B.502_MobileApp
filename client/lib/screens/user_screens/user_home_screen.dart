@@ -39,7 +39,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   }
 
   Future<void> fetchData() async {
-    final url = Uri.parse('http://x.x.x.x:3000/centers/coordinates'); // Replace with your API URL
+    final url = Uri.parse('http://192.168.101.125:3000/centers/coordinates'); // Replace with your API URL
 
     try {
       final response = await http.get(url);

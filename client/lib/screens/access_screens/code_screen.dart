@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import '../user_screens/user_home_screen.dart';
-import '../user_profile.dart';
+import '../bamxscreens/bamx_admin_home.dart';
 
 class MfaScreen extends StatelessWidget {
 
@@ -13,7 +13,7 @@ class MfaScreen extends StatelessWidget {
   final TextEditingController mfaController = TextEditingController();
 
   void sendJsonData(context) async {
-    final url = Uri.parse('http://192.168.100.9:3000/tfa/');
+    final url = Uri.parse('http://192.168.101.125:3000/tfa/');
 
     String mfaCode = mfaController.text;
 
@@ -33,12 +33,16 @@ class MfaScreen extends StatelessWidget {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        final int userIdResponse = responseData['id'];
+        final int userIdResponse = responseData['userInfo']['id'];
+
+        // si no es admin MaterialPageRoute(builder: (context) => UserHomeScreen(userId: userIdResponse)),
+        //si es admin MaterialPageRoute(builder: (context) => BamxAdminHome(userId: userIdResponse)),
         print(responseData);
 
         Navigator.push(
-          context,
-          //MaterialPageRoute(builder: (context) => UserProfileScreen(userId: userIdResponse)),
+          context,  
+           // si no es admin MaterialPageRoute(builder: (context) => UserHomeScreen(userId: userIdResponse)),
+          //si es admin MaterialPageRoute(builder: (context) => BamxAdminHome(userId: userIdResponse)),
           MaterialPageRoute(builder: (context) => UserHomeScreen(userId: userIdResponse)),
         );
       } else {
@@ -99,7 +103,7 @@ class MfaScreen extends StatelessWidget {
                 ],
               ),
             ),
-          ),
+            ),
           Column(
             children: [
               Expanded(flex: 2, child: Container()),
