@@ -33,18 +33,23 @@ class MfaScreen extends StatelessWidget {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        final int userIdResponse = responseData['userInfo']['id'];
+        final bool isBamxAdmin = responseData['isBamxAdmin'];
 
-        // si no es admin MaterialPageRoute(builder: (context) => UserHomeScreen(userId: userIdResponse)),
-        //si es admin MaterialPageRoute(builder: (context) => BamxAdminHome(userId: userIdResponse)),
-        print(responseData);
+        if(isBamxAdmin){
+          final int adminIdResponse = responseData['adminInfo']['id'];
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => BamxAdminHome(userId: adminIdResponse)),
+          );
 
-        Navigator.push(
-          context,  
-           // si no es admin MaterialPageRoute(builder: (context) => UserHomeScreen(userId: userIdResponse)),
-          //si es admin MaterialPageRoute(builder: (context) => BamxAdminHome(userId: userIdResponse)),
-          MaterialPageRoute(builder: (context) => UserHomeScreen(userId: userIdResponse)),
-        );
+        }else{
+          final int userIdResponse = responseData['userInfo']['id'];
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => UserHomeScreen(userId: userIdResponse)),
+          );
+        }
+
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

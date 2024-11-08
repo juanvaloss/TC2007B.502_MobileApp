@@ -8,7 +8,9 @@ import '../user_profile.dart';
 
 
 class BamxAdminHome extends StatefulWidget {
-  const BamxAdminHome({super.key});
+  final int userId;
+
+  BamxAdminHome({required this.userId, super.key});
 
   @override
   _BamxAdminHome createState() => _BamxAdminHome();
