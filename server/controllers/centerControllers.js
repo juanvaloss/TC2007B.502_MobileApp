@@ -1,5 +1,33 @@
 const centerModel = require("../models/centerModels")
 const userModel = require("../models/userModels")
+const axios = require('axios');
+require('dotenv').config();
+
+const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
+
+async function getCoordinatesBAddress(address) {
+    try {
+      const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json`, {
+        params: {
+          address: address,
+          key: GOOGLE_MAPS_API_KEY,
+        },
+      });
+  
+      if (response.data.status === 'OK') {
+        const location = response.data.results[0].geometry.location;
+        return {
+          lat: location.lat,
+          lng: location.lng,
+        };
+      } else {
+        throw new Error('No results found for the specified address');
+      }
+    } catch (error) {
+      console.error('Error fetching coordinates:', error);
+      throw error;
+    }
+  }
 
 const createCenter = async(req, res) =>{
     const { userId, adminId, centerNa, centerAdd, currentCapac ,totalCapac, acceptsM, acceptsV, acceptsC } = req.body;
