@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../user_profile.dart';
+import '../user_screens/more_info_center.dart';
 
 class LocationCenter {
   final int id;
@@ -46,6 +47,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
+        print('Data received: $data'); // Debugging line
 
         setState(() {
           centers = data.map((item) => LocationCenter.fromJson(item)).toList();
@@ -135,7 +137,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                               Align(
                                 alignment: Alignment.bottomRight,
                                 child: FloatingActionButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => MoreInfoCenter(userId: widget.userId, centerId: center.id)),
+                                    );
+                                  },
                                   mini: true,
                                   backgroundColor: Colors.red,
                                   foregroundColor: Colors.white,
