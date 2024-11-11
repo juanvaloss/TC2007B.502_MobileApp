@@ -3,6 +3,7 @@ import 'package:flutter_application_1/screens/user_screens/user_home_screen.dart
 import './screens/access_screens/starting_page.dart';
 import './screens/home_screen_user.dart';
 import 'screens/user_screens/user_main_screen.dart';
+import 'screens/user_screens/more_info_center.dart';
 
 Future<void> main() async {
   runApp(const MyApp());
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const StartingPage(),
+        //'/': (context) => const MoreInfoCenter(userId: 0, centerId: 3),
         //'/': (context) => UserHomeScreen(userId: 0),
         //'/homeUser': (context) => UserHomeScreen(),
         '/map': (context) => MapScreen(),  // Add the map screen to routes
