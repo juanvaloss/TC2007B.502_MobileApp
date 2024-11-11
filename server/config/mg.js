@@ -64,10 +64,11 @@ const sendOTP = async(email) =>{
     </head>
     <body>
       <div class="container">
-        <h2>Your Verification Code</h2>
-        <p class="message">Use the following code to complete your login:</p>
+        <img src="https://uctmljqxrlpurcutbicl.supabase.co/storage/v1/object/public/imagesOfCenters/bamx-logo.png" alt="Logo BAMX" width="200" height="160">
+        <h2>Su Código de Verificación</h2>
+        <p class="message">Use el siguiente código para la verificación:</p>
         <div class="code">${otpCode}</div>
-        <p class="footer">This code will expire in 10 minutes. Please do not share it with anyone.</p>
+        <p class="footer">Este código expirará en 10 minutos. Por favor, no lo comparta con nadie.</p>
       </div>
     </body>
     </html>
