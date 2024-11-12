@@ -69,7 +69,7 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Centro de acopio: ${centerInfo!['centerName']}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  //Text('Centro de acopio: ${centerInfo!['centerName']}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   SizedBox(height: 10),
                   Text('ID: ${widget.centerId}'),
                   // Agrega más campos según la información disponible en centerInfo

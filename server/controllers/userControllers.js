@@ -3,31 +3,6 @@ const tfaModel = require("../models/tfasModels");
 const {sendOTP} = require("../config/mg")
 
 
-const loginUser = async (req, res) => {
-    const { email, plainPassword } = req.body;
-
-    try {
-        const userInfo = await userModel.isInUsers(email, plainPassword);
-    
-        if (userInfo.isMatch === true) {
-            const otpCode = await sendOTP(email);
-            const assignCodeOk = await tfaModel.assignCodetoUser(userInfo.user.id, otpCode);
-
-            if(assignCodeOk === true){
-                res.status(200).json({ success: true, message: 'User login succesful!', userId: userInfo.user.id});
-                return true;
-            }
-            
-        } else {
-            res.status(401).json({ success: false, message: 'Invalid credentials' });
-            return false;
-        }
-    } catch (err) {
-        console.error('Error in loginStudent controller', err);
-        res.status(500).json({ success: false, message: 'Server error' });
-    }
-};
-
 const createUser = async (req, res) => {
     const { name, email, plainPassword } = req.body;
     
@@ -95,4 +70,4 @@ const updateAdminValue = async(req, res) =>{
 
 
 
-module.exports = { createUser, loginUser, getUserInfo, getUserCenters, updateAdminValue};
+module.exports = { createUser, getUserInfo, getUserCenters, updateAdminValue};

@@ -48,9 +48,7 @@ const twoFactAuthVerification = async(req, res) => {
         if(verificationStatus === true){
 
             const userInfo = await userModel.getUserInfo(userId);
-            const adminInfo = await adminModel.getAdminInfo(userId);
-
-            
+            const adminInfo = await adminModel.getAdminInfo(userId);      
             if(adminInfo){
                 res.status(200).json({adminInfo, isBamxAdmin: true})
                 await tfaModel.eraseAllAdminCodes(userId);
@@ -71,7 +69,6 @@ const twoFactAuthVerification = async(req, res) => {
 
 const getNewCode = async(req, res) =>{
     const { userId, email } = req.body;
-    
 
     try{
         const otpCode = await sendOTP(email);
@@ -80,7 +77,7 @@ const getNewCode = async(req, res) =>{
             res.status(500).json({ success: false, message: 'Server error' });
         }
 
-        const assignCodeOk = await tfaModel.assignCode(userId, otpCode);
+        const assignCodeOk = await tfaModel.assignCodetoUser(userId, otpCode);
 
         res.status(200).json({ success: true, message: 'New code was sent succesfully!', userId: userId});
         

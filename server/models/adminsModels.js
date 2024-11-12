@@ -27,7 +27,7 @@ const isInAdmins = async (email, plainPassword) => {
       }
   
       if (data.length === 0) {
-        console.log('User not found');
+        console.log('Admin not found');
         return false;
       }
   

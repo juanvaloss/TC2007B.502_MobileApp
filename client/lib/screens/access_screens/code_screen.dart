@@ -8,12 +8,14 @@ import '../bamxscreens/bamx_admin_home.dart';
 class MfaScreen extends StatelessWidget {
 
   final int userId;
-  MfaScreen({super.key, required this.userId});
+  final String userEmail;
+
+  MfaScreen({super.key, required this.userId, required this.userEmail});
 
   final TextEditingController mfaController = TextEditingController();
 
   void sendJsonData(context) async {
-    final url = Uri.parse('http://192.168.101.125:3000/tfa/');
+    final url = Uri.parse('http://192.168.101.118:3000/tfa/');
 
     String mfaCode = mfaController.text;
 
@@ -64,6 +66,25 @@ class MfaScreen extends StatelessWidget {
     }
   }
 
+  void getNewCode() async{
+    final url = Uri.parse('http://192.168.101.118:3000/tfa/');
+
+    Map<String, dynamic> jsonData = {
+      'userId':  userId,
+      'email': userEmail
+    };
+
+    try{
+
+
+    }catch (e) {
+      print('Error: $e');
+    }
+
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -73,10 +94,10 @@ class MfaScreen extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.of(context).pop(); // Acción del botón de regreso
+            Navigator.of(context).pop();
           },
         ),
-        elevation: 0, // Sin sombra para el AppBar
+        elevation: 0,
       ),
       body: Stack(
         children: [
@@ -91,7 +112,7 @@ class MfaScreen extends StatelessWidget {
                     "Ingresa el código",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 24,
+                      fontSize: 30,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -101,6 +122,7 @@ class MfaScreen extends StatelessWidget {
                       "Mandamos un código de verificación de 6 dígitos a tu correo electrónico",
                       style: TextStyle(
                         color: Colors.white,
+                        fontSize: 17
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -118,47 +140,52 @@ class MfaScreen extends StatelessWidget {
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30.0),
-                      topRight: Radius.circular(30.0),
+                      topLeft: Radius.circular(20.0),
+                      topRight: Radius.circular(20.0),
                     ),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: SingleChildScrollView(
                       physics: const ClampingScrollPhysics(),
+
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text(
-                            "Ingresa el código: ",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                          SizedBox(height: 45),
+                          SizedBox(
+                            width: 300,
+                            height: 150,
+                            child: TextField(
+                              controller: mfaController,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                LengthLimitingTextInputFormatter(6),
+                              ],
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 45,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 12,
+                                color: Colors.black,
+                              ),
+                              decoration: InputDecoration(
+                                labelText: "     Escribe el código",
+                                labelStyle: TextStyle(fontSize: 24, color: Colors.grey[500]),
+                                hintText: "123456",
+                                hintStyle: TextStyle(color: Colors.grey[400]),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: BorderSide.none,
+                                ),
+                                filled: true,
+                                fillColor: const Color(0xFFF0F5FA),
+                                isDense: true,
+                                contentPadding: const EdgeInsets.symmetric(vertical: 12),
                             ),
                           ),
-                          const SizedBox(height: 20),
-                          TextField(
-                            controller: mfaController,
-                            decoration: InputDecoration(
-                              labelText: "Escribe el código",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                borderSide: BorderSide.none,
-                              ),
-                              hintText: 'Ingresa tu nombre completo:',
-                              hintStyle: const TextStyle(
-                                color: Color(0xFFA0A5BA),
-                              ),
-                              filled: true,
-                              fillColor: const Color(0xFFF0F5FA),
-                              isDense: true,
-                            ),
-                            style: const TextStyle(
-                              color: Color(0xFFA0A5BA),
-                            ),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(RegExp('[0-9]'))
-                            ],
                           ),
                           const SizedBox(height: 30),
                           Padding(
@@ -170,15 +197,19 @@ class MfaScreen extends StatelessWidget {
                                     "¿No recibiste un código?",
                                     style: TextStyle(
                                       color: Color(0xFF646982),
+                                      fontSize: 18
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
                                   TextButton(
-                                    onPressed: (){},
-                                    style: TextButton.styleFrom(
-                                      foregroundColor: const Color(0xFFEF3030)
-                                    ),
-                                    child: const Text("Volver a envíar"),
+                                    onPressed: (){
+                                      getNewCode();
+                                    },
+                                    child: const Text("Volver a enviar",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Color(0xFFEF3030)
+                                    ),),
                                   )
                                 ],
                               ),
@@ -199,9 +230,9 @@ class MfaScreen extends StatelessWidget {
                                       sendJsonData(context);
                                     },
                                     child: const Text(
-                                      'INGRESAR',
+                                      'Ingresar',
                                       style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: 24,
                                         color: Colors.white,
                                       ),
                                     ),

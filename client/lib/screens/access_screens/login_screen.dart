@@ -14,7 +14,7 @@ class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
   void sendJsonData(context) async {
-    final url = Uri.parse('http://192.168.101.125:3000/users/login');
+    final url = Uri.parse('http://192.168.101.118:3000/login/global');
 
     String email = usernameController.text;
     String password = passwordController.text;
@@ -35,12 +35,22 @@ class LoginScreen extends StatelessWidget {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        final int userIdResponse = responseData['userId'];
-        print(responseData);
+        final int type = responseData['type'];
+        int userIdResponse;
 
+        if(type == 1){
+          userIdResponse = responseData['userId'];
+          print(userIdResponse);
+
+        }
+        else{
+          userIdResponse = responseData['adminId'];
+          print(userIdResponse);
+
+        }
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MfaScreen(userId: userIdResponse)),
+          MaterialPageRoute(builder: (context) => MfaScreen(userId: userIdResponse, userEmail: email)),
 
         );
       } else {
@@ -82,10 +92,10 @@ class LoginScreen extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    "Log in",
+                    "Inicia sesión",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 30,
+                      fontSize: 35,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -93,7 +103,7 @@ class LoginScreen extends StatelessWidget {
                   Text(
                     "Por favor ingresa los datos de tu cuenta",
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 18,
                       color: Colors.white,
                     ),
                   ),
@@ -127,14 +137,14 @@ class LoginScreen extends StatelessWidget {
                           const Text(
                             "Mail",
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 19,
                               color: Color(0xFFB0B0B0),
                             ),
                           ),
                           const SizedBox(height: 20),
                           TextField(
                             controller: usernameController,
-                            style: const TextStyle(color: Color(0xFFA0A5BA)),
+                            style: const TextStyle(color: Color(0xFFA0A5BA), fontSize: 18),
                             decoration: InputDecoration(
                               hintText: 'example@gmail.com',
                               hintStyle: const TextStyle(color: Color(0xFFA0A5BA)),
@@ -153,7 +163,7 @@ class LoginScreen extends StatelessWidget {
                           const Text(
                             "Contraseña",
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 19,
                               color: Color(0xFFB0B0B0),
                             ),
                           ),
@@ -161,7 +171,7 @@ class LoginScreen extends StatelessWidget {
                           TextField(
                             obscureText: true,
                             controller: passwordController,
-                            style: const TextStyle(color: Color(0xFFA0A5BA)),
+                            style: const TextStyle(color: Color(0xFFA0A5BA), fontSize: 18),
                             decoration: InputDecoration(
                               hintText: 'Contraseña',
                               hintStyle: const TextStyle(color: Color(0xFFA0A5BA)),
@@ -193,7 +203,7 @@ class LoginScreen extends StatelessWidget {
                               child: const Text(
                                 'INGRESAR',
                                 style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize: 21,
                                   color: Colors.white,
                                 ),
                               ),
@@ -210,6 +220,7 @@ class LoginScreen extends StatelessWidget {
                                       "¿No tienes una cuenta?",
                                       style: TextStyle(
                                         color: Colors.grey,
+                                        fontSize: 17
                                       ),
                                     ),
                                     TextButton(
@@ -219,8 +230,9 @@ class LoginScreen extends StatelessWidget {
                                             MaterialPageRoute(builder: (context) => RegisterScreen()));
                                       },
                                       child: const Text(
-                                        "REGÍSTRATE",
+                                        "REGISTRATE",
                                         style: TextStyle(
+                                          fontSize: 18.7,
                                           color: Colors.red,
                                         ),
                                       ),
