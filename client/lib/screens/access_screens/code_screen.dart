@@ -14,7 +14,7 @@ class MfaScreen extends StatelessWidget {
   final TextEditingController mfaController = TextEditingController();
 
   void sendJsonData(context) async {
-    final url = Uri.parse('http://10.43.121.69:3000/tfa/');
+    final url = Uri.parse('http://192.168.101.118:3000/tfa/');
 
     String mfaCode = mfaController.text;
 
@@ -65,12 +65,44 @@ class MfaScreen extends StatelessWidget {
     }
   }
 
-  void getNewCode() async {
-    final url = Uri.parse('http://192.168.101.118:3000/tfa/');
+  void getNewCode(context) async {
+    final url = Uri.parse('http://192.168.101.118:3000/tfa/newCode');
 
     Map<String, dynamic> jsonData = {'userId': userId, 'email': userEmail};
 
-    try {} catch (e) {
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(jsonData),
+      );
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+                "Se ha enviado un nuevo código, revisa tu correo electrónico."),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+      else{
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Algo salió mal, inténtalo de nuevo."),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+          ),
+        );
+
+      }
+
+
+
+    } catch (e) {
       print('Error: $e');
     }
   }
@@ -196,7 +228,7 @@ class MfaScreen extends StatelessWidget {
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      getNewCode();
+                                      getNewCode(context);
                                     },
                                     child: const Text(
                                       "Volver a enviar",

@@ -18,14 +18,14 @@ class StartingPage extends StatelessWidget{
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset('images/bamx-logo.png',
-            width: 200,
-            height: 200,),
+            width: 250,
+            height: 250,),
             Container(
               alignment: Alignment.center,
               width: screenWidth * 0.8,
               child: const Text(
                 "Bienvenido a Kanan",
-                style: TextStyle(fontSize: 24, 
+                style: TextStyle(fontSize: 34,
                 fontWeight: FontWeight.bold
                 ),
               ),
@@ -40,12 +40,16 @@ class StartingPage extends StatelessWidget{
               style: ElevatedButton.styleFrom(
                 backgroundColor:  const Color(0xFFEF3030),
                 foregroundColor: Colors.white,
-                minimumSize: const Size(200, 40),
+                minimumSize: const Size(250, 40),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)
                 )
               ),
-              child: const Text('Ingresa')
+              child: const Text(
+                'Ingresa',
+                style: TextStyle(
+                    fontSize: 20,
+              ),)
             ), //iniciar sesion
              ElevatedButton(
               onPressed: (){
@@ -57,12 +61,12 @@ class StartingPage extends StatelessWidget{
               style: ElevatedButton.styleFrom(
                 backgroundColor:  const Color(0xFFB4B7C3),
                 foregroundColor: Colors.white,
-                minimumSize: const Size(200, 40),
+                minimumSize: const Size(250, 40),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)
                 )
               ),
-              child: const Text('Registrarte')
+              child: const Text('Registrarte',style: TextStyle(fontSize: 20),)
             ), //Registrarse
              OutlinedButton(
               onPressed: (){
@@ -73,12 +77,12 @@ class StartingPage extends StatelessWidget{
               style: OutlinedButton.styleFrom(
                 foregroundColor: const Color(0xFFEF3030),
                 side: const BorderSide (color: Color(0xFFEF3030), width: 2),
-                minimumSize: const Size(200, 40),
+                minimumSize: const Size(250, 40),
                   shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)
                 )
               ),
-              child: const Text('Usuario Invitado')
+              child: const Text('Usuario Invitado',style: TextStyle(fontSize: 20))
             ), //Entrar como invitado
           ]
         )
