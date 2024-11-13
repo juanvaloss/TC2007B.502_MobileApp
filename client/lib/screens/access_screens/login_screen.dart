@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import '../access_screens/register_screen.dart';
 import '../access_screens/code_screen.dart';
-import '../user_profile.dart';
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController usernameController = TextEditingController();
@@ -38,20 +37,18 @@ class LoginScreen extends StatelessWidget {
         final int type = responseData['type'];
         int userIdResponse;
 
-        if(type == 1){
+        if (type == 1) {
           userIdResponse = responseData['userId'];
           print(userIdResponse);
-
-        }
-        else{
+        } else {
           userIdResponse = responseData['adminId'];
           print(userIdResponse);
-
         }
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MfaScreen(userId: userIdResponse, userEmail: email)),
-
+          MaterialPageRoute(
+              builder: (context) =>
+                  MfaScreen(userId: userIdResponse, userEmail: email)),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -144,10 +141,12 @@ class LoginScreen extends StatelessWidget {
                           const SizedBox(height: 20),
                           TextField(
                             controller: usernameController,
-                            style: const TextStyle(color: Color(0xFFA0A5BA), fontSize: 18),
+                            style: const TextStyle(
+                                color: Color(0xFFA0A5BA), fontSize: 18),
                             decoration: InputDecoration(
                               hintText: 'example@gmail.com',
-                              hintStyle: const TextStyle(color: Color(0xFFA0A5BA)),
+                              hintStyle:
+                                  const TextStyle(color: Color(0xFFA0A5BA)),
                               fillColor: const Color(0xFFF0F5FA),
                               filled: true,
                               border: OutlineInputBorder(
@@ -156,7 +155,8 @@ class LoginScreen extends StatelessWidget {
                               ),
                             ),
                             inputFormatters: [
-                              FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9_.@]')),
+                              FilteringTextInputFormatter.allow(
+                                  RegExp('[a-zA-Z0-9_.@]')),
                             ],
                           ),
                           const SizedBox(height: 35),
@@ -171,10 +171,12 @@ class LoginScreen extends StatelessWidget {
                           TextField(
                             obscureText: true,
                             controller: passwordController,
-                            style: const TextStyle(color: Color(0xFFA0A5BA), fontSize: 18),
+                            style: const TextStyle(
+                                color: Color(0xFFA0A5BA), fontSize: 18),
                             decoration: InputDecoration(
                               hintText: 'Contraseña',
-                              hintStyle: const TextStyle(color: Color(0xFFA0A5BA)),
+                              hintStyle:
+                                  const TextStyle(color: Color(0xFFA0A5BA)),
                               fillColor: const Color(0xFFF0F5FA),
                               filled: true,
                               border: OutlineInputBorder(
@@ -183,7 +185,8 @@ class LoginScreen extends StatelessWidget {
                               ),
                             ),
                             inputFormatters: [
-                              FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9_.]')),
+                              FilteringTextInputFormatter.allow(
+                                  RegExp('[a-zA-Z0-9_.]')),
                             ],
                           ),
                           const SizedBox(height: 40),
@@ -219,15 +222,15 @@ class LoginScreen extends StatelessWidget {
                                     const Text(
                                       "¿No tienes una cuenta?",
                                       style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 17
-                                      ),
+                                          color: Colors.grey, fontSize: 17),
                                     ),
                                     TextButton(
-                                      onPressed: (){
+                                      onPressed: () {
                                         Navigator.push(
                                             context,
-                                            MaterialPageRoute(builder: (context) => RegisterScreen()));
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RegisterScreen()));
                                       },
                                       child: const Text(
                                         "REGISTRATE",

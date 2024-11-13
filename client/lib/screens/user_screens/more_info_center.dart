@@ -13,74 +13,119 @@ class MoreInfoCenter extends StatefulWidget {
 }
 
 class _MoreInfoCenterState extends State<MoreInfoCenter> {
-  List<Map<String, dynamic>>? centerInfo;
-  String errorMessage = '';
+  Map<String, dynamic>? centerInfo;
+  String errormessage = '';
 
   @override
   void initState() {
     super.initState();
-    fetchCenterData();
+    futureCenterInfo();
   }
 
-  Future<void> fetchCenterData() async {
-    final url = Uri.parse('http://192.168.101.125:3000/centers/centerinfo'); // Replace with your API URL
+ Future<void> futureCenterInfo() async {
+  try {
+    final url = Uri.parse('http://10.43.41.205:3000/centers/centerinfo');
 
     Map<String, dynamic> jsonData = {
-      'centerId': widget.centerId,
+      'centerId': widget.centerId.toString()
     };
 
-    try {
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(jsonData),
-      ); 
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(jsonData),
+    );
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        print('Data received: $data'); // Debugging line
-
-        if (mounted) {
-          setState(() {
-            centerInfo = data;
-          });
-        }
+    if (response.statusCode == 200 && response.body.isNotEmpty) {
+      final responseData = json.decode(response.body);
+      
+      // Si `responseData` es una lista, obtenemos el primer elemento
+      if (responseData is List && responseData.isNotEmpty) {
+        setState(() {
+          centerInfo = responseData[0]; // Extraemos el primer centro de la lista
+        });
       } else {
         setState(() {
-          errorMessage = 'Error: ${response.statusCode}';
+          errormessage = 'No se encontró información del centro.';
         });
       }
-    } catch (e) {
+    } else {
       setState(() {
-        errorMessage = 'Error: $e';
+        errormessage = 'Error ${response.statusCode}: no se pudo cargar la información del centro.';
       });
     }
+  } catch (e) {
+    setState(() {
+      errormessage = 'Error ${e}: no se pudo cargar la información del centro ayuda.';
+    });
   }
+}
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Center Information'),
+
+ @override 
+Widget build(BuildContext context){
+  return Scaffold(
+    backgroundColor: Colors.white,
+    appBar: AppBar(
+      title: const Text('Información del centro'),
+      backgroundColor: Colors.white,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.black),
+        onPressed: () => Navigator.pop(context),
       ),
-      body: centerInfo != null
-          ? Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //Text('Centro de acopio: ${centerInfo!['centerName']}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 10),
-                  Text('ID: ${widget.centerId}'),
-                  // Agrega más campos según la información disponible en centerInfo
-                ],
-              ),
-            )
-          : Center(
-              child: errorMessage.isEmpty
-                  ? CircularProgressIndicator()
-                  : Text(errorMessage, style: TextStyle(color: Colors.red)),
+      elevation: 0,
+    ),
+    body: Padding(
+      padding: const EdgeInsets.only(top: 50, left: 20, right: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,  // Aligns all items in the column to the left
+        children: [
+          Container(
+            width: 400,
+            height: 200,
+            decoration: BoxDecoration(
+              color: const Color(0xFF98A8B8),
+              borderRadius: BorderRadius.circular(40),
             ),
-    );
-  }
+          ),
+          const SizedBox(height: 15),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              '${centerInfo?['centerName'] ?? 'No disponible'}',
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(height: 3),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Dirección: ${centerInfo?['centerAddress'] ?? 'No disponible'}',
+              style: const TextStyle(
+                fontSize: 10,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+          if (errormessage.isNotEmpty) 
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  errormessage,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              ),
+            ),
+        ]
+      ),
+    ),
+  );
+}
+
 }

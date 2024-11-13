@@ -6,7 +6,6 @@ import '../user_screens/user_home_screen.dart';
 import '../bamxscreens/bamx_admin_home.dart';
 
 class MfaScreen extends StatelessWidget {
-
   final int userId;
   final String userEmail;
 
@@ -20,7 +19,7 @@ class MfaScreen extends StatelessWidget {
     String mfaCode = mfaController.text;
 
     Map<String, dynamic> jsonData = {
-      'userId':  userId,
+      'userId': userId,
       'codeSentForVeri': mfaCode
     };
 
@@ -37,21 +36,21 @@ class MfaScreen extends StatelessWidget {
         final Map<String, dynamic> responseData = json.decode(response.body);
         final bool isBamxAdmin = responseData['isBamxAdmin'];
 
-        if(isBamxAdmin){
+        if (isBamxAdmin) {
           final int adminIdResponse = responseData['adminInfo']['id'];
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => BamxAdminHome(userId: adminIdResponse)),
+            MaterialPageRoute(
+                builder: (context) => BamxAdminHome(userId: adminIdResponse)),
           );
-
-        }else{
+        } else {
           final int userIdResponse = responseData['userInfo']['id'];
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => UserHomeScreen(userId: userIdResponse)),
+            MaterialPageRoute(
+                builder: (context) => UserHomeScreen(userId: userIdResponse)),
           );
         }
-
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -66,23 +65,14 @@ class MfaScreen extends StatelessWidget {
     }
   }
 
-  void getNewCode() async{
+  void getNewCode() async {
     final url = Uri.parse('http://192.168.101.118:3000/tfa/');
 
-    Map<String, dynamic> jsonData = {
-      'userId':  userId,
-      'email': userEmail
-    };
+    Map<String, dynamic> jsonData = {'userId': userId, 'email': userEmail};
 
-    try{
-
-
-    }catch (e) {
+    try {} catch (e) {
       print('Error: $e');
     }
-
-
-
   }
 
   @override
@@ -120,17 +110,14 @@ class MfaScreen extends StatelessWidget {
                   Center(
                     child: Text(
                       "Mandamos un código de verificación de 6 dígitos a tu correo electrónico",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 17
-                      ),
+                      style: TextStyle(color: Colors.white, fontSize: 17),
                       textAlign: TextAlign.center,
                     ),
                   ),
                 ],
               ),
             ),
-            ),
+          ),
           Column(
             children: [
               Expanded(flex: 2, child: Container()),
@@ -148,12 +135,18 @@ class MfaScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(16.0),
                     child: SingleChildScrollView(
                       physics: const ClampingScrollPhysics(),
-
                       child: Column(
-
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(height: 45),
+                          const SizedBox(height: 45),
+                          const Text(
+                            "Código de verificación: ",
+                            style: TextStyle(
+                              color: const Color(0xFF121223),
+                              fontSize: 24,
+                            ),
+                          ),
+                          SizedBox(height: 15),
                           SizedBox(
                             width: 300,
                             height: 150,
@@ -173,7 +166,8 @@ class MfaScreen extends StatelessWidget {
                               ),
                               decoration: InputDecoration(
                                 labelText: "     Escribe el código",
-                                labelStyle: TextStyle(fontSize: 24, color: Colors.grey[500]),
+                                labelStyle: TextStyle(
+                                    fontSize: 24, color: Colors.grey[500]),
                                 hintText: "123456",
                                 hintStyle: TextStyle(color: Colors.grey[400]),
                                 border: OutlineInputBorder(
@@ -183,61 +177,61 @@ class MfaScreen extends StatelessWidget {
                                 filled: true,
                                 fillColor: const Color(0xFFF0F5FA),
                                 isDense: true,
-                                contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                                contentPadding:
+                                    const EdgeInsets.symmetric(vertical: 12),
+                              ),
                             ),
-                          ),
                           ),
                           const SizedBox(height: 30),
                           Padding(
                             padding: const EdgeInsets.only(left: 25, right: 25),
                             child: Center(
-                            child: Column(
-                              children: [
+                              child: Column(
+                                children: [
                                   const Text(
                                     "¿No recibiste un código?",
                                     style: TextStyle(
-                                      color: Color(0xFF646982),
-                                      fontSize: 18
-                                    ),
+                                        color: Color(0xFF646982), fontSize: 18),
                                     textAlign: TextAlign.center,
                                   ),
                                   TextButton(
-                                    onPressed: (){
+                                    onPressed: () {
                                       getNewCode();
                                     },
-                                    child: const Text("Volver a enviar",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      color: Color(0xFFEF3030)
-                                    ),),
+                                    child: const Text(
+                                      "Volver a enviar",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: Color(0xFFEF3030)),
+                                    ),
                                   )
                                 ],
                               ),
                             ),
                           ),
                           const SizedBox(height: 50),
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 50,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFFEF3030),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10.0),
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      sendJsonData(context);
-                                    },
-                                    child: const Text(
-                                      'Ingresar',
-                                      style: TextStyle(
-                                        fontSize: 24,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFEF3030),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
+                              ),
+                              onPressed: () {
+                                sendJsonData(context);
+                              },
+                              child: const Text(
+                                'Ingresar',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
