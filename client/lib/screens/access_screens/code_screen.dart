@@ -15,7 +15,7 @@ class MfaScreen extends StatelessWidget {
   final TextEditingController mfaController = TextEditingController();
 
   void sendJsonData(context) async {
-    final url = Uri.parse('http://192.168.101.118:3000/tfa/');
+    final url = Uri.parse('http://10.43.41.205:3000/tfa/');
 
     String mfaCode = mfaController.text;
 
@@ -153,7 +153,14 @@ class MfaScreen extends StatelessWidget {
 
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(height: 45),
+                          const SizedBox(height: 45),
+                          const Text("Código de verificación: ",
+                            style: TextStyle(
+                              color: const Color(0xFF121223),
+                              fontSize: 24,
+                            ),
+                          ),
+                          SizedBox(height: 15),
                           SizedBox(
                             width: 300,
                             height: 150,
