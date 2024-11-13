@@ -36,6 +36,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   logging:  ^1.0.2
   sliding_up_panel: ^2.0.0+1
+  font_awesome_flutter: ^10.1.0
 
 
 

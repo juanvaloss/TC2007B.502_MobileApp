@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MoreInfoCenter extends StatefulWidget {
   final int userId;
@@ -97,12 +98,12 @@ List<Widget> getAcceptedItems() {
     items.add(Column(
       children: [
         Container(
-          decoration: const BoxDecoration(
-            color: Color(0xFFEF3030),
+          decoration: BoxDecoration(
+            color: Colors.red.withOpacity(0.25),
             shape: BoxShape.circle,
           ),
           padding: const EdgeInsets.all(10),
-        child: const Icon(Icons.restaurant, color: Colors.black, size: 30),
+        child: const Icon(FontAwesomeIcons.drumstickBite, color: Color(0xFF747783), size: 35),
         ),
         const Text('Carne'),
       ],
@@ -110,19 +111,33 @@ List<Widget> getAcceptedItems() {
   }
 
   if(centerInfo?['acceptsVegetables'] == true){
-    items.add(const Column(
+    items.add(Column(
       children: [
-        Icon(Icons.local_florist, color: Colors.black, size: 30),
-        Text('Vegetales')
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.red.withOpacity(0.25),
+            shape: BoxShape.circle,
+          ),
+          padding: const EdgeInsets.all(10),
+       child: const Icon(FontAwesomeIcons.carrot, color: Color(0xFF747783), size: 30),
+        ),
+        const Text('Vegetales')
       ],
     ));
   }
 
   if(centerInfo?['acceptsCans'] == true){
-    items.add(const Column(
+    items.add(Column(
       children: [
-        Icon(Icons.local_drink, color: Colors.black, size: 30),
-        Text('Latas')
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.red.withOpacity(0.25),
+            shape: BoxShape.circle,
+          ),
+          padding: const EdgeInsets.all(10),
+        child: const Icon(FontAwesomeIcons.solidTrashCan, color: Color(0xFF747783), size: 30),
+        ),
+        const Text('Latas')
       ],
     ));
   }
@@ -214,6 +229,32 @@ Widget build(BuildContext context){
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: getAcceptedItems(),
+            ),
+
+            const SizedBox(height: 80),
+
+            Center(
+            child: SizedBox(
+                            width: double.infinity,
+                            height: 70,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFEF3030),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                              ),
+                              onPressed: () {
+                              },
+                              child: const Text(
+                                'ENCONTRAR RUTA',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
             )
         ]
       ),

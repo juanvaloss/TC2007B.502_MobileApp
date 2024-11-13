@@ -19,7 +19,6 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const StartingPage(),
-        //'/': (context) => const MoreInfoCenter(userId: 0, centerId: 3),
         //'/': (context) => UserHomeScreen(userId: 0),
         //'/homeUser': (context) => UserHomeScreen(),
         '/map': (context) => MapScreen(),  // Add the map screen to routes
