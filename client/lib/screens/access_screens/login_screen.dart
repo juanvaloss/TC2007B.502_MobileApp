@@ -13,7 +13,7 @@ class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
   void sendJsonData(context) async {
-    final url = Uri.parse('http://192.168.101.118:3000/login/global');
+    final url = Uri.parse('http://10.43.121.69:3000/login/global');
 
     String email = usernameController.text;
     String password = passwordController.text;

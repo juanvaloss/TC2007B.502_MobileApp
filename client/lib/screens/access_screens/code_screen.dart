@@ -14,7 +14,7 @@ class MfaScreen extends StatelessWidget {
   final TextEditingController mfaController = TextEditingController();
 
   void sendJsonData(context) async {
-    final url = Uri.parse('http://192.168.101.118:3000/tfa/');
+    final url = Uri.parse('http://10.43.121.69:3000/tfa/');
 
     String mfaCode = mfaController.text;
 

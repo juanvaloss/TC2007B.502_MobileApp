@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -31,8 +30,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   List<List<dynamic>> centers = [];
   late String _mapStyleString;
 
-  static const double maxDistance = 900;
   bool isInfoWindowVisible = false;
+  bool _isMapLoaded = false;
+
   LatLng? _selectedMarkerPosition;
   String? _selectedMarkerTitle;
   String? _selectedMarkerSnippet;
@@ -42,15 +42,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   final Set<Marker> _markers = {};
 
   static const CameraPosition _initialPosition = CameraPosition(
-    target: LatLng(20.7360372, -103.4557347),
+    target: LatLng(20.67471511804876, -103.43224564816127),
     zoom: 15,
   );
 
-
-  bool _isMapLoaded = false;
-
   Future<void> fetchData() async {
-    final url = Uri.parse('http://192.168.101.118:3000/centers/coordinates');
+    final url = Uri.parse('http://10.43.121.69:3000/centers/coordinates');
 
     try {
       final response = await http.get(url);
@@ -96,7 +93,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     }
   }
 
-
   Future<void> _goToCenter(double lat, double long, String name, String address) async {
 
     final GoogleMapController controller = await _mapController.future;
@@ -113,7 +109,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       }
     });
 
-
     _onMarkerTapped(
       LatLng(lat, long),
       name,
@@ -125,10 +120,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   Future<void> _goToMe() async {
     final GoogleMapController controller = await _mapController.future;
     await controller.animateCamera(CameraUpdate.newCameraPosition(_initialPosition));
+    _hideCustomInfoWindow();
   }
 
 
   void _onMarkerTapped(LatLng position, String title, String snippet) {
+    print('Tappeeeeeeeeeeeeed!!');
     setState(() {
       isInfoWindowVisible = true;
       _selectedMarkerPosition = position;
@@ -138,31 +135,27 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   }
 
   void _hideCustomInfoWindow() {
+
+    if(isInfoWindowVisible){
+      print("Hidiiiiing!!!!");
+      setState(() {
+        isInfoWindowVisible = false;
+        _selectedMarkerPosition == null;
+      });
+    }
+
+  }
+
+  double scaleFactor = 1.0; // Initial scale of the button
+  bool isExpanded = false;
+
+  void _expand200percent() {
     setState(() {
-      _selectedMarkerPosition = null;
+      scaleFactor = isExpanded ? 1.0 : 6.0; // Toggle between original and 200% size
+      isExpanded = !isExpanded;
     });
   }
 
-  void _onCameraMove(CameraPosition position) {
-
-    if ( _selectedMarkerPosition == null) {
-      return;
-    }
-
-    double distance = Geolocator.distanceBetween(
-      _selectedMarkerPosition!.latitude,
-      _selectedMarkerPosition!.longitude,
-      position.target.latitude,
-      position.target.longitude,
-    );
-    print(distance);
-
-    if (distance > maxDistance && isInfoWindowVisible) {
-      _hideCustomInfoWindow();
-    } else if (distance <= maxDistance && !isInfoWindowVisible) {
-      _hideCustomInfoWindow();
-    }
-  }
 
 
   @override
@@ -180,14 +173,16 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               itemBuilder: (context, index) {
                 final center = centers[index];
                 return Card(
+                  color: const Color(0xFFE78080),
                   margin: const EdgeInsets.symmetric(vertical: 8.0),
                   child: ListTile(
                     title: Text(
                       '${center[1]}', // Center name
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                     subtitle: const Text(
-                      'Toca para ir al centro', // Coordinates
+                      'Toca para ir al centro',
+                      style: const TextStyle()// Coordinates
                     ),
                     onTap: () {
                       _goToCenter(center[3], center[4], center[1], center[2]);
@@ -208,7 +203,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               initialCameraPosition: _initialPosition,
               markers: _markers,
               zoomControlsEnabled: false,
-              zoomGesturesEnabled: true,
+              scrollGesturesEnabled: !isInfoWindowVisible,
+              zoomGesturesEnabled: !isInfoWindowVisible,
+              rotateGesturesEnabled: !isInfoWindowVisible,
+              tiltGesturesEnabled: !isInfoWindowVisible,
               onMapCreated: (GoogleMapController controller) {
                 _mapController.complete(controller);
                 _mapController.future.then((value) {
@@ -218,8 +216,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   _isMapLoaded = true;
                 });
               },
-              onCameraMove: _onCameraMove,
-
             ),
             if (!_isMapLoaded)
               Container(
@@ -237,8 +233,18 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   ],
                 ),
               ),
+            if (isInfoWindowVisible)
+              GestureDetector(
+                onTap: () {
+                  _hideCustomInfoWindow(); // Hide the info window on tap outside
+                },
+                child: Container(
+                  color: Colors.transparent, // Invisible full-screen overlay
+                ),
+              ),
             if (isInfoWindowVisible == true)
               Positioned(
+                key: UniqueKey(),
                 left: MediaQuery.of(context).size.width / 2 - 125,
                 bottom: 500,
                 child: Container(
@@ -284,11 +290,65 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 ),
               ),
             Positioned(
+            top: 50,
+            right: 20,
+            child: AnimatedScale(
+              scale: scaleFactor,
+              duration: const Duration(milliseconds: 300), // Animation duration
+              curve: Curves.easeInOut, // Smooth transition curve
+              alignment: Alignment.topRight,
+              child: Transform.translate(
+                offset: Offset(isExpanded ? -1 : 0, isExpanded ? 1 : 0),
+                child: FloatingActionButton(
+                  onPressed: _expand200percent,
+                  backgroundColor: const Color(0xFFEF3030),
+                  foregroundColor: Colors.white,
+                  child: const Icon(Icons.person),
+                ),
+                ),
+              ),
+            ),
+            if (isExpanded)
+              Positioned(
+                top: 120,
+                right: 50,
+                child: AnimatedOpacity(
+                  opacity: isExpanded ? 1.0 : 0.0,
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          // Action for option 1
+                        },
+                        child: Text("Option 1", style: TextStyle(color: Colors.black)),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          // Action for option 2
+                        },
+                        child: Text("Option 2", style: TextStyle(color: Colors.black)),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          // Action for option 3
+                        },
+                        child: Text("Option 3", style: TextStyle(color: Colors.black)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            Positioned(
               bottom: 100,
               left: 20,
               child: FloatingActionButton(
                 onPressed: _goToMe,
-                child: const Icon(Icons.my_location),
+                backgroundColor: const Color(0xFFEF3030),
+                foregroundColor: Colors.white,
+                child: const Icon(Icons.navigation),
               ),
             ),
           ],
@@ -299,6 +359,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           topLeft: Radius.circular(24.0),
           topRight: Radius.circular(24.0),
         ),
+
+        //Sliding panel
         header: Container(
           alignment: Alignment.center,
           padding: const EdgeInsets.only(top: 13, left: 100),
