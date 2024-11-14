@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const StartingPage(),
         //'/': (context) => const CheckApplication(userId: 0),
-        '/map': (context) => MapScreen(),  // Add the map screen to routes
+        '/map': (context) => MapScreen(), // Add the map screen to routes
       },
     );
   }
