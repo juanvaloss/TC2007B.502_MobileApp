@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import '../user_profile.dart';
 
 
 class UserHomeScreen extends StatefulWidget {
@@ -146,17 +147,14 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
   }
 
-  double scaleFactor = 1.0; // Initial scale of the button
-  bool isExpanded = false;
-
-  void _expand200percent() {
-    setState(() {
-      scaleFactor = isExpanded ? 1.0 : 6.0; // Toggle between original and 200% size
-      isExpanded = !isExpanded;
-    });
+  void _goToUserInfoScreen(){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) =>
+              UserProfileScreen(userId: widget.userId)),
+    );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -292,55 +290,13 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             Positioned(
             top: 50,
             right: 20,
-            child: AnimatedScale(
-              scale: scaleFactor,
-              duration: const Duration(milliseconds: 300), // Animation duration
-              curve: Curves.easeInOut, // Smooth transition curve
-              alignment: Alignment.topRight,
-              child: Transform.translate(
-                offset: Offset(isExpanded ? -1 : 0, isExpanded ? 1 : 0),
-                child: FloatingActionButton(
-                  onPressed: _expand200percent,
-                  backgroundColor: const Color(0xFFEF3030),
-                  foregroundColor: Colors.white,
-                  child: const Icon(Icons.person),
-                ),
-                ),
+              child: FloatingActionButton(
+                onPressed: _goToUserInfoScreen,
+                backgroundColor: const Color(0xFFEF3030),
+                foregroundColor: Colors.white,
+                child: const Icon(Icons.person),
               ),
             ),
-            if (isExpanded)
-              Positioned(
-                top: 120,
-                right: 50,
-                child: AnimatedOpacity(
-                  opacity: isExpanded ? 1.0 : 0.0,
-                  duration: Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          // Action for option 1
-                        },
-                        child: Text("Option 1", style: TextStyle(color: Colors.black)),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Action for option 2
-                        },
-                        child: Text("Option 2", style: TextStyle(color: Colors.black)),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Action for option 3
-                        },
-                        child: Text("Option 3", style: TextStyle(color: Colors.black)),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
             Positioned(
               bottom: 100,
               left: 20,

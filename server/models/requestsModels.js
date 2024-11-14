@@ -1,5 +1,26 @@
 const { supabase } = require('../config/db'); 
 
+
+const getRequestInfo = async (userId) => {
+  try {
+    const { data, error } = await supabase
+      .from('requests')
+      .select('*')
+      .eq('solicitor', userId);
+
+    if (error) {
+      throw new Error(`Error fetching request: ${error.message}`);
+    }
+
+    return data;
+  } catch (err) {
+    console.error('Error fetching request:', err);
+    throw err;
+  }
+
+}
+
+
 const createRequest = async (userId, centerNa, centerAdd, capac, acceptsM, acceptsV, acceptsC) => {
   try {
     const { data, error } = await supabase
@@ -36,4 +57,4 @@ const deleteRequest = async(requestId) =>{
   }
 }
 
-module.exports = { createRequest, deleteRequest };
+module.exports = { getRequestInfo ,createRequest, deleteRequest };
