@@ -8,18 +8,18 @@ class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key, required this.userId});
 
   @override
-  _UserInfoScreenState createState() => _UserInfoScreenState();
+  _UserProfileScreenState createState() => _UserProfileScreenState();
 }
 
-class _UserInfoScreenState extends State<UserProfileScreen> {
-  Map<String, dynamic>? userInfo;
-  List<Map<String, dynamic>>? centerInfo;
-  String errorMessage = '';
+class _UserProfileScreenState extends State<UserProfileScreen> {
+  Map<String, dynamic> userInfo = {};
+  List<Map<String, dynamic>> centerInfo = [];
 
   @override
   void initState() {
-    super.initState();
     fetchUserInfo();
+    super.initState();
+
   }
 
   String _capitalizeFirstLetter(String text) {
@@ -28,14 +28,14 @@ class _UserInfoScreenState extends State<UserProfileScreen> {
   }
 
   String _generateMapUrl(double latitude, double longitude) {
-    const apiKey = 'AIzaSyAEW6obJehSR'; // Replace with your API key
+    const apiKey = 'AIzaSyAEW6obJehSR-507NnEKKLB_NS1tHdwzTw';
     return 'https://maps.googleapis.com/maps/api/staticmap?center=$latitude,$longitude&zoom=17&size=650x300&markers=color:red%7C$latitude,$longitude&key=$apiKey';
   }
 
   Future<void> fetchUserInfo() async {
     try {
-      final url1 = Uri.parse('http://10.43.41.205:3000/users/userInfo');
-      final url2 = Uri.parse('http://10.43.41.205:3000/users/userCenters');
+      final url1 = Uri.parse('http://10.43.121.69:3000/users/userInfo');
+      final url2 = Uri.parse('http://10.43.121.69:3000/users/userCenters');
 
       Map<String, dynamic> jsonData = {
         'userId': widget.userId,
@@ -46,6 +46,7 @@ class _UserInfoScreenState extends State<UserProfileScreen> {
         headers: {'Content-Type': 'application/json'},
         body: json.encode(jsonData),
       );
+
       final response2 = await http.post(
         url2,
         headers: {'Content-Type': 'application/json'},
@@ -56,161 +57,146 @@ class _UserInfoScreenState extends State<UserProfileScreen> {
         final responseData1 = json.decode(response1.body);
         setState(() {
           userInfo = {
-            ...responseData1,
+            "nombre": responseData1['name'],
+            "email": responseData1['email'],
+            "isCenterAdmin": responseData1['isCenterAdmin'],
           };
         });
       } else {
-        setState(() {
-          errorMessage = 'Failed to fetch user information. Please try again.';
-        });
+        print('Failed to fetch user information. Please try again.');
       }
 
       if (response2.statusCode == 200 && response2.body.isNotEmpty) {
-        final dynamic responseData2 = json.decode(response2.body);
+        final List<dynamic> responseData2 = json.decode(response2.body);
+        final List<Map<String, dynamic>> centers = responseData2.map((item) {
+          return {
+            "centerName": item['centerName'],
+            "centerAddress": item['centerAddress'],
+            "latitude": item['latitude'],
+            "longitude": item['longitude'],
+          };
+        }).toList();
 
-        if (responseData2 is List) {
-          setState(() {
-            centerInfo = List<Map<String, dynamic>>.from(responseData2);
-          });
-        } else if (responseData2 is Map<String, dynamic>) {
-          setState(() {
-            centerInfo = [responseData2];
-          });
-        } else {
-          setState(() {
-            errorMessage = 'Unexpected response format.';
-          });
-        }
-      } else {
         setState(() {
-          errorMessage = 'No information available.';
+          centerInfo = centers;
         });
+      } else {
+        print('No information available.');
       }
+
+
     } catch (e) {
-      setState(() {
-        errorMessage = 'An error occurred: $e';
-      });
+        print('An error occurred: $e');
     }
-  }
-
-  Widget _buildUserInfoSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        CircleAvatar(
-          radius: 40,
-          backgroundColor: Colors.red[200],
-          child: Icon(Icons.person, size: 40, color: Colors.white),
-        ),
-        const SizedBox(height: 16),
-        Text(
-          userInfo?['name'] ?? 'Local Shop',
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 16),
-
-      ],
-    );
-  }
-
-  Widget _buildUserInfoContainer() {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      decoration: BoxDecoration(
-        color: Color(0xFFF0F5FA),
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'User Info:',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          ...userInfo!.entries
-              .where((entry) => entry.key.toLowerCase() != 'id') // Filtrar "Id"
-              .map((entry) {
-            return ListTile(
-              title: Text(_capitalizeFirstLetter(entry.key)),
-              subtitle: Text(entry.value.toString()),
-            );
-          }),
-        ],
-      ),
-    );
-  }
-
-
-  Widget _buildCenterInfoContainer() {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      decoration: BoxDecoration(
-        color: Color(0xFFF0F5FA),
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Center Info:',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          ...centerInfo!.map((center) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Name: ${center['name']}",
-                  style: const TextStyle(fontSize: 16),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  "Address: ${center['address']}",
-                  style: const TextStyle(fontSize: 16),
-                ),
-                const SizedBox(height: 8),
-                Center(
-                  child: Image.network(
-                    _generateMapUrl(
-                      center['latitude'],
-                      center['longitude'],
-                    ),
-                    height: 200,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
-            );
-          }),
-        ],
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Perfil de usuario')),
-      body: userInfo != null && centerInfo != null
+      body: userInfo.isNotEmpty
           ? Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            _buildUserInfoSection(),
-            _buildUserInfoContainer(),
-            _buildCenterInfoContainer(),
+          Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              radius: 40,
+              backgroundColor: Colors.red[200],
+              child: Icon(Icons.person, size: 40, color: Colors.white),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Tu perfil',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+
+          ],
+        ),
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              margin: const EdgeInsets.symmetric(vertical: 8.0),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF0F5FA),
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Tu información:',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  ...userInfo.entries
+                      .where((entry) => entry.key.toLowerCase() != 'iscenteradmin')
+                      .map((entry) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${_capitalizeFirstLetter(entry.key)}:",
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          entry.value.toString(),
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        const SizedBox(height: 8),
+                      ],
+                    );
+                  }),
+                ],
+              ),
+            ),
+            if (userInfo['isCenterAdmin'] == true) ...[
+              const Text(
+                'Información de tu centro:',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: centerInfo.length,
+                itemBuilder: (context, index) {
+                  final center = centerInfo[index];
+                  return Card(
+                    margin: const EdgeInsets.all(10),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Nombre del centro: \n ${center['centerName']}",
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            "Dirección del centro: \n ${center['centerAddress']}",
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                          const SizedBox(height: 8),
+                          Center(
+                            child: Image.network(
+                              _generateMapUrl(center['latitude'], center['longitude']),
+                              height: 200,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
             const SizedBox(height: 8),
             SizedBox(
               width: double.infinity,
@@ -222,27 +208,18 @@ class _UserInfoScreenState extends State<UserProfileScreen> {
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
-                onPressed: () {
-                },
+                onPressed: () {},
                 child: const Text(
                   'Solicitud de Centro',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ),
             ),
           ],
         ),
       )
-          : Center(
-        child: errorMessage.isEmpty
-            ? const CircularProgressIndicator()
-            : Text(
-          errorMessage,
-          style: const TextStyle(color: Colors.red, fontSize: 16),
-        ),
+          : const Center(
+        child: CircularProgressIndicator(),
       ),
     );
   }
