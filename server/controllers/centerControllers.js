@@ -32,7 +32,8 @@ async function getCoordinatesBAddress(address) {
 const createCenter = async(req, res) =>{
     const { userId, adminId, centerNa, centerAdd, currentCapac ,totalCapac, acceptsM, acceptsV, acceptsC } = req.body;
     try {
-        const modifyUser = await userModel.updateAdminValue(userId, true);
+        await userModel.updateAdminValue(userId, true);
+        
         const {lat, lng } = await getCoordinatesBAddress(centerAdd);
         const response = await centerModel.createCenter( userId, adminId, centerNa, centerAdd, currentCapac ,totalCapac, acceptsM, acceptsV, acceptsC, lat, lng);
         res.json(response);

@@ -318,6 +318,28 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   ),
                 ),
               ),
+            if (widget.isAdmin)
+              Positioned(
+                top: 50,
+                left: 20,
+                child: GestureDetector(
+                  onTap: _goToUserInfoScreen,
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xFFEF3030),
+                    ),
+                    child: ClipOval(
+                      child: Image.asset(
+                        'images/bamx-logo.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             Positioned(
             top: 50,
             right: 20,

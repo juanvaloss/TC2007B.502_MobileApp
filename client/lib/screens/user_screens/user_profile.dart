@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'image_application_screen.dart';
+import '../access_screens/starting_page.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class UserProfileScreen extends StatefulWidget {
@@ -37,8 +37,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   Future<void> fetchUserInfo() async {
     try {
-      final url1 = Uri.parse('http://10.43.121.69:3000/users/userInfo');
-      final url2 = Uri.parse('http://10.43.121.69:3000/users/userCenters');
+      final url1 = Uri.parse('http://192.168.101.102:3000/users/userInfo');
+      final url2 = Uri.parse('http://192.168.101.102:3000/users/userCenters');
 
       Map<String, dynamic> jsonData = {
         'userId': widget.userId,
@@ -91,6 +91,32 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     } catch (e) {
         print('An error occurred: $e');
     }
+  }
+
+  Future<void> _deleteUserAccount()async{
+    try{
+      final url = Uri.parse("http://192.168.101.102:3000/users/delete");
+
+      Map<String, dynamic> jsonData = {
+        'userId': widget.userId,
+      };
+
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(jsonData),
+      );
+
+      if(response.statusCode == 200){
+
+      }
+
+
+
+    }catch(e){
+      print(e);
+    }
+
   }
 
   @override
@@ -222,6 +248,79 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   ),
                 ),
               ),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => StartingPage()), // Replace with your login screen widget
+                        (Route<dynamic> route) => false,
+                  );
+                  print('Session closed');
+                },
+                child: const Text(
+                  'Cerrar Sesión',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text("Confirmación", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                        content: const Text("¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.", style: TextStyle(fontSize: 20),),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("Cancelar", style: TextStyle(fontSize: 18)),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                            onPressed: () {
+                              // Add your delete account logic here
+                              Navigator.of(context).pop();
+                              print('Account deleted');
+                            },
+                            child: const Text(
+                              "Eliminar Cuenta",
+                              style: TextStyle(color: Colors.white, fontSize: 18),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                child: const Text(
+                  'Eliminar Cuenta',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              ),
+            ),
           ],
         ),
       )
