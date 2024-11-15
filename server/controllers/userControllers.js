@@ -11,7 +11,7 @@ const createUser = async (req, res) => {
     
         if (userInfo.isMatch === false) {
             const otpCode = await sendOTP(email);
-            const assignCodeOk = await tfaModel.assignCode(userInfo.user.id, otpCode);
+            const assignCodeOk = await tfaModel.assignCodetoUser(userInfo.user.id, otpCode);
 
             if(assignCodeOk === true){
                 const response = await userModel.createUser(name, email, plainPassword);
