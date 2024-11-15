@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -19,16 +20,20 @@ class MoreInfoCenter extends StatefulWidget {
 class _MoreInfoCenterState extends State<MoreInfoCenter> {
   Map<String, dynamic>? centerInfo;
   String errormessage = '';
+  double result = 0.0;
+  Uint8List? _imageFile;
 
   @override
   void initState() {
     super.initState();
+    _getCenterImage();
     futureCenterInfo();
     calculateCapacity();
   }
+
  Future<void> futureCenterInfo() async {
   try {
-    final url = Uri.parse('http://10.43.121.69:3000/centers/centerinfo');
+    final url = Uri.parse('http://192.168.101.102:3000/centers/centerinfo');
 
     Map<String, dynamic> jsonData = {
       'centerId': widget.centerId.toString()
@@ -64,14 +69,27 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
   }
 }
 
-double result = 0.0;
-
 void calculateCapacity() async {
   setState(() {
     result = (100 * (centerInfo?['currentCapacity'] ?? 0)) / (centerInfo?['maxCapacity'] ?? 1);
   });
 }
 
+
+Future<void> _getCenterImage() async{
+  final supabase = SupabaseClient(dotenv.env['SUPABASE_URL']!, dotenv.env['SUPABASE_ANON_KEY']!);
+  final storageResponse = await supabase
+      .storage
+      .from('imagesOfCenters')
+      .download('center${widget.centerId}.jpg');
+
+  setState(() {
+    _imageFile = storageResponse;
+  });
+
+
+
+}
 
 
 IconData getIcon() {
@@ -169,17 +187,22 @@ Widget build(BuildContext context){
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,  // Aligns all items in the column to the left
         children: [
-          Container(
-            width: 400,
-            height: 200,
-            decoration: BoxDecoration(
-              color: const Color(0xFF98A8B8),
-              borderRadius: BorderRadius.circular(40),
-              image: DecorationImage(
-                image: NetworkImage('https://media.tacdn.com/media/attractions-splice-spp-674x446/0b/27/a8/cb.jpg'), // Use NetworkImage for an online image
-                fit: BoxFit.cover, // Adjust to cover the container fully
-              ),
-            ),
+        Container(
+          width: double.infinity,
+          height: 200,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            image: _imageFile != null
+                ? DecorationImage(
+              image: MemoryImage(_imageFile!),
+              fit: BoxFit.cover,
+            )
+                : null,
+            color: Colors.grey[200], // Placeholder color
+          ),
+          child: _imageFile == null
+              ? const Center(child: CircularProgressIndicator())
+              : null,
           ),
           const SizedBox(height: 15),
           Align(

@@ -11,8 +11,9 @@ import 'more_info_center.dart';
 
 class UserHomeScreen extends StatefulWidget {
   final int userId;
+  final bool isAdmin;
 
-  const UserHomeScreen({required this.userId, super.key});
+  const UserHomeScreen({required this.userId, required this.isAdmin, super.key});
 
   @override
   _UserHomeScreenState createState() => _UserHomeScreenState();
@@ -50,7 +51,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   );
 
   Future<void> fetchData() async {
-    final url = Uri.parse('http://10.43.121.69:3000/centers/coordinates');
+    final url = Uri.parse('http://192.168.101.102:3000/centers/coordinates');
 
     try {
       final response = await http.get(url);
@@ -314,6 +315,28 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
                     ],
 
+                  ),
+                ),
+              ),
+            if (widget.isAdmin)
+              Positioned(
+                top: 50,
+                left: 20,
+                child: GestureDetector(
+                  onTap: _goToUserInfoScreen,
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xFFEF3030),
+                    ),
+                    child: ClipOval(
+                      child: Image.asset(
+                        'images/bamx-logo.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                 ),
               ),

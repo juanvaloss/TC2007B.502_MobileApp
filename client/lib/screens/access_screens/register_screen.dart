@@ -51,7 +51,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MfaScreen(userId: userIdResponse, userEmail: email),
+            builder: (context) => MfaScreen(userId: userIdResponse, typeOfUser: 1, userEmail: email),
           ),
         );
       } else {

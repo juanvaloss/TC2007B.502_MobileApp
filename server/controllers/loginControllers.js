@@ -24,7 +24,7 @@ const globalLogin = async (req, res) => {
             const assignCodeOk = await tfaModel.assignCodetoAdmin(adminInfo.user.id, otpCode);
 
             if(assignCodeOk === true){
-                res.status(200).json({ type: 2, adminId: adminInfo.user.id});
+                res.status(200).json({ type: 2, userId: adminInfo.user.id});
                 return true;
             }
         } else {

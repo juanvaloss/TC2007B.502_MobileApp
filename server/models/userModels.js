@@ -135,6 +135,25 @@ const updateAdminValue = async(userId, value) => {
     throw err;
   }
 }
+
+const deleteUser = async (userId) => {
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .delete()
+      .eq('id', userId);
+
+    if (error) {
+      throw new Error(`Error deleting user: ${error.message}`);
+    }
+
+    return data;
+  } catch (err) {
+    console.error('Error deleting user:', err);
+    throw err;
+  }
+};
+
   
 
-module.exports = { createUser, isInUsers, getUserInfo, getUserCenters, updateAdminValue};
+module.exports = { createUser, isInUsers, getUserInfo, getUserCenters, updateAdminValue, deleteUser };
