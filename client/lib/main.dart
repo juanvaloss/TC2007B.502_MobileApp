@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import './screens/access_screens/starting_page.dart';
-import 'screens/user_screens/user_main_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import './screens/user_screens/image_application_screen.dart';
