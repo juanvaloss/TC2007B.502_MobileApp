@@ -10,11 +10,11 @@ const createUser = async (req, res) => {
         const userInfo = await userModel.isInUsers(email, plainPassword);
     
         if (userInfo.isMatch === false) {
+            const response = await userModel.createUser(name, email, plainPassword);
             const otpCode = await sendOTP(email);
             const assignCodeOk = await tfaModel.assignCodetoUser(userInfo.user.id, otpCode);
 
             if(assignCodeOk === true){
-                const response = await userModel.createUser(name, email, plainPassword);
                 res.status(200).json({ success: true, message: 'Creation succesful!', userId: response.id});
             }else{
                 throw false;
