@@ -7,14 +7,15 @@ import '../bamxscreens/bamx_admin_home.dart';
 
 class MfaScreen extends StatelessWidget {
   final int userId;
+  final int typeOfUser;
   final String userEmail;
 
-  MfaScreen({super.key, required this.userId, required this.userEmail});
+  MfaScreen({super.key, required this.userId, required this.typeOfUser, required this.userEmail});
 
   final TextEditingController mfaController = TextEditingController();
 
   void sendJsonData(context) async {
-    final url = Uri.parse('http://10.43.121.69:3000/tfa/');
+    final url = Uri.parse('http://192.168.101.102:3000/tfa/');
 
     String mfaCode = mfaController.text;
 
@@ -34,23 +35,15 @@ class MfaScreen extends StatelessWidget {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
+        final userIdResponse = responseData['userId'];
         final bool isBamxAdmin = responseData['isBamxAdmin'];
 
-        if (isBamxAdmin) {
-          final int adminIdResponse = responseData['adminInfo']['id'];
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => BamxAdminHome(userId: adminIdResponse)),
-          );
-        } else {
-          final int userIdResponse = responseData['userInfo']['id'];
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => UserHomeScreen(userId: userIdResponse)),
-          );
-        }
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => UserHomeScreen(userId: userIdResponse, isAdmin: isBamxAdmin,)),
+        );
+
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

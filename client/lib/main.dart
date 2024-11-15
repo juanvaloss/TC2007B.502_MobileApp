@@ -3,7 +3,7 @@ import './screens/access_screens/starting_page.dart';
 import 'screens/user_screens/user_main_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import './screens/user_screens/application_screen.dart';
+import './screens/user_screens/image_application_screen.dart';
 
 
 Future<void> main() async {
@@ -22,12 +22,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'KANAAAAAAAAAAN!!!!',
       initialRoute: '/',
       routes: {
         '/': (context) => const StartingPage(),
         //'/': (context) => const CheckApplication(userId: 0),
-        //'/': (context) => ApplicationScreen(userId: 0),
+        //'/': (context) => const ApplicationScreen(applicationId: 10),
       },
     );
   }

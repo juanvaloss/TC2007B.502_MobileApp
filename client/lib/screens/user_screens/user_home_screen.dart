@@ -11,8 +11,9 @@ import 'more_info_center.dart';
 
 class UserHomeScreen extends StatefulWidget {
   final int userId;
+  final bool isAdmin;
 
-  const UserHomeScreen({required this.userId, super.key});
+  const UserHomeScreen({required this.userId, required this.isAdmin, super.key});
 
   @override
   _UserHomeScreenState createState() => _UserHomeScreenState();
@@ -50,7 +51,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   );
 
   Future<void> fetchData() async {
-    final url = Uri.parse('http://10.43.121.69:3000/centers/coordinates');
+    final url = Uri.parse('http://192.168.101.102:3000/centers/coordinates');
 
     try {
       final response = await http.get(url);

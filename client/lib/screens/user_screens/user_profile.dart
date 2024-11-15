@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'application_screen.dart';
+import 'image_application_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class UserProfileScreen extends StatefulWidget {
