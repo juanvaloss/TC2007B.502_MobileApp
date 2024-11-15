@@ -5,13 +5,16 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import '../user_profile.dart';
+import 'user_profile.dart';
+import 'more_info_center.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
 class UserHomeScreen extends StatefulWidget {
   final int userId;
+  final bool isAdmin;
 
-  const UserHomeScreen({required this.userId, super.key});
+  const UserHomeScreen({required this.userId, required this.isAdmin, super.key});
 
   @override
   _UserHomeScreenState createState() => _UserHomeScreenState();
@@ -34,6 +37,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   bool isInfoWindowVisible = false;
   bool _isMapLoaded = false;
 
+  int? _selectedMarkerId;
   LatLng? _selectedMarkerPosition;
   String? _selectedMarkerTitle;
   String? _selectedMarkerSnippet;
@@ -48,7 +52,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   );
 
   Future<void> fetchData() async {
-    final url = Uri.parse('http://10.43.121.69:3000/centers/coordinates');
+    final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/centers/coordinates');
 
     try {
       final response = await http.get(url);
@@ -78,6 +82,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               markerId: MarkerId(id.toString()),
               position: LatLng(latitude, longitude),
               onTap: () => _onMarkerTapped(
+                id,
                 LatLng(latitude, longitude),
                 name,
                 address,
@@ -94,7 +99,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     }
   }
 
-  Future<void> _goToCenter(double lat, double long, String name, String address) async {
+  Future<void> _goToCenter(int id,double lat, double long, String name, String address) async {
 
     final GoogleMapController controller = await _mapController.future;
     CameraPosition newPosition = CameraPosition(
@@ -111,6 +116,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     });
 
     _onMarkerTapped(
+      id,
       LatLng(lat, long),
       name,
       address,
@@ -125,10 +131,11 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   }
 
 
-  void _onMarkerTapped(LatLng position, String title, String snippet) {
+  void _onMarkerTapped(int id, LatLng position, String title, String snippet) {
     print('Tappeeeeeeeeeeeeed!!');
     setState(() {
       isInfoWindowVisible = true;
+      _selectedMarkerId = id;
       _selectedMarkerPosition = position;
       _selectedMarkerTitle = title;
       _selectedMarkerSnippet = snippet;
@@ -156,6 +163,15 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     );
   }
 
+  void _goToMoreInfoCenter(int cId){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) =>
+              MoreInfoCenter(userId: widget.userId, centerId: cId,)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -171,7 +187,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               itemBuilder: (context, index) {
                 final center = centers[index];
                 return Card(
-                  color: const Color(0xFFE78080),
+                  color: const Color(0xFFEF3030),
                   margin: const EdgeInsets.symmetric(vertical: 8.0),
                   child: ListTile(
                     title: Text(
@@ -180,10 +196,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     ),
                     subtitle: const Text(
                       'Toca para ir al centro',
-                      style: const TextStyle()// Coordinates
+                      style: const TextStyle(color: Colors.white)// Coordinates
                     ),
                     onTap: () {
-                      _goToCenter(center[3], center[4], center[1], center[2]);
+                      _goToCenter(center[0], center[3], center[4], center[1], center[2]);
                     },
                   ),
                 );
@@ -283,7 +299,45 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                         _selectedMarkerSnippet ?? "",
                         style: const TextStyle(fontSize: 14),
                       ),
+                      const SizedBox(height: 8),
+                      ElevatedButton(
+                        onPressed: () {
+                          _goToMoreInfoCenter(_selectedMarkerId!);
+
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFEF3030),
+                        ),
+                        child: const Text(
+                          'Más información',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+
                     ],
+
+                  ),
+                ),
+              ),
+            if (widget.isAdmin)
+              Positioned(
+                top: 50,
+                left: 20,
+                child: GestureDetector(
+                  onTap: _goToUserInfoScreen,
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xFFEF3030),
+                    ),
+                    child: ClipOval(
+                      child: Image.asset(
+                        'images/bamx-logo.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -291,6 +345,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             top: 50,
             right: 20,
               child: FloatingActionButton(
+                heroTag: "userProfileButton",
                 onPressed: _goToUserInfoScreen,
                 backgroundColor: const Color(0xFFEF3030),
                 foregroundColor: Colors.white,
@@ -302,6 +357,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               left: 20,
               child: FloatingActionButton(
                 onPressed: _goToMe,
+                heroTag: "myLocationButton",
                 backgroundColor: const Color(0xFFEF3030),
                 foregroundColor: Colors.white,
                 child: const Icon(Icons.navigation),

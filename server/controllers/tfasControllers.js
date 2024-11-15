@@ -30,16 +30,11 @@ const verifyOTP = async ( savedOtp, userSentOtp, codeTimestamp) => {
     throw false;
 }
 
-const twoFactAuthVerification = async(req, res) => {
+const twoFactAuthVerificationAdmin = async(req, res) => {
     const { userId, codeSentForVeri } = req.body;
     try{
 
-        let response1 = await tfaModel.getLatestCodeUser(userId);
-
-        if (!response1) {
-            response1 = await tfaModel.getLatestCodeAdmin(userId);
-            console.log(response1)
-        }
+        let response1 = await tfaModel.getLatestCodeAdmin(userId);
 
         const savedOtpCode = response1.code;
         const codeTimestamp = response1.createdAt;
@@ -47,24 +42,57 @@ const twoFactAuthVerification = async(req, res) => {
 
         if(verificationStatus === true){
 
-            const userInfo = await userModel.getUserInfo(userId);
-            const adminInfo = await adminModel.getAdminInfo(userId);      
-            if(adminInfo){
-                res.status(200).json({adminInfo, isBamxAdmin: true})
-                await tfaModel.eraseAllAdminCodes(userId);
-            }
-            else{
-                res.status(200).json({userInfo, isBamxAdmin: false})
-                await tfaModel.eraseAllUserCodes(userId);
-            }
+            var userInfo = await adminModel.getAdminInfo(userId);
+
+            res.status(200).json({userId: userInfo.id , isBamxAdmin: true})
+            await tfaModel.eraseAllAdminCodes(userId);
+            
+
             return true;
+        }else{
+            res.status(400).json({ success: false, message: 'Invalid code' });
+            return false;
+
         }
-        return false;
+        
     }catch(err){
         console.error('Error in TFA controller.', err);
         res.status(500).json({ success: false, message: 'Server error' });
         return false;
     }
+}
+
+const twoFactAuthVerificationUser = async(req, res) => {
+    const { userId, codeSentForVeri } = req.body;
+    try{
+
+        let response1 = await tfaModel.getLatestCodeUser(userId);
+
+        const savedOtpCode = response1.code;
+        const codeTimestamp = response1.createdAt;
+        const verificationStatus = await verifyOTP(savedOtpCode, codeSentForVeri, codeTimestamp);
+
+        if(verificationStatus === true){
+
+            var userInfo = await userModel.getUserInfo(userId);
+
+            res.status(200).json({userId: userInfo.id, isBamxAdmin: false})
+            await tfaModel.eraseAllUserCodes(userId);
+            
+
+            return true;
+        }else{
+            res.status(400).json({ success: false, message: 'Invalid code' });
+            return false;
+
+        }
+        
+    }catch(err){
+        console.error('Error in TFA controller.', err);
+        res.status(500).json({ success: false, message: 'Server error' });
+        return false;
+    }
+
 }
 
 const getNewCode = async(req, res) =>{
@@ -90,4 +118,4 @@ const getNewCode = async(req, res) =>{
 }
 
   
-module.exports = {twoFactAuthVerification, getNewCode}
+module.exports = {twoFactAuthVerificationAdmin, twoFactAuthVerificationUser, getNewCode}

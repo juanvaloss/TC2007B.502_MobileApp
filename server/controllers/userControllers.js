@@ -68,6 +68,18 @@ const updateAdminValue = async(req, res) =>{
     }
 }
 
+const deleteUser = async(req, res) =>{
+    const { userId } = req.body;
+    try{
+        const response = await userModel.deleteUser(userId);
+        res.json(response);
+
+    }catch(err){
+        console.error('Error in creation of users controller', err);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+}
 
 
-module.exports = { createUser, getUserInfo, getUserCenters, updateAdminValue};
+
+module.exports = { createUser, getUserInfo, getUserCenters, updateAdminValue, deleteUser};

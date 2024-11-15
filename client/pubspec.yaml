@@ -37,6 +37,8 @@ dependencies:
   logging:  ^1.0.2
   sliding_up_panel: ^2.0.0+1
   font_awesome_flutter: ^10.1.0
+  supabase_flutter: ^2.0.0
+  image_picker: ^1.1.2
 
 
 
@@ -70,6 +72,7 @@ flutter:
   assets:
   - images/bamx-logo.png
   - assets/map_style.json
+  - .env
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

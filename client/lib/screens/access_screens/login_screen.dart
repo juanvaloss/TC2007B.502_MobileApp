@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import '../access_screens/register_screen.dart';
 import '../access_screens/code_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController usernameController = TextEditingController();
@@ -13,7 +15,7 @@ class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
   void sendJsonData(context) async {
-    final url = Uri.parse('http://10.43.121.69:3000/login/global');
+    final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/login/global');
 
     String email = usernameController.text;
     String password = passwordController.text;
@@ -35,20 +37,13 @@ class LoginScreen extends StatelessWidget {
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
         final int type = responseData['type'];
-        int userIdResponse;
+        final int userIdResponse = responseData['userId'];
 
-        if (type == 1) {
-          userIdResponse = responseData['userId'];
-          print(userIdResponse);
-        } else {
-          userIdResponse = responseData['adminId'];
-          print(userIdResponse);
-        }
         Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  MfaScreen(userId: userIdResponse, userEmail: email)),
+                  MfaScreen(userId: userIdResponse, typeOfUser: type, userEmail: email)),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

@@ -1,7 +1,11 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 class MoreInfoCenter extends StatefulWidget {
   final int userId;
@@ -16,16 +20,20 @@ class MoreInfoCenter extends StatefulWidget {
 class _MoreInfoCenterState extends State<MoreInfoCenter> {
   Map<String, dynamic>? centerInfo;
   String errormessage = '';
+  double result = 0.0;
+  Uint8List? _imageFile;
 
   @override
   void initState() {
     super.initState();
+    _getCenterImage();
     futureCenterInfo();
     calculateCapacity();
   }
+
  Future<void> futureCenterInfo() async {
   try {
-    final url = Uri.parse('http://10.43.44.202:3000/centers/centerinfo');
+    final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/centers/centerinfo');
 
     Map<String, dynamic> jsonData = {
       'centerId': widget.centerId.toString()
@@ -61,13 +69,28 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
   }
 }
 
-double result = 0.0;
-
 void calculateCapacity() async {
   setState(() {
     result = (100 * (centerInfo?['currentCapacity'] ?? 0)) / (centerInfo?['maxCapacity'] ?? 1);
   });
 }
+
+
+Future<void> _getCenterImage() async{
+  final supabase = SupabaseClient(dotenv.env['SUPABASE_URL']!, dotenv.env['SUPABASE_ANON_KEY']!);
+  final storageResponse = await supabase
+      .storage
+      .from('imagesOfCenters')
+      .download('center${widget.centerId}.jpg');
+
+  setState(() {
+    _imageFile = storageResponse;
+  });
+
+
+
+}
+
 
 IconData getIcon() {
   if (result < 30) {
@@ -103,9 +126,9 @@ List<Widget> getAcceptedItems() {
             shape: BoxShape.circle,
           ),
           padding: const EdgeInsets.all(10),
-        child: const Icon(FontAwesomeIcons.drumstickBite, color: Color(0xFF747783), size: 35),
+        child: const Icon(FontAwesomeIcons.drumstickBite, color: Color(0xFF747783), size: 40),
         ),
-        const Text('Carne'),
+        const Text('Carne', style: TextStyle(fontSize: 16),),
       ],
     ));
   }
@@ -119,9 +142,9 @@ List<Widget> getAcceptedItems() {
             shape: BoxShape.circle,
           ),
           padding: const EdgeInsets.all(10),
-       child: const Icon(FontAwesomeIcons.carrot, color: Color(0xFF747783), size: 30),
+       child: const Icon(FontAwesomeIcons.carrot, color: Color(0xFF747783), size: 40),
         ),
-        const Text('Vegetales')
+        const Text('Vegetales',style: TextStyle(fontSize: 16))
       ],
     ));
   }
@@ -135,9 +158,9 @@ List<Widget> getAcceptedItems() {
             shape: BoxShape.circle,
           ),
           padding: const EdgeInsets.all(10),
-        child: const Icon(FontAwesomeIcons.solidTrashCan, color: Color(0xFF747783), size: 30),
+        child: const Icon(FontAwesomeIcons.solidTrashCan, color: Color(0xFF747783), size: 40),
         ),
-        const Text('Latas')
+        const Text('Latas', style: TextStyle(fontSize: 16))
       ],
     ));
   }
@@ -164,13 +187,22 @@ Widget build(BuildContext context){
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,  // Aligns all items in the column to the left
         children: [
-          Container(
-            width: 400,
-            height: 200,
-            decoration: BoxDecoration(
-              color: const Color(0xFF98A8B8),
-              borderRadius: BorderRadius.circular(40),
-            ),
+        Container(
+          width: double.infinity,
+          height: 200,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            image: _imageFile != null
+                ? DecorationImage(
+              image: MemoryImage(_imageFile!),
+              fit: BoxFit.cover,
+            )
+                : null,
+            color: Colors.grey[200], // Placeholder color
+          ),
+          child: _imageFile == null
+              ? const Center(child: CircularProgressIndicator())
+              : null,
           ),
           const SizedBox(height: 15),
           Align(
@@ -178,18 +210,18 @@ Widget build(BuildContext context){
             child: Text(
               '${centerInfo?['centerName'] ?? 'No disponible'}',
               style: const TextStyle(
-                fontSize: 20,
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
-          const SizedBox(height: 3),
+          const SizedBox(height: 8),
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
               'Dirección: ${centerInfo?['centerAddress'] ?? 'No disponible'}',
               style: const TextStyle(
-                fontSize: 10,
+                fontSize: 17,
                 color: Colors.grey,
               ),
             ),
@@ -209,18 +241,18 @@ Widget build(BuildContext context){
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Icon(getIcon(), color: getColor()),
+                Icon(getIcon(), color: getColor(), size: 40,),
                 const SizedBox(width: 10),
-                Text('$result% lleno', style: const TextStyle(fontSize: 16)),
+                Text('$result% lleno', style: const TextStyle(fontSize: 22)),
               ],
             ),
 
-            const SizedBox(height: 50),
+            const SizedBox(height: 40),
 
             const Text(
               'Acepta: ',
               style: TextStyle(
-                fontSize: 20
+                fontSize: 22
               )
             ),
 
@@ -231,7 +263,7 @@ Widget build(BuildContext context){
               children: getAcceptedItems(),
             ),
 
-            const SizedBox(height: 80),
+            const SizedBox(height: 60),
 
             Center(
             child: SizedBox(
@@ -249,7 +281,7 @@ Widget build(BuildContext context){
                               child: const Text(
                                 'ENCONTRAR RUTA',
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 20,
                                   color: Colors.white,
                                 ),
                               ),

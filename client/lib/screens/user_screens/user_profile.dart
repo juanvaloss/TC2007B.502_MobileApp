@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../access_screens/starting_page.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class UserProfileScreen extends StatefulWidget {
   final int userId;
@@ -17,6 +19,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   @override
   void initState() {
+
     fetchUserInfo();
     super.initState();
 
@@ -28,14 +31,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   String _generateMapUrl(double latitude, double longitude) {
-    const apiKey = 'AIzaSyAEW6obJehSR-507NnEKKLB_NS1tHdwzTw';
+    var apiKey = dotenv.env['GOOGLE_MAPS_API_KEY'];
     return 'https://maps.googleapis.com/maps/api/staticmap?center=$latitude,$longitude&zoom=17&size=650x300&markers=color:red%7C$latitude,$longitude&key=$apiKey';
   }
 
   Future<void> fetchUserInfo() async {
     try {
-      final url1 = Uri.parse('http://10.43.121.69:3000/users/userInfo');
-      final url2 = Uri.parse('http://10.43.121.69:3000/users/userCenters');
+      final url1 = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/users/userInfo');
+      final url2 = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/users/userCenters');
 
       Map<String, dynamic> jsonData = {
         'userId': widget.userId,
@@ -90,9 +93,36 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     }
   }
 
+  Future<void> _deleteUserAccount()async{
+    try{
+      final url = Uri.parse("http://${dotenv.env['LOCAL_IP']}:3000/users/delete");
+
+      Map<String, dynamic> jsonData = {
+        'userId': widget.userId,
+      };
+
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(jsonData),
+      );
+
+      if(response.statusCode == 200){
+
+      }
+
+
+
+    }catch(e){
+      print(e);
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: AppBar(title: const Text('Perfil de usuario')),
       body: userInfo.isNotEmpty
           ? Padding(
@@ -110,7 +140,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             const SizedBox(height: 16),
             const Text(
               'Tu perfil',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
 
@@ -128,7 +158,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 children: [
                   const Text(
                     'Tu información:',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   ...userInfo.entries
@@ -139,12 +169,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       children: [
                         Text(
                           "${_capitalizeFirstLetter(entry.key)}:",
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           entry.value.toString(),
-                          style: const TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 18),
                         ),
                         const SizedBox(height: 8),
                       ],
@@ -156,7 +186,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             if (userInfo['isCenterAdmin'] == true) ...[
               const Text(
                 'Información de tu centro:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
               ),
               ListView.builder(
                 shrinkWrap: true,
@@ -171,15 +201,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Nombre del centro: \n ${center['centerName']}",
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          const Text(
+                            "Nombre del centro:",
+                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                           ),
+                          Text("     ${center['centerName']}", style: const TextStyle(fontSize: 18)),
                           const SizedBox(height: 4),
-                          Text(
-                            "Dirección del centro: \n ${center['centerAddress']}",
-                            style: const TextStyle(fontSize: 16),
+                          const Text(
+                            "Dirección del centro: ",
+                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                           ),
+                          Text("     ${center['centerAddress']}", style: const TextStyle(fontSize: 18)),
                           const SizedBox(height: 8),
                           Center(
                             child: Image.network(
@@ -198,20 +230,94 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               ),
             ],
             const SizedBox(height: 8),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFEF3030),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
+            if (!userInfo['isCenterAdmin'])
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFEF3030),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  onPressed: () {},
+                  child: const Text(
+                    'Solicitud de Centro',
+                    style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
-                onPressed: () {},
+              ),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => StartingPage()), // Replace with your login screen widget
+                        (Route<dynamic> route) => false,
+                  );
+                  print('Session closed');
+                },
                 child: const Text(
-                  'Solicitud de Centro',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                  'Cerrar Sesión',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text("Confirmación", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                        content: const Text("¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.", style: TextStyle(fontSize: 20),),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("Cancelar", style: TextStyle(fontSize: 18)),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                            onPressed: () {
+                              // Add your delete account logic here
+                              Navigator.of(context).pop();
+                              print('Account deleted');
+                            },
+                            child: const Text(
+                              "Eliminar Cuenta",
+                              style: TextStyle(color: Colors.white, fontSize: 18),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                child: const Text(
+                  'Eliminar Cuenta',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
               ),
             ),

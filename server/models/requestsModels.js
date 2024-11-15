@@ -26,7 +26,8 @@ const createRequest = async (userId, centerNa, centerAdd, capac, acceptsM, accep
     const { data, error } = await supabase
       .from('requests')
       .insert([{ solicitor: userId, centerName: centerNa, centerAddress: centerAdd, capacity: capac, acceptsMeat: acceptsM, acceptsVegetables: acceptsV, acceptsCans: acceptsC }])
-      .select('*')
+      .select('id')
+      
     if (error) {
       throw new Error(`Error executing query: ${error.message}`);
     }
