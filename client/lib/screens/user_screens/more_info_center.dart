@@ -33,7 +33,7 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
 
  Future<void> futureCenterInfo() async {
   try {
-    final url = Uri.parse('http://192.168.101.102:3000/centers/centerinfo');
+    final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/centers/centerinfo');
 
     Map<String, dynamic> jsonData = {
       'centerId': widget.centerId.toString()

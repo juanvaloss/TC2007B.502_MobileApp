@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'user_profile.dart';
 import 'more_info_center.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
 class UserHomeScreen extends StatefulWidget {
@@ -51,7 +52,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   );
 
   Future<void> fetchData() async {
-    final url = Uri.parse('http://192.168.101.102:3000/centers/coordinates');
+    final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/centers/coordinates');
 
     try {
       final response = await http.get(url);

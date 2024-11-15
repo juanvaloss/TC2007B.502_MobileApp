@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import '../user_screens/user_home_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MfaScreen extends StatelessWidget {
   final int userId;
@@ -14,7 +15,7 @@ class MfaScreen extends StatelessWidget {
   final TextEditingController mfaController = TextEditingController();
 
   void sendJsonData(context) async {
-    final url = Uri.parse('http://192.168.101.102:3000/tfa/${typeOfUser}');
+    final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/tfa/${typeOfUser}');
     print(url);
 
     String mfaCode = mfaController.text;

@@ -37,8 +37,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   Future<void> fetchUserInfo() async {
     try {
-      final url1 = Uri.parse('http://192.168.101.102:3000/users/userInfo');
-      final url2 = Uri.parse('http://192.168.101.102:3000/users/userCenters');
+      final url1 = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/users/userInfo');
+      final url2 = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/users/userCenters');
 
       Map<String, dynamic> jsonData = {
         'userId': widget.userId,
@@ -95,7 +95,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   Future<void> _deleteUserAccount()async{
     try{
-      final url = Uri.parse("http://192.168.101.102:3000/users/delete");
+      final url = Uri.parse("http://${dotenv.env['LOCAL_IP']}:3000/users/delete");
 
       Map<String, dynamic> jsonData = {
         'userId': widget.userId,
