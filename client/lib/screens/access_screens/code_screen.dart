@@ -62,7 +62,7 @@ class MfaScreen extends StatelessWidget {
   }
 
   void getNewCode(context) async {
-    final url = Uri.parse('http://192.168.101.118:3000/tfa/newCode');
+    final url = Uri.parse('http://192.168.101.118:3000/tfa/newCode/${typeOfUser}');
 
     Map<String, dynamic> jsonData = {'userId': userId, 'email': userEmail};
 
@@ -95,8 +95,6 @@ class MfaScreen extends StatelessWidget {
         );
 
       }
-
-
 
     } catch (e) {
       print('Error: $e');

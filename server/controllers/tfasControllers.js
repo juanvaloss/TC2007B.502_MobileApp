@@ -2,7 +2,6 @@ const tfaModel = require("../models/tfasModels")
 const userModel = require("../models/userModels")
 const adminModel = require("../models/adminsModels")
 const {sendOTP} = require("../config/mg");
-const e = require("express");
 
 const verifyOTP = async ( savedOtp, userSentOtp, codeTimestamp) => {
   
@@ -95,7 +94,7 @@ const twoFactAuthVerificationUser = async(req, res) => {
 
 }
 
-const getNewCode = async(req, res) =>{
+const getNewCodeUser = async(req, res) =>{
     const { userId, email } = req.body;
 
     try{
@@ -105,7 +104,7 @@ const getNewCode = async(req, res) =>{
             res.status(500).json({ success: false, message: 'Server error' });
         }
 
-        const assignCodeOk = await tfaModel.assignCodetoUser(userId, otpCode);
+        await tfaModel.assignCodetoUser(userId, otpCode);
 
         res.status(200).json({ success: true, message: 'New code was sent succesfully!', userId: userId});
         
@@ -117,5 +116,26 @@ const getNewCode = async(req, res) =>{
 
 }
 
+const getNewCodeAdmin = async(req, res) =>{
+    const { userId, email } = req.body;
+
+    try{
+        const otpCode = await sendOTP(email);
+        if(otpCode === null){
+            console.error('Error in assigning new code.', err);
+            res.status(500).json({ success: false, message: 'Server error' });
+        }
+
+        await tfaModel.assignCodetoAdmin(userId, otpCode);
+
+        res.status(200).json({ success: true, message: 'New code was sent succesfully!', userId: userId});
+        
+
+    }catch(err){
+        console.error('Error in assigning new code.', err);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+
+}
   
-module.exports = {twoFactAuthVerificationAdmin, twoFactAuthVerificationUser, getNewCode}
+module.exports = {twoFactAuthVerificationAdmin, twoFactAuthVerificationUser, getNewCodeUser, getNewCodeAdmin};
