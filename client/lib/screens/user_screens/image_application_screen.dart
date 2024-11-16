@@ -6,8 +6,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
 class ImageApplicationScreen extends StatefulWidget {
-  final int applicationId;
-  const ImageApplicationScreen({super.key, required this.applicationId});
+  final int userId;
+  final String firstNameOfCenter;
+  const ImageApplicationScreen({super.key, required this.userId, required this.firstNameOfCenter});
 
   @override
   _ImageApplicationScreenState createState() => _ImageApplicationScreenState();
@@ -34,7 +35,7 @@ class _ImageApplicationScreenState extends State<ImageApplicationScreen> {
     }
 
     else{
-      String imageName = 'center${widget.applicationId}.jpg';
+      String imageName = 'center${widget.userId}${widget.firstNameOfCenter}.jpg';
       try{
         final supabase = SupabaseClient(dotenv.env['SUPABASE_URL']!, dotenv.env['SUPABASE_ANON_KEY']!);
 

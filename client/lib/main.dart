@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/screens/user_screens/application_screen.dart';
 import './screens/access_screens/starting_page.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -24,9 +25,9 @@ class MyApp extends StatelessWidget {
       title: 'KANAAAAAAAAAAN!!!!',
       initialRoute: '/',
       routes: {
-        '/': (context) => const StartingPage(),
+        //'/': (context) => const StartingPage(),
         //'/': (context) => const CheckApplication(userId: 0),
-        //'/': (context) => const ApplicationScreen(applicationId: 10),
+        '/': (context) => const ApplicationScreen(userId: 10,),
       },
     );
   }
