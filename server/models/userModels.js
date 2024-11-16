@@ -48,6 +48,37 @@ const isInUsers = async (email, plainPassword) => {
     }
 };
 
+
+const alreadyExists = async (email) => {
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .select('id')
+      .eq('email', email);
+
+    if (error) {
+      throw new Error(`Error executing query: ${error.message}`);
+    }
+
+    if (data.length > 0) {
+      console.log('User found');
+      return true;
+    }
+
+    else{
+      console.log('User not found');
+      return false;
+    }
+
+    
+  } catch (err) {
+    console.error('Error fetching user:', err);
+    throw err;
+  }
+
+};
+
+
 //Basic register, more info abt the user needs to be added.
 const createUser = async (name, email, plainPassword) => {
     try {
@@ -156,4 +187,4 @@ const deleteUser = async (userId) => {
 
   
 
-module.exports = { createUser, isInUsers, getUserInfo, getUserCenters, updateAdminValue, deleteUser };
+module.exports = { createUser, isInUsers, getUserInfo, getUserCenters, updateAdminValue, deleteUser, alreadyExists };

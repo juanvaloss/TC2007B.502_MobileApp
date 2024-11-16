@@ -7,22 +7,25 @@ const createUser = async (req, res) => {
     const { name, email, plainPassword } = req.body;
     
     try {
-        const userInfo = await userModel.isInUsers(email, plainPassword);
+        const userInfo = await userModel.alreadyExists(email);
+        console.log(userInfo);
     
-        if (userInfo.isMatch === false) {
-            const response = await userModel.createUser(name, email, plainPassword);
-            const otpCode = await sendOTP(email);
-            const assignCodeOk = await tfaModel.assignCodetoUser(userInfo.user.id, otpCode);
-
-            if(assignCodeOk === true){
-                res.status(200).json({ success: true, message: 'Creation succesful!', userId: response.id});
-            }else{
-                throw false;
-            }
-            
-        } else {
-            res.status(401).json({ success: false, message: 'Already in database, login please.' });
+        if (userInfo === true) {
+            res.status(400).json({ success: false, message: 'Email used by another account, login!' });
+            return;
         }
+
+        const response = await userModel.createUser(name, email, plainPassword);
+        console.log(response);
+        const otpCode = await sendOTP(email);
+        const assignCodeOk = await tfaModel.assignCodetoUser(response.id, otpCode);
+
+        if(assignCodeOk === true){
+            res.status(200).json({ success: true, message: 'Creation succesful!', userId: response.id});
+        }else{
+            throw false;
+        }
+            
 
         
       } catch (err) {
