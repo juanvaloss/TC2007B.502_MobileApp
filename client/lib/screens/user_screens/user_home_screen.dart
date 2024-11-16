@@ -5,30 +5,32 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'user_profile.dart';
 import 'more_info_center.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class UserHomeScreen extends StatefulWidget {
   final int userId;
   final bool isAdmin;
 
-  const UserHomeScreen({required this.userId, required this.isAdmin, super.key});
+  const UserHomeScreen(
+      {required this.userId, required this.isAdmin, super.key});
 
   @override
   _UserHomeScreenState createState() => _UserHomeScreenState();
 }
 
 class _UserHomeScreenState extends State<UserHomeScreen> {
-
   @override
   void initState() {
+    super.initState();
     rootBundle.loadString('assets/map_style.json').then((string) {
       _mapStyleString = string;
     });
-    super.initState();
     fetchData();
+    _requestPermission();
   }
 
   List<List<dynamic>> centers = [];
@@ -42,7 +44,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   String? _selectedMarkerTitle;
   String? _selectedMarkerSnippet;
 
-  final Completer<GoogleMapController> _mapController = Completer<GoogleMapController>();
+  final Completer<GoogleMapController> _mapController =
+      Completer<GoogleMapController>();
   final PanelController _panelController = PanelController();
   final Set<Marker> _markers = {};
 
@@ -51,8 +54,43 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     zoom: 15,
   );
 
+  Future<void> _requestPermission() async {
+    await FirebaseMessaging.instance.requestPermission();
+    final fcm_token = await FirebaseMessaging.instance.getToken();
+
+    if (fcm_token != null) {
+      _setFcmToken(fcm_token);
+    }
+
+    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) async {
+      await _setFcmToken(newToken);
+    });
+
+    //WIP
+    FirebaseMessaging.onMessage.listen((payload) {
+      final notification = payload.notification;
+      if (notification != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${notification.title} - ${notification.body}'),
+          ),
+        );
+      }
+    });
+  }
+
+  Future<void> _setFcmToken(String fcm_token) async {
+    final supabase = SupabaseClient(
+        dotenv.env['SUPABASE_URL']!, dotenv.env['SUPABASE_ANON_KEY']!);
+
+    await supabase
+        .from('users')
+        .update({'fcm_token': fcm_token}).eq('id', widget.userId);
+  }
+
   Future<void> fetchData() async {
-    final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/centers/coordinates');
+    final url =
+        Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/centers/coordinates');
 
     try {
       final response = await http.get(url);
@@ -61,13 +99,15 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         final List<dynamic> data = json.decode(response.body);
 
         setState(() {
-          centers = data.map((item) => [
-            item['id'],
-            item['centerName'],
-            item['centerAddress'],
-            item['latitude'],
-            item['longitude']
-          ]).toList();
+          centers = data
+              .map((item) => [
+                    item['id'],
+                    item['centerName'],
+                    item['centerAddress'],
+                    item['latitude'],
+                    item['longitude']
+                  ])
+              .toList();
         });
 
         for (var center in centers) {
@@ -79,18 +119,16 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
           _markers.add(
             Marker(
-              markerId: MarkerId(id.toString()),
-              position: LatLng(latitude, longitude),
-              onTap: () => _onMarkerTapped(
-                id,
-                LatLng(latitude, longitude),
-                name,
-                address,
-              )
-            ),
+                markerId: MarkerId(id.toString()),
+                position: LatLng(latitude, longitude),
+                onTap: () => _onMarkerTapped(
+                      id,
+                      LatLng(latitude, longitude),
+                      name,
+                      address,
+                    )),
           );
         }
-
       } else {
         print('Error: ${response.statusCode}');
       }
@@ -99,15 +137,14 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     }
   }
 
-  Future<void> _goToCenter(int id,double lat, double long, String name, String address) async {
-
+  Future<void> _goToCenter(
+      int id, double lat, double long, String name, String address) async {
     final GoogleMapController controller = await _mapController.future;
     CameraPosition newPosition = CameraPosition(
       target: LatLng(lat, long),
       zoom: 15,
     );
     await controller.animateCamera(CameraUpdate.newCameraPosition(newPosition));
-
 
     Future.delayed(Duration(milliseconds: 500), () {
       if (_panelController.isPanelOpen) {
@@ -121,15 +158,14 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       name,
       address,
     );
-
   }
 
   Future<void> _goToMe() async {
     final GoogleMapController controller = await _mapController.future;
-    await controller.animateCamera(CameraUpdate.newCameraPosition(_initialPosition));
+    await controller
+        .animateCamera(CameraUpdate.newCameraPosition(_initialPosition));
     _hideCustomInfoWindow();
   }
-
 
   void _onMarkerTapped(int id, LatLng position, String title, String snippet) {
     print('Tappeeeeeeeeeeeeed!!');
@@ -143,72 +179,74 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   }
 
   void _hideCustomInfoWindow() {
-
-    if(isInfoWindowVisible){
+    if (isInfoWindowVisible) {
       print("Hidiiiiing!!!!");
       setState(() {
         isInfoWindowVisible = false;
         _selectedMarkerPosition == null;
       });
     }
-
   }
 
-  void _goToUserInfoScreen(){
+  void _goToUserInfoScreen() {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) =>
-              UserProfileScreen(userId: widget.userId)),
+          builder: (context) => UserProfileScreen(userId: widget.userId)),
     );
   }
 
-  void _goToMoreInfoCenter(int cId){
+  void _goToMoreInfoCenter(int cId) {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) =>
-              MoreInfoCenter(userId: widget.userId, centerId: cId,)),
+          builder: (context) => MoreInfoCenter(
+                userId: widget.userId,
+                centerId: cId,
+              )),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: SlidingUpPanel(
         controller: _panelController,
         panel: Center(
           child: centers.isNotEmpty
               ? Padding(
-            padding: const EdgeInsets.only(top: 50, right: 20, left: 20),
-            child: ListView.builder(
-              itemCount: centers.length,
-              itemBuilder: (context, index) {
-                final center = centers[index];
-                return Card(
-                  color: const Color(0xFFEF3030),
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: ListTile(
-                    title: Text(
-                      '${center[1]}', // Center name
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                    ),
-                    subtitle: const Text(
-                      'Toca para ir al centro',
-                      style: const TextStyle(color: Colors.white)// Coordinates
-                    ),
-                    onTap: () {
-                      _goToCenter(center[0], center[3], center[4], center[1], center[2]);
+                  padding: const EdgeInsets.only(top: 50, right: 20, left: 20),
+                  child: ListView.builder(
+                    itemCount: centers.length,
+                    itemBuilder: (context, index) {
+                      final center = centers[index];
+                      return Card(
+                        color: const Color(0xFFEF3030),
+                        margin: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: ListTile(
+                          title: Text(
+                            '${center[1]}', // Center name
+                            style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                          subtitle: const Text('Toca para ir al centro',
+                              style: const TextStyle(
+                                  color: Colors.white) // Coordinates
+                              ),
+                          onTap: () {
+                            _goToCenter(center[0], center[3], center[4],
+                                center[1], center[2]);
+                          },
+                        ),
+                      );
                     },
                   ),
-                );
-              },
-            ),
-          )
+                )
               : const Center(
-            child: CircularProgressIndicator(),
-          ),
+                  child: CircularProgressIndicator(),
+                ),
         ),
         body: Stack(
           children: [
@@ -284,7 +322,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                           Expanded(
                             child: Text(
                               _selectedMarkerTitle ?? "",
-                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
                               overflow: TextOverflow.clip,
                             ),
                           ),
@@ -303,7 +342,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       ElevatedButton(
                         onPressed: () {
                           _goToMoreInfoCenter(_selectedMarkerId!);
-
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFEF3030),
@@ -313,9 +351,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
-
                     ],
-
                   ),
                 ),
               ),
@@ -342,8 +378,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 ),
               ),
             Positioned(
-            top: 50,
-            right: 20,
+              top: 50,
+              right: 20,
               child: FloatingActionButton(
                 heroTag: "userProfileButton",
                 onPressed: _goToUserInfoScreen,
@@ -399,7 +435,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             ],
           ),
         ),
-
       ),
     );
   }
