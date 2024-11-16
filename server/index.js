@@ -9,7 +9,7 @@ const port = 3000;
 const userRoutes = require("./routes/userRoutes");
 const centerRoutes = require("./routes/centerRoutes");
 const adminRoutes = require("./routes/adminsRoutes");
-const requestRoutes = require("./routes/requestsRoutes");
+const applicationRoutes = require("./routes/applicationsRoutes");
 const donationRoutes = require("./routes/donationsRoutes");
 const tfaRoutes = require("./routes/tfasRoutes");
 const loginRoutes = require("./routes/loginRoutes");
@@ -26,7 +26,7 @@ app.listen(port, () => {
 app.use("/users",userRoutes)
 app.use("/centers",centerRoutes)
 app.use("/admins",adminRoutes)
-app.use("/requests",requestRoutes)
+app.use("/applications",applicationRoutes)
 app.use("/donations",donationRoutes)
 app.use("/tfa", tfaRoutes)
 app.use("/login", loginRoutes)

@@ -1,32 +1,32 @@
 const { supabase } = require('../config/db'); 
 
 
-const getRequestInfo = async (userId) => {
+const getApplicationInfo = async (userId) => {
   try {
     const { data, error } = await supabase
-      .from('requests')
+      .from('applications')
       .select('*')
       .eq('solicitor', userId);
 
     if (error) {
-      throw new Error(`Error fetching request: ${error.message}`);
+      throw new Error(`Error fetching application: ${error.message}`);
     }
 
     return data;
   } catch (err) {
-    console.error('Error fetching request:', err);
+    console.error('Error fetching application:', err);
     throw err;
   }
 
 }
 
 
-const createRequest = async (userId, centerNa, centerAdd, capac, acceptsM, acceptsV, acceptsC) => {
+const createApplication = async (userId, centerNa, centerAdd, capac, acceptsM, acceptsV, acceptsC) => {
   try {
     const { data, error } = await supabase
-      .from('requests')
+      .from('applications')
       .insert([{ solicitor: userId, centerName: centerNa, centerAddress: centerAdd, capacity: capac, acceptsMeat: acceptsM, acceptsVegetables: acceptsV, acceptsCans: acceptsC }])
-      .select('id')
+      .select('solicitor, centerName')
       
     if (error) {
       throw new Error(`Error executing query: ${error.message}`);
@@ -34,17 +34,17 @@ const createRequest = async (userId, centerNa, centerAdd, capac, acceptsM, accep
 
     return data[0]; // Return the created center data
   } catch (err) {
-    console.error('Error creating request:', err);
+    console.error('Error creating application:', err);
     throw err;
   }
 };
 
-const deleteRequest = async(requestId) =>{
+const deleteApplication = async(ApplicationId) =>{
   try{
     const { data, error } = await supabase
-    .from('requests')
+    .from('applications')
     .delete()
-    .eq('id', requestId);
+    .eq('id', ApplicationId);
 
     if(error){
       throw new Error(`Error executing query: ${error.message}`);
@@ -53,9 +53,9 @@ const deleteRequest = async(requestId) =>{
     return data
 
   }catch(err){
-    console.error('Error deleting request:', err);
+    console.error('Error deleting application:', err);
     throw err;
   }
 }
 
-module.exports = { getRequestInfo ,createRequest, deleteRequest };
+module.exports = { getApplicationInfo ,createApplication, deleteApplication };

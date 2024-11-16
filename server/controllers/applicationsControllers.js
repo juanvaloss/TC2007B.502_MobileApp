@@ -1,40 +1,39 @@
-const requestModel = require("../models/requestsModels")
+const applicationModel = require("../models/applicationsModels")
 const userModel = require("../models/userModels")
 
-const getRequestInfo = async(req, res) => {
+const getApplicationInfo = async(req, res) => {
     const {userId} = req.body;
     try {
-        const response = await requestModel.getRequestInfo(userId);
+        const response = await ApplicationModel.getApplicationInfo(userId);
         res.json(response);
     } catch (err) {
-        console.error('Error in creation of users controller', err);
+        console.error('Error fetching the application', err);
         res.status(500).json({ success: false, message: 'Server error' });
     }
 }
 
-const createRequest = async(req, res) => {
+const createApplication = async(req, res) => {
     const {userId, centerName, centerAddress, capac, acceptsM, acceptsV, acceptsC} = req.body;
 
-    try {
-        
+    try {   
         const userInfo = await userModel.getUserInfo(userId);
         if(userInfo.isCenterAdmin === false){
-            const response = await requestModel.createRequest( userId, centerName, centerAddress, capac, acceptsM, acceptsV, acceptsC );
+            const response = await applicationModel.createApplication( userId, centerName, centerAddress, capac, acceptsM, acceptsV, acceptsC );
             res.json(response);
         }else{
             res.json({message: "El usuario ya es administrador de un centro de acopio."});
         }
         
     } catch (err) {
-        console.error('Error in creation of users controller', err);
+        console.error('Error creating an application.', err);
         res.status(500).json({ success: false, message: 'Server error' });
     }
 }
 
-const deleteRequest = async(req, res) =>{
-    const { requestId } = req.body;
+const deleteApplication = async(req, res) =>{
+    const { applicationId } = req.body;
     try {
-        const response = await requestModel.deleteRequest( requestId );
+        const response = await ApplicationModel.deleteApplication( applicationId );
         res.json(response);
        
     } catch (err) {
@@ -43,4 +42,4 @@ const deleteRequest = async(req, res) =>{
     } 
 }
 
-module.exports = { getRequestInfo ,createRequest, deleteRequest}
+module.exports = { getApplicationInfo ,createApplication, deleteApplication}
