@@ -4,7 +4,7 @@ const userModel = require("../models/userModels")
 const getApplicationInfo = async(req, res) => {
     const {userId} = req.body;
     try {
-        const response = await ApplicationModel.getApplicationInfo(userId);
+        const response = await applicationModel.getApplicationInfo(userId);
         res.json(response);
     } catch (err) {
         console.error('Error fetching the application', err);
@@ -33,7 +33,7 @@ const createApplication = async(req, res) => {
 const deleteApplication = async(req, res) =>{
     const { applicationId } = req.body;
     try {
-        const response = await ApplicationModel.deleteApplication( applicationId );
+        const response = await applicationModel.deleteApplication( applicationId );
         res.json(response);
        
     } catch (err) {
@@ -44,7 +44,7 @@ const deleteApplication = async(req, res) =>{
 
 const getAllApplications = async(req, res) => {
     try {
-        const response = await ApplicationModel.getAllApplications();
+        const response = await applicationModel.getAllApplications();
         res.json(response);
     } catch (err) {
         console.error('Error fetching all the applications.', err);
