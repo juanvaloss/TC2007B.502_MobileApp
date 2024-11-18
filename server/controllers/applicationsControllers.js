@@ -52,4 +52,4 @@ const getAllApplications = async(req, res) => {
     }
 }
 
-module.exports = { getApplicationInfo ,createApplication, deleteApplication}
+module.exports = { getApplicationInfo ,createApplication, deleteApplication, getAllApplications}
