@@ -50,7 +50,7 @@ app.*.map.json
 /android/app/release
 
 #Supabase
-/supabase/functions/service-account.json
+/supabase/functions/
 
 # Firebase config
 
