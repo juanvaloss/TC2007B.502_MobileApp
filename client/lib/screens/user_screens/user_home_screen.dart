@@ -69,6 +69,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     //WIP
     FirebaseMessaging.onMessage.listen((payload) {
       final notification = payload.notification;
+      print(notification);
       if (notification != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

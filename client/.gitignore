@@ -48,3 +48,12 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+#Supabase
+/supabase/functions/service-account.json
+
+# Firebase config
+
+/android/app/google-services.json
+/android/app/src/main/AndroidManifest.xml
+/lib/firebase_options.dart

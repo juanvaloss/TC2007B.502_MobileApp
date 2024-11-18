@@ -53,7 +53,7 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: '',
+    apiKey: 'AIzaSyDBmN2ICQzGPX_qOHIe4JwaKU7eq6BSBRc',
     appId: '1:315207208854:android:467010e7d7ff8587ee97b7',
     messagingSenderId: '315207208854',
     projectId: 'kanaan-project',
