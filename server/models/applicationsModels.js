@@ -58,4 +58,21 @@ const deleteApplication = async(ApplicationId) =>{
   }
 }
 
-module.exports = { getApplicationInfo ,createApplication, deleteApplication };
+const getAllApplications = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('applications')
+      .select('*');
+
+    if (error) {
+      throw new Error(`Error fetching applications: ${error.message}`);
+    }
+
+    return data;
+  } catch (err) {
+    console.error('Error fetching applications:', err);
+    throw err;
+  }
+}
+
+module.exports = { getApplicationInfo ,createApplication, deleteApplication, getAllApplications };

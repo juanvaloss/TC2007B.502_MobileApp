@@ -37,9 +37,19 @@ const deleteApplication = async(req, res) =>{
         res.json(response);
        
     } catch (err) {
-        console.error('Error in creation of users controller', err);
+        console.error('Error deleting an application.', err);
         res.status(500).json({ success: false, message: 'Server error' });
     } 
+}
+
+const getAllApplications = async(req, res) => {
+    try {
+        const response = await ApplicationModel.getAllApplications();
+        res.json(response);
+    } catch (err) {
+        console.error('Error fetching all the applications.', err);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
 }
 
 module.exports = { getApplicationInfo ,createApplication, deleteApplication}

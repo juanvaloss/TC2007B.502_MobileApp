@@ -5,5 +5,6 @@ const applicationController = require('../controllers/applicationsControllers');
 router.post('/getReqInfo', applicationController.getApplicationInfo);
 router.post('/create', applicationController.createApplication);
 router.post('/delete', applicationController.deleteApplication);
+router.get('/getAll', applicationController.getAllApplications);
 
 module.exports = router;
