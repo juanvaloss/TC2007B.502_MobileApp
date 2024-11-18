@@ -1,5 +1,11 @@
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { JWT } from 'npm:google-auth-library@9';
+import { config } from "https://deno.land/x/dotenv@v3.2.2/mod.ts";
+
+const env = config();
+
+const supabaseUrl = env.SUPABASE_URL;
+const supabaseKey = env.SUPABASE_ANON_KEY;
 
 interface Application {
   centerName: string,
@@ -16,8 +22,8 @@ interface WebhookPayload {
 }
 
 const supabase = createClient(
-  'https://uctmljqxrlpurcutbicl.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVjdG1sanF4cmxwdXJjdXRiaWNsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyODQzODI3MiwiZXhwIjoyMDQ0MDE0MjcyfQ.OZpIzQ6lU388vxHwJdMrXfBZMAPcfNsWoyb5n6jj7WE'
+  supabaseUrl,
+  supabaseKey
 
 )
 
