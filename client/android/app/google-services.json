@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "315207208854",
+    "project_id": "kanaan-project",
+    "storage_bucket": "kanaan-project.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:315207208854:android:467010e7d7ff8587ee97b7",
+        "android_client_info": {
+          "package_name": "com.ka.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBmN2ICQzGPX_qOHIe4JwaKU7eq6BSBRc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

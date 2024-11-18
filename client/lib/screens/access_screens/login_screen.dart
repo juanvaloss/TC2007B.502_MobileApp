@@ -6,7 +6,6 @@ import '../access_screens/register_screen.dart';
 import '../access_screens/code_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-
 class LoginScreen extends StatelessWidget {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -42,8 +41,8 @@ class LoginScreen extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  MfaScreen(userId: userIdResponse, typeOfUser: type, userEmail: email)),
+              builder: (context) => MfaScreen(
+                  userId: userIdResponse, typeOfUser: type, userEmail: email)),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
