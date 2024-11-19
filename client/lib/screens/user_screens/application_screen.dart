@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'image_application_screen.dart';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ApplicationScreen extends StatefulWidget {
 
@@ -69,7 +69,7 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
         if (response.statusCode == 200) {
           final Map<String, dynamic> responseData = json.decode(response.body);
           final solicitorId = responseData['solicitor'];
-          final firstNameOfC = responseData['centerName'].split(' ').first;;
+          final firstNameOfC = responseData['centerName'].split(' ').first;
 
           Navigator.pushAndRemoveUntil(
             context,
@@ -221,7 +221,7 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                   children: [
                     _buildProductTypeButton('Carne', Icons.restaurant_menu, _isCarneSelected),
                     _buildProductTypeButton('Verduras', Icons.eco, _isVegetablesSelected),
-                    _buildProductTypeButton('Enlatados', Icons.local_dining, _isCansSelected),
+                    _buildProductTypeButton('Enlatados', FontAwesomeIcons.bucket, _isCansSelected),
                   ],
                 ),
                 const SizedBox(height: 20),

@@ -1,12 +1,13 @@
 const { supabase } = require('../config/db'); 
 
 
-const getApplicationInfo = async (userId) => {
+const getApplicationInfo = async (applicationId) => {
   try {
     const { data, error } = await supabase
       .from('applications')
       .select('*')
-      .eq('solicitor', userId);
+      .eq('id', applicationId)
+      .single();
 
     if (error) {
       throw new Error(`Error fetching application: ${error.message}`);
@@ -39,12 +40,12 @@ const createApplication = async (userId, centerNa, centerAdd, capac, acceptsM, a
   }
 };
 
-const deleteApplication = async(ApplicationId) =>{
+const deleteApplication = async(applicationId) =>{
   try{
     const { data, error } = await supabase
     .from('applications')
     .delete()
-    .eq('id', ApplicationId);
+    .eq('id', applicationId);
 
     if(error){
       throw new Error(`Error executing query: ${error.message}`);

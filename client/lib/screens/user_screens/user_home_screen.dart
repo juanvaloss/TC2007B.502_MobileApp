@@ -10,6 +10,7 @@ import 'user_profile.dart';
 import 'more_info_center.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import '../bamxscreens/notifications_screen.dart';
 
 class UserHomeScreen extends StatefulWidget {
   final int userId;
@@ -208,6 +209,18 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     );
   }
 
+  void _goToBamxDashboard(){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => NotificationsScreen(
+            userId: widget.userId,
+          )),
+    );
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -361,7 +374,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 top: 50,
                 left: 20,
                 child: GestureDetector(
-                  onTap: _goToUserInfoScreen,
+                  onTap: _goToBamxDashboard,
                   child: Container(
                     width: 100,
                     height: 100,

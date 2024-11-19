@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../access_screens/starting_page.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import './application_screen.dart';
 
 class UserProfileScreen extends StatefulWidget {
   final int userId;
@@ -33,6 +34,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   String _generateMapUrl(double latitude, double longitude) {
     var apiKey = dotenv.env['GOOGLE_MAPS_API_KEY'];
     return 'https://maps.googleapis.com/maps/api/staticmap?center=$latitude,$longitude&zoom=17&size=650x300&markers=color:red%7C$latitude,$longitude&key=$apiKey';
+  }
+
+  void _goToApplication(){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ApplicationScreen(userId: widget.userId,), // Replace with your screen widget
+      ),
+    );
+
+
   }
 
   Future<void> fetchUserInfo() async {
@@ -110,8 +122,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       if(response.statusCode == 200){
 
       }
-
-
 
     }catch(e){
       print(e);
@@ -241,10 +251,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    _goToApplication();
+                  },
                   child: const Text(
                     'Solicitud de Centro',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
+                    style: TextStyle(fontSize: 20, color: Colors.white),
                   ),
                 ),
               ),
@@ -262,7 +274,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 onPressed: () {
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => StartingPage()), // Replace with your login screen widget
+                    MaterialPageRoute(builder: (context) => StartingPage()),
                         (Route<dynamic> route) => false,
                   );
                   print('Session closed');

@@ -95,8 +95,6 @@ Future<void> _getCenterImage() async{
     _imageFile = storageResponse;
   });
 
-
-
 }
 
 

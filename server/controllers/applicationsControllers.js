@@ -2,9 +2,9 @@ const applicationModel = require("../models/applicationsModels")
 const userModel = require("../models/userModels")
 
 const getApplicationInfo = async(req, res) => {
-    const {userId} = req.body;
+    const {applicationId} = req.body;
     try {
-        const response = await applicationModel.getApplicationInfo(userId);
+        const response = await applicationModel.getApplicationInfo(applicationId);
         res.json(response);
     } catch (err) {
         console.error('Error fetching the application', err);

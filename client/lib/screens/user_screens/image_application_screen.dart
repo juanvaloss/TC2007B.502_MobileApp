@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'user_profile.dart';
 
 
 class ImageApplicationScreen extends StatefulWidget {
@@ -51,6 +52,13 @@ class _ImageApplicationScreenState extends State<ImageApplicationScreen> {
         print(e);
       }
     }
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+          builder: (context) => UserProfileScreen(userId: widget.userId,)),
+          (Route<dynamic> route) => false,
+    );
 
   }
 

@@ -37,6 +37,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           requests = data.map((request) {
             return {
               "id": request['id'],
+              "solicitor": request['solicitor'],
               "centerName": request['centerName'],
               "centerAddress": request['centerAddress'],
             };
@@ -143,12 +144,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   final request = requests[index];
                   return GestureDetector(
                     onTap: () {
-                      // Navegar a la pantalla de detalles de la solicitud
+                      print(request['solicitor']);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => ApplicationDetailsScreen(
-                            userId: request['id'],
+                            applicationId: request['id'],
+                            solicitorId:  request['solicitor'],
                           ),
                         ),
                       );

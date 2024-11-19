@@ -32,8 +32,8 @@ class MyApp extends StatelessWidget {
       title: 'KANAAAAAAAAAAN!!!!',
       initialRoute: '/',
       routes: {
-        //'/': (context) => const StartingPage(),
-        '/': (context) => const StatusCenter(userId: 8, centerId: 3)
+        '/': (context) => const StartingPage(),
+        //'/': (context) => const StatusCenter(userId: 8, centerId: 3)
 
       },
     );
