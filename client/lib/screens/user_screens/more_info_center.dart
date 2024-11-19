@@ -52,6 +52,7 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
         setState(() {
           centerInfo = responseData[0]; 
         });
+        calculateCapacity();
       } else {
         setState(() {
           errormessage = 'No se encontró información del centro.';
@@ -69,9 +70,16 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
   }
 }
 
-void calculateCapacity() async {
+
+
+void calculateCapacity() {
   setState(() {
-    result = (100 * (centerInfo?['currentCapacity'] ?? 0)) / (centerInfo?['maxCapacity'] ?? 1);
+    if (centerInfo != null) {
+      result = (100 * (centerInfo?['currentCapacity'] ?? 0)) / 
+               ((centerInfo?['totalCapacity'] ?? 1).toDouble());
+    } else {
+      result = 0.0;
+    }
   });
 }
 
@@ -243,7 +251,7 @@ Widget build(BuildContext context){
               children: [
                 Icon(getIcon(), color: getColor(), size: 40,),
                 const SizedBox(width: 10),
-                Text('$result% lleno', style: const TextStyle(fontSize: 22)),
+                Text('${result.round()}% lleno', style: const TextStyle(fontSize: 22)),
               ],
             ),
 
