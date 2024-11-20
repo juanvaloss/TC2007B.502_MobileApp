@@ -47,8 +47,7 @@ flutter {
 }
 
 dependencies {
-    // Add your dependencies here, for example:
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10"
-    implementation 'com.google.android.gms:play-services-maps:18.0.2' // Example for Google Maps
-    implementation 'com.google.android.gms:play-services-location:21.0.1' // Example for Location
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
 }
