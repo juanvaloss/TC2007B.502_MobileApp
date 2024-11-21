@@ -75,6 +75,32 @@ class _AddDonation extends State<AddDonation> {
                   FilteringTextInputFormatter.allow(RegExp('[0-9_. ]'))
                 ],
               ),
+
+              const SizedBox(height: 100),
+
+              const Text(
+                '¿Cuáles fueron los tipos de alimentos que se donaron?',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: const Icon(FontAwesomeIcons.drumstickBite, color: Color(0xFF747783)),
+                        onPressed: () {
+                          // Action for apple
+                        },
+                      ),
+                      const Text('Manzanas')
+                    ],
+                  )
+                ],
+              )
             ],
           ),
         ),
