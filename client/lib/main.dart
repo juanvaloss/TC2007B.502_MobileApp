@@ -8,6 +8,7 @@ import 'package:flutter_application_1/screens/user_screens/application_screen.da
 import './screens/access_screens/starting_page.dart';
 import './screens/center_screens/status_center.dart';
 import './screens/user_screens/more_info_center.dart';
+import './screens/center_screens/center_home.dart'; 
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,8 +33,9 @@ class MyApp extends StatelessWidget {
       title: 'KANAAAAAAAAAAN!!!!',
       initialRoute: '/',
       routes: {
-        '/': (context) => const StartingPage(),
-        //'/': (context) => const StatusCenter(userId: 8, centerId: 3)
+        //'/': (context) => const StartingPage(),
+        '/': (context) => const CenterHome(userId: 8, centerId: 3)
+
 
       },
     );
