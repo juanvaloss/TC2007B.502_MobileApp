@@ -57,3 +57,7 @@ app.*.map.json
 /android/app/google-services.json
 /android/app/src/main/AndroidManifest.xml
 /lib/firebase_options.dart
+
+# Dependency directories
+node_modules/
+jspm_packages/

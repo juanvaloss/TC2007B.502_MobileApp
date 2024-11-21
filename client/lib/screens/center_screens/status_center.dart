@@ -241,7 +241,7 @@ List<Widget> getAcceptedItems() {
     shape: const CircularNotchedRectangle(), 
     notchMargin: 8.0, 
     child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround, // Adjust items' positions
+      mainAxisAlignment: MainAxisAlignment.spaceAround, 
       children: [
         IconButton(
           icon: const Icon(Icons.home_outlined, color: Colors.black),
