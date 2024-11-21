@@ -60,7 +60,8 @@ const getCenterInfo = async (centerId) => {
     const { data, error } = await supabase
       .from('centers')
       .select('*')
-      .eq('id', centerId);
+      .eq('id', centerId)
+      .single();
 
     if (error) {
       throw new Error(`Error fetching center info: ${error.message}`);

@@ -18,25 +18,27 @@ class MoreInfoCenter extends StatefulWidget {
 }
 
 class _MoreInfoCenterState extends State<MoreInfoCenter> {
-  Map<String, dynamic>? centerInfo;
+  Map<String, dynamic> centerInfo = {};
   String errormessage = '';
   double result = 0.0;
   Uint8List? _imageFile;
+  late var centerAdmin;
+  late var firstNameOfC;
 
   @override
   void initState() {
     super.initState();
-    _getCenterImage();
     futureCenterInfo();
     calculateCapacity();
+    _getCenterImage();
   }
 
  Future<void> futureCenterInfo() async {
   try {
-    final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/centers/centerinfo');
+    final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/centers/centerInfo');
 
     Map<String, dynamic> jsonData = {
-      'centerId': widget.centerId.toString()
+      'centerId': widget.centerId
     };
 
     final response = await http.post(
@@ -45,19 +47,15 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
       body: json.encode(jsonData),
     );
 
-    if (response.statusCode == 200 && response.body.isNotEmpty) {
+    if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
-      
-      if (responseData is List && responseData.isNotEmpty) {
-        setState(() {
-          centerInfo = responseData[0]; 
-        });
-        calculateCapacity();
-      } else {
-        setState(() {
-          errormessage = 'No se encontró información del centro.';
-        });
-      }
+
+      setState(() {
+        centerInfo = responseData;
+        centerAdmin = responseData['centerAdmin'];
+        firstNameOfC = responseData['centerName'].split(' ').first;
+      });
+
     } else {
       setState(() {
         errormessage = 'Error ${response.statusCode}: no se pudo cargar la información del centro.';
@@ -74,13 +72,9 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
 
 void calculateCapacity() {
   setState(() {
-    if (centerInfo != null) {
-      result = (100 * (centerInfo?['currentCapacity'] ?? 0)) / 
-               ((centerInfo?['totalCapacity'] ?? 1).toDouble());
-    } else {
-      result = 0.0;
-    }
-  });
+    result = (100 * (centerInfo['currentCapacity'] ?? 0)) /
+             ((centerInfo['totalCapacity'] ?? 1).toDouble());
+    });
 }
 
 
@@ -123,7 +117,7 @@ Color getColor() {
 List<Widget> getAcceptedItems() {
   List<Widget> items = [];
 
-  if(centerInfo?['acceptsMeat'] == true){
+  if(centerInfo['acceptsMeat'] == true){
     items.add(Column(
       children: [
         Container(
@@ -139,7 +133,7 @@ List<Widget> getAcceptedItems() {
     ));
   }
 
-  if(centerInfo?['acceptsVegetables'] == true){
+  if(centerInfo['acceptsVegetables'] == true){
     items.add(Column(
       children: [
         Container(
@@ -155,7 +149,7 @@ List<Widget> getAcceptedItems() {
     ));
   }
 
-  if(centerInfo?['acceptsCans'] == true){
+  if(centerInfo['acceptsCans'] == true){
     items.add(Column(
       children: [
         Container(
