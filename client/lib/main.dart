@@ -9,6 +9,7 @@ import './screens/access_screens/starting_page.dart';
 import './screens/center_screens/status_center.dart';
 import './screens/user_screens/more_info_center.dart';
 import './screens/center_screens/center_home.dart'; 
+import './screens/center_screens/add_donation.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         //'/': (context) => const StartingPage(),
-        '/': (context) => const CenterHome(userId: 8, centerId: 3)
+        '/': (context) => const AddDonation(userId: 8, centerId: 3)
 
 
       },
