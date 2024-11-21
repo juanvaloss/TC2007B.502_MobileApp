@@ -16,7 +16,6 @@ class MfaScreen extends StatelessWidget {
 
   void sendJsonData(context) async {
     final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/tfa/${typeOfUser}');
-    print(url);
 
     String mfaCode = mfaController.text;
 
