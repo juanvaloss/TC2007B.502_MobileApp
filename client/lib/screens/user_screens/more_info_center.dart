@@ -30,7 +30,6 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
     super.initState();
     futureCenterInfo();
     calculateCapacity();
-    _getCenterImage();
   }
 
  Future<void> futureCenterInfo() async {
@@ -53,7 +52,17 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
       setState(() {
         centerInfo = responseData;
         centerAdmin = responseData['centerAdmin'];
-        firstNameOfC = responseData['centerName'].split(' ').first;
+        firstNameOfC = removeDiacritics(responseData['centerName'].split(' ').first);
+      });
+
+      final supabase = SupabaseClient(dotenv.env['SUPABASE_URL']!, dotenv.env['SUPABASE_ANON_KEY']!);
+      final storageResponse = await supabase
+          .storage
+          .from('imagesOfCenters')
+          .download('center${centerAdmin}${firstNameOfC}.jpg');
+
+      setState(() {
+        _imageFile = storageResponse;
       });
 
     } else {
@@ -68,6 +77,27 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
   }
 }
 
+  String removeDiacritics(String str) {
+    var withDiacritics = 'áéíóúÁÉÍÓÚ';
+    var withoutDiacritics = 'aeiouAEIOU';
+
+    String result = '';
+
+    for (int i = 0; i < str.length; i++) {
+      // Check if the character is in withDiacritics
+      int index = withDiacritics.indexOf(str[i]);
+      if (index != -1) {
+        // Replace with corresponding character in withoutDiacritics
+        result += withoutDiacritics[index];
+      } else {
+        // If not found, keep the character as is
+        result += str[i];
+      }
+    }
+
+    return result;
+  }
+
 
 
 void calculateCapacity() {
@@ -76,21 +106,6 @@ void calculateCapacity() {
              ((centerInfo['totalCapacity'] ?? 1).toDouble());
     });
 }
-
-
-Future<void> _getCenterImage() async{
-  final supabase = SupabaseClient(dotenv.env['SUPABASE_URL']!, dotenv.env['SUPABASE_ANON_KEY']!);
-  final storageResponse = await supabase
-      .storage
-      .from('imagesOfCenters')
-      .download('center${widget.centerId}.jpg');
-
-  setState(() {
-    _imageFile = storageResponse;
-  });
-
-}
-
 
 IconData getIcon() {
   if (result < 30) {

@@ -5,11 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'user_profile.dart';
 import 'more_info_center.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import '../bamxscreens/notifications_screen.dart';
 
 class UserHomeScreen extends StatefulWidget {
@@ -31,7 +29,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       _mapStyleString = string;
     });
     fetchData();
-    _requestPermission();
   }
 
   List<List<dynamic>> centers = [];
@@ -54,41 +51,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     target: LatLng(20.67471511804876, -103.43224564816127),
     zoom: 15,
   );
-
-  Future<void> _requestPermission() async {
-    await FirebaseMessaging.instance.requestPermission();
-    final fcm_token = await FirebaseMessaging.instance.getToken();
-
-    if (fcm_token != null) {
-      _setFcmToken(fcm_token);
-    }
-
-    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) async {
-      await _setFcmToken(newToken);
-    });
-
-    //WIP
-    FirebaseMessaging.onMessage.listen((payload) {
-      final notification = payload.notification;
-      print(notification);
-      if (notification != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${notification.title} - ${notification.body}'),
-          ),
-        );
-      }
-    });
-  }
-
-  Future<void> _setFcmToken(String fcm_token) async {
-    final supabase = SupabaseClient(
-        dotenv.env['SUPABASE_URL']!, dotenv.env['SUPABASE_ANON_KEY']!);
-
-    await supabase
-        .from('users')
-        .update({'fcm_token': fcm_token}).eq('id', widget.userId);
-  }
 
   Future<void> fetchData() async {
     final url =

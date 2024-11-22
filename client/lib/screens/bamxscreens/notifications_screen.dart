@@ -4,6 +4,8 @@ import 'package:flutter_application_1/screens/bamxscreens/bamx_admin_home.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class NotificationsScreen extends StatefulWidget {
   final int userId;
@@ -20,9 +22,19 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   void initState() {
     super.initState();
-    if (selectedOption == 'Solicitudes') {
-      fetchRequests(); // Solo cargar solicitudes si se selecciona "Solicitudes"
-    }
+    fetchRequests();
+    _requestPermission();
+    FirebaseMessaging.onMessage.listen((payload) {
+      final notification = payload.notification;
+      print(notification);
+      if (notification != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${notification.title} - ${notification.body}'),
+          ),
+        );
+      }
+    });
   }
 
   // Método para obtener las solicitudes desde el servidor
@@ -51,17 +63,40 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     }
   }
 
+  Future<void> _requestPermission() async {
+    await FirebaseMessaging.instance.requestPermission();
+    final fcm_token = await FirebaseMessaging.instance.getToken();
+
+    if (fcm_token != null) {
+      _setFcmToken(fcm_token);
+    }
+
+    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) async {
+      await _setFcmToken(newToken);
+    });
+
+  }
+
+  Future<void> _setFcmToken(String fcm_token) async {
+    final supabase = SupabaseClient(dotenv.env['SUPABASE_URL']!, dotenv.env['SUPABASE_ANON_KEY']!);
+
+    await supabase
+        .from('admins')
+        .update({'fcm_token': fcm_token}).eq('id', widget.userId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: const Text('Notificaciones'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pushReplacement(
+            Navigator.pop(
               context,
-              MaterialPageRoute(builder: (context) => BamxAdminHome(userId: widget.userId)),
             );
           },
         ),
@@ -110,7 +145,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       Text(
                         'Solicitudes',
                         style: TextStyle(
-                          color: selectedOption == 'Solicitudes' ? Colors.red : Colors.black,
+                          color: selectedOption == 'Solicitudes' ? const Color(0xFFEF3030) : Colors.black,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
@@ -144,7 +179,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   final request = requests[index];
                   return GestureDetector(
                     onTap: () {
-                      print(request['solicitor']);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -157,6 +191,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     },
                     child: Card(
                       margin: const EdgeInsets.all(10),
+                      color: const Color(0xFFEF3030),
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Column(
@@ -167,10 +202,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
+                                color: Colors.white
                               ),
                             ),
                             const SizedBox(height: 4),
-                            Text('Presiona para ver más información'),
+                            const Text('Presiona para ver más información', style: TextStyle(color: Colors.white),),
                           ],
                         ),
                       ),

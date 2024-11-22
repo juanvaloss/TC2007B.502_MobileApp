@@ -22,15 +22,15 @@ interface WebhookPayload {
 }
 
 const supabase = createClient(
-  supabaseUrl,
-  supabaseKey
+  'https://uctmljqxrlpurcutbicl.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVjdG1sanF4cmxwdXJjdXRiaWNsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyODQzODI3MiwiZXhwIjoyMDQ0MDE0MjcyfQ.OZpIzQ6lU388vxHwJdMrXfBZMAPcfNsWoyb5n6jj7WE'
 
 )
 
 Deno.serve(async (req) => {
   const payload: WebhookPayload = await req.json();
 
-  const {data} = await supabase.from('users').select('fcm_token').eq('id', payload.record.solicitor).single();
+  const {data} = await supabase.from('admins').select('fcm_token').eq('id', 2).single();
 
   const fcm_token = data!.fcm_token as string;
 
