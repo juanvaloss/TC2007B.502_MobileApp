@@ -41,9 +41,9 @@ const twoFactAuthVerificationAdmin = async(req, res) => {
 
         if(verificationStatus === true){
 
-            const userInfo = await adminModel.getAdminInfo(userId);
+            var adminInfo = await adminModel.getAdminInfo(userId);
 
-            res.status(200).json({userId: userInfo.id , isBamxAdmin: true})
+            res.status(200).json({userId: adminInfo.id , isCenterAdmin: false,isBamxAdmin: true})
             await tfaModel.eraseAllAdminCodes(userId);
             
 
@@ -75,7 +75,7 @@ const twoFactAuthVerificationUser = async(req, res) => {
 
             var userInfo = await userModel.getUserInfo(userId);
 
-            res.status(200).json({userId: userInfo.id, isBamxAdmin: false})
+            res.status(200).json({userId: userInfo.id, isCenterAdmin: userInfo.isCenterAdmin ,isBamxAdmin: false})
             await tfaModel.eraseAllUserCodes(userId);
             
 
