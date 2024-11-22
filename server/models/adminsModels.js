@@ -70,7 +70,7 @@ const getAdminInfo = async (userId) => {
     const { data, error } = await supabase
       .from('admins')
       .select('name, email')
-      .eq('id', userId);
+      .eq('id', userId)
   
       if (data.length > 0) {
         console.log('Admin found');

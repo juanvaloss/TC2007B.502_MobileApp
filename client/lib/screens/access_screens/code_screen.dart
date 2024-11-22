@@ -37,6 +37,7 @@ class MfaScreen extends StatelessWidget {
         final Map<String, dynamic> responseData = json.decode(response.body);
         final userIdResponse = responseData['userId'];
         final bool isBamxAdmin = responseData['isBamxAdmin'];
+        final bool isCenterAdmin = responseData['isCenterAdmin'] ?? false;
 
         Navigator.pushAndRemoveUntil(
           context,
