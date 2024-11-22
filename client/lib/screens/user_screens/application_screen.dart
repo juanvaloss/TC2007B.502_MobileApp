@@ -174,6 +174,7 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                       borderSide: BorderSide.none,
                     ),
                   ),
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
                 const Text(
@@ -197,6 +198,7 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                       borderSide: BorderSide.none,
                     ),
                   ),
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
                 const Text(
@@ -239,6 +241,7 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                       borderSide: BorderSide.none,
                     ),
                   ),
+                  textAlign: TextAlign.center,
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(
                       //WIP
