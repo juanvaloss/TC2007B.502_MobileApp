@@ -34,9 +34,9 @@ class MyApp extends StatelessWidget {
       title: 'KANAAAAAAAAAAN!!!!',
       initialRoute: '/',
       routes: {
-        //'/': (context) => const StartingPage(),
+        '/': (context) => const StartingPage(),
         //'/': (context) => const ApplicationScreen(userId: 10),
-        '/': (context) => const UserHomeScreen(userId: 2, isBamxAdmin: true,),
+        //'/': (context) => const UserHomeScreen(userId: 2, isBamxAdmin: true,),
 
 
 
