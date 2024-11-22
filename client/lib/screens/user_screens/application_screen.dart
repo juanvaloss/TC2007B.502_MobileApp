@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'image_application_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter/services.dart';
 
 class ApplicationScreen extends StatefulWidget {
 
@@ -96,10 +97,10 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
           CircleAvatar(
             radius: 30,
             backgroundColor:
-            isSelected ? const Color(0xFFE55A4F) : const Color(0xFFF8D7DA),
+            isSelected ? const Color(0xFFEF3030) : const Color(0xFFEF3030).withOpacity(0.25),
             child: Icon(
               icon,
-              color: isSelected ? Colors.white : const Color(0xFFE55A4F),
+              color: isSelected ? Colors.white : const Color(0xFF747783),
             ),
           ),
           const SizedBox(height: 6),
@@ -247,12 +248,17 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                       borderSide: BorderSide.none,
                     ),
                   ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(
+                      //WIP
+                        RegExp(r'^\d*\.\d*$')),
+                  ],
                 ),
                 const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: _sendApplication,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFE55A4F),
+                    backgroundColor: const Color(0xFFEF3030),
                     padding:
                     const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
                     shape: RoundedRectangleBorder(
