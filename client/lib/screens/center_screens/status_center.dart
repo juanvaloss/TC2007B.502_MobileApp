@@ -89,7 +89,7 @@ List<Widget> getAcceptedItems() {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: Colors.red.withOpacity(0.25),
+            color: const Color(0xFFEF3030).withOpacity(0.25),
             shape: BoxShape.circle,
           ),
           padding: const EdgeInsets.all(10),
@@ -105,7 +105,7 @@ List<Widget> getAcceptedItems() {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: Colors.red.withOpacity(0.25),
+            color: const Color(0xFFEF3030).withOpacity(0.25),
             shape: BoxShape.circle,
           ),
           padding: const EdgeInsets.all(10),
@@ -121,7 +121,7 @@ List<Widget> getAcceptedItems() {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: Colors.red.withOpacity(0.25),
+            color: const Color(0xFFEF3030).withOpacity(0.25),
             shape: BoxShape.circle,
           ),
           padding: const EdgeInsets.all(10),
