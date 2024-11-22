@@ -34,9 +34,8 @@ class MyApp extends StatelessWidget {
       title: 'KANAAAAAAAAAAN!!!!',
       initialRoute: '/',
       routes: {
-        '/': (context) => const StartingPage(),
-        //'/': (context) => const AddDonation(userId: 8, centerId: 3)
-        //'/': (context) => const ImageApplicationScreen(userId: 3, firstNameOfCenter: 'WOoooow')
+        //'/': (context) => const StartingPage(),
+        '/': (context) => const ApplicationScreen(userId: 10),
 
 
       },

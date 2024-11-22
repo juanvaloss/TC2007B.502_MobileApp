@@ -100,6 +100,7 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
             isSelected ? const Color(0xFFEF3030) : const Color(0xFFEF3030).withOpacity(0.25),
             child: Icon(
               icon,
+              size: 25,
               color: isSelected ? Colors.white : const Color(0xFF747783),
             ),
           ),
@@ -119,7 +120,7 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: const Color(0xFFFFFFFF),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -128,9 +129,14 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text(
-          'Petición Centro de Acopio',
-          style: TextStyle(color: Colors.grey, fontSize: 16),
-        ),
+                  'Solicitud de Centro de Acopio',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
         centerTitle: true,
       ),
       body: Center(
@@ -138,29 +144,14 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
           child: Container(
             padding: const EdgeInsets.all(20.0),
             margin: const EdgeInsets.all(20.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20.0),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 10.0,
-                  offset: Offset(0, 4),
-                ),
-              ],
-            ),
+            
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Text(
-                  'Solicitud de Centro de Acopio',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
+          'Petición Centro de Acopio',
+          style: TextStyle(color: Colors.grey, fontSize: 16),
+        ),
                 const SizedBox(height: 20),
                 const Text(
                   'Ingresa el nombre de tu Centro de Acopio',
@@ -183,6 +174,7 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                       borderSide: BorderSide.none,
                     ),
                   ),
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
                 const Text(
@@ -206,6 +198,7 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                       borderSide: BorderSide.none,
                     ),
                   ),
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
                 const Text(
@@ -220,8 +213,8 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildProductTypeButton('Carne', Icons.restaurant_menu, _isCarneSelected),
-                    _buildProductTypeButton('Verduras', Icons.eco, _isVegetablesSelected),
+                    _buildProductTypeButton('Carne', FontAwesomeIcons.drumstickBite, _isCarneSelected),
+                    _buildProductTypeButton('Verduras', FontAwesomeIcons.carrot, _isVegetablesSelected),
                     _buildProductTypeButton('Enlatados', FontAwesomeIcons.bucket, _isCansSelected),
                   ],
                 ),
@@ -248,6 +241,7 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                       borderSide: BorderSide.none,
                     ),
                   ),
+                  textAlign: TextAlign.center,
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(
                       //WIP

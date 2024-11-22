@@ -67,4 +67,4 @@ This project is a proposal for a mobile application designed to streamline the p
 ## Requirements to Run the Program
 
 - Install **Flutter** and configure it for mobile development (iOS/Android).
-- Install **Node.js** for running the server.
+- Pull the Server Image from **Docker** kanan-server/benja0rtzzz
