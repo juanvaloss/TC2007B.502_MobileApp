@@ -5,11 +5,15 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'user_profile.dart';
 
-
 class ImageApplicationScreen extends StatefulWidget {
   final int userId;
   final String firstNameOfCenter;
-  const ImageApplicationScreen({super.key, required this.userId, required this.firstNameOfCenter});
+
+  const ImageApplicationScreen({
+    Key? key,
+    required this.userId,
+    required this.firstNameOfCenter,
+  }) : super(key: key);
 
   @override
   _ImageApplicationScreenState createState() => _ImageApplicationScreenState();
@@ -19,13 +23,14 @@ class _ImageApplicationScreenState extends State<ImageApplicationScreen> {
   final ImagePicker _picker = ImagePicker();
   XFile? _imageFile;
   String? _pickImageError;
+  bool isUploading = false;
 
   Future<void> _uploadImage() async {
     if (_imageFile == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-              'Por favor, elija una imagen para continuar.',
+            'Por favor, elija una imagen para continuar.',
             style: TextStyle(fontSize: 17),
           ),
           backgroundColor: Color(0xFFEF3030),
@@ -33,33 +38,48 @@ class _ImageApplicationScreenState extends State<ImageApplicationScreen> {
         ),
       );
       return;
-    }
-
-    else{
+    } else {
+      setState(() {
+        isUploading = true;
+      });
       String imageName = 'center${widget.userId}${widget.firstNameOfCenter}.jpg';
-      try{
-        final supabase = SupabaseClient(dotenv.env['SUPABASE_URL']!, dotenv.env['SUPABASE_ANON_KEY']!);
+      try {
+        final supabase = SupabaseClient(
+          dotenv.env['SUPABASE_URL']!,
+          dotenv.env['SUPABASE_ANON_KEY']!,
+        );
 
         final File file = File(_imageFile!.path);
-        final storageResponse = await supabase
-            .storage
-            .from('imagesOfCenters')
-            .upload(imageName, file);
+        await supabase.storage.from('imagesOfCenters').upload(imageName, file);
 
-        print(storageResponse);
-
-      }catch(e){
-        print(e);
+        // Navigate to the UserProfileScreen after upload
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => UserProfileScreen(
+              userId: widget.userId,
+              isBamxAdmin: false,
+            ),
+          ),
+              (Route<dynamic> route) => false,
+        );
+      } catch (e) {
+        print('Error uploading image: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Error subiendo la imagen: $e',
+              style: const TextStyle(fontSize: 17),
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } finally {
+        setState(() {
+          isUploading = false;
+        });
       }
     }
-
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-          builder: (context) => UserProfileScreen(userId: widget.userId, isBamxAdmin: false,)),
-          (Route<dynamic> route) => false,
-    );
-
   }
 
   Future<void> _pickImage() async {
@@ -88,14 +108,25 @@ class _ImageApplicationScreenState extends State<ImageApplicationScreen> {
     if (_imageFile != null) {
       return Stack(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
-            child: Image.file(
-              File(_imageFile!.path),
-              width: double.infinity,
-              height: 200,
-              fit: BoxFit.cover,
-            ),
+          FutureBuilder<void>(
+            future: Future.delayed(const Duration(seconds: 4)),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: Image.file(
+                    File(_imageFile!.path),
+                    width: double.infinity,
+                    height: 200,
+                    fit: BoxFit.cover,
+                  ),
+                );
+              }
+            },
           ),
           Positioned(
             right: 10,
@@ -145,121 +176,130 @@ class _ImageApplicationScreenState extends State<ImageApplicationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.grey[800]),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        backgroundColor: Colors.white,
         title: const Text(
-          'Petición Centro de Acopio',
-          style: TextStyle(color: Colors.grey, fontSize: 16),
+          'Solicitud de Centro de Acopio',
+          style: TextStyle(color: Colors.black,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,),
         ),
         centerTitle: true,
       ),
-      body: Center(
-        child: Container(
-          padding: const EdgeInsets.all(20.0),
-          margin: const EdgeInsets.all(20.0),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20.0),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 10.0,
-                offset: Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Solicitud de Centro de Acopio',
-                style: TextStyle(
-                  color: Colors.grey[800],
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'Estás a un paso de convertirte en un administrador de un Centro de Acopio',
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 18,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 22),
-              const Text(
-                'Sube la mejor foto de tu Centro de Acopio:',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
-              GestureDetector(
-                onTap: _pickImage,
-                child: Container(
-                  width: double.infinity,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(10.0),
-                    border: Border.all(color: Colors.grey[300]!),
-                  ),
-                  child: _imageFile == null
-                      ? Center(
-                    child: Text(
-                      'Subir foto',
-                      style: TextStyle(color: Colors.grey[600]),
+      body: Stack(
+        children: [
+          Center(
+            child: Container(
+              padding: const EdgeInsets.all(20.0),
+              margin: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Estás a un paso de convertirte en un administrador de un Centro de Acopio',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 22,
                     ),
-                  )
-                      : ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: _previewImage(),
+                    textAlign: TextAlign.center,
                   ),
-                ),
-              ),
-              const SizedBox(height: 20,),
-              Text(
-                'Recuerda que esta imagen será visible para todos, lúcete!!!',
-                style: TextStyle(
-                  color: Colors.grey[700],
-                  fontSize: 20,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: _uploadImage,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFEF3030),
-                  padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                  const SizedBox(height: 22),
+                  Text(
+                    'Sube la mejor foto de tu Centro de Acopio:',
+                    style: TextStyle(
+                      color: Colors.grey[500],
+                      fontSize: 20,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                ),
-                child: const Text(
-                  'CONTINUAR',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                  const SizedBox(height: 20),
+                  GestureDetector(
+                    onTap: _pickImage,
+                    child: Container(
+                      width: double.infinity,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(10.0),
+                        border: Border.all(color: Colors.grey[300]!),
+                      ),
+                      child: _imageFile == null
+                          ? Center(
+                        child: Text(
+                          'Subir foto',
+                          style: TextStyle(color: Colors.grey[600], fontSize: 20),
+                        ),
+                      )
+                          : ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: _previewImage(),
+                      ),
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'Recuerda que esta imagen será visible para todos, lúcete!!!',
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                      fontSize: 22,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 30),
+                  ElevatedButton(
+                    onPressed: _uploadImage,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFEF3030),
+                      padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text(
+                      'CONTINUAR',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-
-            ],
+            ),
           ),
-        ),
+          if (isUploading)
+            Container(
+              color: Colors.white, // Semi-transparent background
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Cargando, espera por favor...',
+                      style: TextStyle(color: Colors.black, fontSize: 18),
+                    ),
+                    const SizedBox(height: 20),
+                    Image.asset(
+                      'images/bamx-logo.png', // Replace with your image path
+                      width: 200,
+                      height: 200,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

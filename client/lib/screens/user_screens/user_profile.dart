@@ -134,7 +134,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
 
-      appBar: AppBar(title: const Text('Perfil de usuario')),
+      appBar: AppBar(title: const Text('Perfil de usuario'), backgroundColor: Colors.white,),
+      backgroundColor: Colors.white,
       body: userInfo.isNotEmpty
           ? Padding(
         padding: const EdgeInsets.all(16.0),
