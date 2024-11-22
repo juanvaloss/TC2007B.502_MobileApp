@@ -56,7 +56,7 @@ class _ImageApplicationScreenState extends State<ImageApplicationScreen> {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-          builder: (context) => UserProfileScreen(userId: widget.userId,)),
+          builder: (context) => UserProfileScreen(userId: widget.userId, isBamxAdmin: false,)),
           (Route<dynamic> route) => false,
     );
 

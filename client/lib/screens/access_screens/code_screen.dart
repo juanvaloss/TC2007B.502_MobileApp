@@ -41,7 +41,7 @@ class MfaScreen extends StatelessWidget {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-              builder: (context) => UserHomeScreen(userId: userIdResponse, isAdmin: isBamxAdmin,)),
+              builder: (context) => UserHomeScreen(userId: userIdResponse, isBamxAdmin: isBamxAdmin,)),
               (Route<dynamic> route) => false,
         );
 

@@ -230,7 +230,7 @@ class _AddDonation extends State<AddDonation> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => UserProfileScreen(userId: widget.userId),
+                    builder: (context) => UserProfileScreen(userId: widget.userId, isBamxAdmin: false),
                   ),
                 );
               },

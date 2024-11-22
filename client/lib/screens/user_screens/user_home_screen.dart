@@ -194,7 +194,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => UserProfileScreen(userId: widget.userId)),
+          builder: (context) => UserProfileScreen(userId: widget.userId, isBamxAdmin: widget.isBamxAdmin)),
     );
   }
 

@@ -7,8 +7,9 @@ import './application_screen.dart';
 
 class UserProfileScreen extends StatefulWidget {
   final int userId;
+  final bool isBamxAdmin;
 
-  const UserProfileScreen({super.key, required this.userId});
+  const UserProfileScreen({super.key, required this.userId, required this.isBamxAdmin});
 
   @override
   _UserProfileScreenState createState() => _UserProfileScreenState();

@@ -254,7 +254,7 @@ List<Widget> getAcceptedItems() {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => UserProfileScreen(userId: widget.userId)),
+              MaterialPageRoute(builder: (context) => UserProfileScreen(userId: widget.userId, isBamxAdmin: false)),
             );
           },
         ),
