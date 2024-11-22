@@ -14,10 +14,10 @@ import '../bamxscreens/notifications_screen.dart';
 
 class UserHomeScreen extends StatefulWidget {
   final int userId;
-  final bool isAdmin;
+  final bool isBamxAdmin;
 
   const UserHomeScreen(
-      {required this.userId, required this.isAdmin, super.key});
+      {required this.userId, required this.isBamxAdmin, super.key});
 
   @override
   _UserHomeScreenState createState() => _UserHomeScreenState();
@@ -369,7 +369,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   ),
                 ),
               ),
-            if (widget.isAdmin)
+            if (widget.isBamxAdmin)
               Positioned(
                 top: 50,
                 left: 20,

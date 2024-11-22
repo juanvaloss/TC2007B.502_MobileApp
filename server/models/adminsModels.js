@@ -69,7 +69,7 @@ const getAdminInfo = async (userId) => {
   try {
     const { data, error } = await supabase
       .from('admins')
-      .select('id, name, email')
+      .select('name, email')
       .eq('id', userId);
   
       if (data.length > 0) {
