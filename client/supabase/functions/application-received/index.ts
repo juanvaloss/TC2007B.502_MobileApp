@@ -22,9 +22,8 @@ interface WebhookPayload {
 }
 
 const supabase = createClient(
-  'https://uctmljqxrlpurcutbicl.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVjdG1sanF4cmxwdXJjdXRiaWNsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyODQzODI3MiwiZXhwIjoyMDQ0MDE0MjcyfQ.OZpIzQ6lU388vxHwJdMrXfBZMAPcfNsWoyb5n6jj7WE'
-
+  supabaseUrl,
+  supabaseKey
 )
 
 Deno.serve(async (req) => {
