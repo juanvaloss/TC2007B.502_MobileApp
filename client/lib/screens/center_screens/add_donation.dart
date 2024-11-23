@@ -6,6 +6,18 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../user_screens/user_profile.dart';
 
+class DecimalInputFormatter extends TextInputFormatter {
+  final RegExp _regex = RegExp(r'^\d{0,10}(\.\d{0,10})?$');
+
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    if (_regex.hasMatch(newValue.text)) {
+      return newValue;
+    }
+    return oldValue;
+  }
+}
+
 class AddDonation extends StatefulWidget {
   final int userId;
   final int centerId;
@@ -14,6 +26,8 @@ class AddDonation extends StatefulWidget {
 
   @override
   _AddDonation createState() => _AddDonation();
+
+
 }
 
 class _AddDonation extends State<AddDonation> {
@@ -26,6 +40,36 @@ class _AddDonation extends State<AddDonation> {
   void initState() {
     super.initState();
   }
+
+  Future<void> addDonation() async{
+    final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/donations/register');
+    Map<String, dynamic> jsonData = {
+      'receivIn': widget.centerId,
+      'quan': 3
+    };
+
+    if(!_isCanPressed && !_isMeatPressed && !_isVeggiePressed){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Selecciona al menos un tipo de alimento'),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    try{
+
+    }catch(e){
+      print(e);
+    }
+
+
+
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +91,7 @@ class _AddDonation extends State<AddDonation> {
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Column(
                 children: [
@@ -56,7 +100,7 @@ class _AddDonation extends State<AddDonation> {
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 25),
                   TextField(
                     controller: _donationController,
                     decoration: InputDecoration(
@@ -77,116 +121,11 @@ class _AddDonation extends State<AddDonation> {
                     ),
                     textAlign: TextAlign.center,
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp('[0-9_. ]')),
-                    ],
+                      DecimalInputFormatter(),                    ],
                   ),
                 ],
               ),
-              //const SizedBox(height: 400),
-              Column(
-                children: [
-                  const Text(
-                    '¿Cuáles fueron los tipos de alimentos que se donaron?',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      const SizedBox(width: 20),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: _isMeatPressed
-                                  ? const Color(0xFFEF3030)
-                                  : const Color(0xFFEF3030).withOpacity(0.25),
-                              shape: BoxShape.circle,
-                            ),
-                            child: IconButton(
-                              icon: Icon(
-                                FontAwesomeIcons.drumstickBite,
-                                color: _isMeatPressed
-                                    ? Colors.white
-                                    : const Color(0xFF747783),
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _isMeatPressed = !_isMeatPressed;
-                                });
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text('Carne'),
-                        ],
-                      ),
-                      const SizedBox(width: 20),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: _isVeggiePressed
-                                  ? const Color(0xFFEF3030)
-                                  : const Color(0xFFEF3030).withOpacity(0.25),
-                              shape: BoxShape.circle,
-                            ),
-                            child: IconButton(
-                              icon: Icon(
-                                FontAwesomeIcons.carrot,
-                                color: _isVeggiePressed
-                                    ? Colors.white
-                                    : const Color(0xFF747783),
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _isVeggiePressed = !_isVeggiePressed;
-                                });
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text('Vegetales'),
-                        ],
-                      ),
-                      const SizedBox(width: 20),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: _isCanPressed
-                                  ? const Color(0xFFEF3030)
-                                  : const Color(0xFFEF3030).withOpacity(0.25),
-                              shape: BoxShape.circle,
-                            ),
-                            child: IconButton(
-                              icon: Icon(
-                                FontAwesomeIcons.bucket,
-                                color: _isCanPressed
-                                    ? Colors.white
-                                    : const Color(0xFF747783),
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _isCanPressed = !_isCanPressed;
-                                });
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text('Enlatados'),
-                        ],
-                      ),
-                      const SizedBox(width: 20),
-                    ],
-                  ),
-                ],
-              ),
-              //const SizedBox(height: 200),
+              const SizedBox(height: 30,),
               SizedBox(
                 width: double.infinity,
                 height: 70,
@@ -197,7 +136,7 @@ class _AddDonation extends State<AddDonation> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: addDonation,
                   child: const Text(
                     'REGISTRAR DONACIÓN',
                     style: TextStyle(

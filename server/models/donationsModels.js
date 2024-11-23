@@ -1,10 +1,10 @@
 const { supabase } = require('../config/db');
 
-const registerDonation = async(receivIn, ty, quan) =>{
+const registerDonation = async(receivIn, quan) =>{
     try {        
         let { data, error } = await supabase
           .from('donations')
-          .insert([{ receivedIn: receivIn, type: ty, quantity: quan }])
+          .insert([{ receivedIn: receivIn, quantity: quan }])
           .select('*')
           .single();
     

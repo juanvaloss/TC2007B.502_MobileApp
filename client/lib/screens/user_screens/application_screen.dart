@@ -6,6 +6,19 @@ import 'image_application_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
 
+class DecimalInputFormatter extends TextInputFormatter {
+  final RegExp _regex = RegExp(r'^\d{0,10}(\.\d{0,10})?$');
+
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    if (_regex.hasMatch(newValue.text)) {
+      return newValue;
+    }
+    return oldValue;
+  }
+}
+
+
 class ApplicationScreen extends StatefulWidget {
 
   final int userId;
@@ -242,6 +255,9 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                     ),
                   ),
                   textAlign: TextAlign.center,
+                  inputFormatters: [
+                    DecimalInputFormatter(),
+                  ],
                 ),
                 const SizedBox(height: 30),
                 ElevatedButton(

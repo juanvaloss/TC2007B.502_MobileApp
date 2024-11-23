@@ -1,17 +1,17 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../user_screens/user_profile.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 
 class StatusCenter extends StatefulWidget {
-  final int userId;
   final int centerId;
 
-  const StatusCenter({required this.userId, required this.centerId, super.key});
-
+  const StatusCenter({ required this.centerId, super.key});
 
   @override
   _StatusCenterState createState() => _StatusCenterState();
@@ -19,24 +19,45 @@ class StatusCenter extends StatefulWidget {
 
 
 class _StatusCenterState extends State<StatusCenter>{
-  Map<String, dynamic>? centerInfo;
+  late Map<String, dynamic> centerInfo = {};
   String errormessage = '';
-  double result = 0.0;  
+  double result = 0.0;
+  late var firstNameOfC;
+  Uint8List? _imageFile;
+
 
   @override
   void initState(){
     super.initState();
-    getcenterinfo();
+    getCenterInfo();
     calculateCapacity();
   }
 
- Future<void> getcenterinfo() async {
-  try {
-    final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/centers/centerinfo');
+  String removeDiacritics(String str) {
+    var withDiacritics = 'áéíóúÁÉÍÓÚ';
+    var withoutDiacritics = 'aeiouAEIOU';
 
-    Map<String, dynamic> jsonData = {
-      'centerId': widget.centerId
-    };
+    String result = '';
+
+    for (int i = 0; i < str.length; i++) {
+      int index = withDiacritics.indexOf(str[i]);
+      if (index != -1) {
+        result += withoutDiacritics[index];
+      } else {
+        result += str[i];
+      }
+    }
+
+    return result;
+  }
+
+ Future<void> getCenterInfo() async {
+   final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/centers/centerinfo');
+
+   Map<String, dynamic> jsonData = {
+     'centerId': widget.centerId
+   };
+   try {
 
     final response = await http.post(
       url,
@@ -44,19 +65,25 @@ class _StatusCenterState extends State<StatusCenter>{
       body: json.encode(jsonData),
     );
 
-    if (response.statusCode == 200 && response.body.isNotEmpty) {
+    if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
+      setState(() {
+        centerInfo = responseData;
+        firstNameOfC = removeDiacritics(responseData['centerName'].split(' ').first);
+      });
+      calculateCapacity();
 
-      if (responseData is List && responseData.isNotEmpty) {
-        setState(() {
-          centerInfo = responseData[0];
-        });
-        calculateCapacity(); 
-      } else {
-        setState(() {
-          errormessage = 'No se encontró información del centro.';
-        });
-      }
+      final supabase =
+      SupabaseClient(dotenv.env['SUPABASE_URL']!, dotenv.env['SUPABASE_ANON_KEY']!);
+      final storageResponse = await supabase
+          .storage
+          .from('imagesOfCenters')
+          .download('center${centerInfo['centerAdmin']}${firstNameOfC}.jpg');
+
+      setState(() {
+        _imageFile = storageResponse;
+      });
+
     } else {
       setState(() {
         errormessage = 'Error ${response.statusCode}: no se pudo cargar la información del centro.';
@@ -72,19 +99,15 @@ class _StatusCenterState extends State<StatusCenter>{
 
 void calculateCapacity() {
   setState(() {
-    if (centerInfo != null) {
-      result = (100 * (centerInfo?['currentCapacity'] ?? 0)) / 
-               ((centerInfo?['totalCapacity'] ?? 1).toDouble());
-    } else {
-      result = 0.0;
-    }
-  });
+    result = (100 * (centerInfo['currentCapacity'] ?? 0)) /
+             ((centerInfo['totalCapacity'] ?? 1).toDouble());
+    });
 }
 
 List<Widget> getAcceptedItems() {
   List<Widget> items = [];
 
-  if(centerInfo?['acceptsMeat'] == true){
+  if(centerInfo['acceptsMeat'] == true){
     items.add(Column(
       children: [
         Container(
@@ -100,7 +123,7 @@ List<Widget> getAcceptedItems() {
     ));
   }
 
-  if(centerInfo?['acceptsVegetables'] == true){
+  if(centerInfo['acceptsVegetables'] == true){
     items.add(Column(
       children: [
         Container(
@@ -116,7 +139,7 @@ List<Widget> getAcceptedItems() {
     ));
   }
 
-  if(centerInfo?['acceptsCans'] == true){
+  if(centerInfo['acceptsCans'] == true){
     items.add(Column(
       children: [
         Container(
@@ -154,8 +177,26 @@ List<Widget> getAcceptedItems() {
       child: Center(
         child: Column(
           children: [
+            if (_imageFile != null)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.memory(
+                  _imageFile!,
+                  width: 200,
+                  height: 200,
+                  fit: BoxFit.cover,
+                ),
+              )
+            else
+              const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                  strokeWidth: 4.0,
+                ),
+              ),
+            const SizedBox(height: 20),
             Text(
-            '${centerInfo?['centerName'] ?? 'No disponible'}',
+            '${centerInfo['centerName'] ?? 'No disponible'}',
              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
              
              const SizedBox(height: 20),
@@ -247,15 +288,6 @@ List<Widget> getAcceptedItems() {
           icon: const Icon(Icons.home_outlined, color: Colors.black),
           onPressed: () {
             // Action for home
-          },
-        ),
-        IconButton(
-          icon: const Icon(Icons.person_outline_rounded, color: Colors.black),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => UserProfileScreen(userId: widget.userId, isBamxAdmin: false)),
-            );
           },
         ),
         IconButton(

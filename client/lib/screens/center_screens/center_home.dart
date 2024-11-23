@@ -1,11 +1,23 @@
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import '../user_screens/user_home_screen.dart';
+import './status_center.dart';
+
+class DecimalInputFormatter extends TextInputFormatter {
+  final RegExp _regex = RegExp(r'^\d{0,10}(\.\d{0,10})?$');
+
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    if (_regex.hasMatch(newValue.text)) {
+      return newValue;
+    }
+    return oldValue;
+  }
+}
 
 class CenterHome extends StatefulWidget {
   final int userId;
@@ -19,14 +31,34 @@ class CenterHome extends StatefulWidget {
 class _CenterHome extends State<CenterHome> {
   Map<String, dynamic> userInfo = {};
   Map<String, dynamic> centerInfo = {};
-  Uint8List? _imageFile;
-  late var firstNameOfC;
+  late bool isSuccess = false;
+  final TextEditingController _donationController = TextEditingController();
+
 
   @override
   void initState() {
     super.initState();
     fetchUserInfo();
 
+  }
+
+  Future<void> addDonation() async{
+    final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/donations/register');
+    Map<String, dynamic> jsonData = {
+      'receivIn': centerInfo['id'],
+      'quan': _donationController.text,
+    };
+
+    try{
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(jsonData),
+      );
+      print(response);
+    }catch(e){
+      print(e);
+    }
   }
 
   Future<void> fetchUserInfo()async{
@@ -59,19 +91,10 @@ class _CenterHome extends State<CenterHome> {
             "email": responseData1['email'],
           };
           centerInfo = responseData2;
-          firstNameOfC = removeDiacritics(responseData2['centerName'].split(' ').first);
+
         });
 
-        final supabase =
-        SupabaseClient(dotenv.env['SUPABASE_URL']!, dotenv.env['SUPABASE_ANON_KEY']!);
-        final storageResponse = await supabase
-            .storage
-            .from('imagesOfCenters')
-            .download('center${widget.userId}${firstNameOfC}.jpg');
 
-        setState(() {
-          _imageFile = storageResponse;
-        });
 
       } else {
         print('Failed to fetch user information. Please try again.');
@@ -81,24 +104,6 @@ class _CenterHome extends State<CenterHome> {
     } catch (e) {
       print('An error occurred: $e');
     }
-  }
-
-  String removeDiacritics(String str) {
-    var withDiacritics = 'áéíóúÁÉÍÓÚ';
-    var withoutDiacritics = 'aeiouAEIOU';
-
-    String result = '';
-
-    for (int i = 0; i < str.length; i++) {
-      int index = withDiacritics.indexOf(str[i]);
-      if (index != -1) {
-        result += withoutDiacritics[index];
-      } else {
-        result += str[i];
-      }
-    }
-
-    return result;
   }
 
   @override
@@ -119,7 +124,7 @@ class _CenterHome extends State<CenterHome> {
               children: [
                 Flexible(
                   child: Text(
-                    "Bienvenido ${userInfo['nombre']}!",
+                    "Bienvenido ${userInfo['nombre'] ?? ''}!",
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 20,
@@ -158,23 +163,10 @@ class _CenterHome extends State<CenterHome> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Image
-                    if (_imageFile != null)
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.memory(
-                          _imageFile!,
-                          width: 40,
-                          height: 40,
-                          fit: BoxFit.cover,
-                        ),
-                      )
-                    else
-                      const SizedBox(),
                     const SizedBox(width: 10), // Add spacing between image and text
                     // Text
                     Text(
-                      "${centerInfo['centerName']}",
+                      "${centerInfo['centerName'] ?? ''}",
                       style: const TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
@@ -191,20 +183,165 @@ class _CenterHome extends State<CenterHome> {
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               children: [
-                OptionCard(
-                  icon: FontAwesomeIcons.donate,
+                  OptionCard(
+                  icon: FontAwesomeIcons.circleDollarToSlot,
                   text: "Agregar donación al inventario",
                   onTap: () {
-                    // Acción para este botón
-                    print("Agregar donación");
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return StatefulBuilder(
+                          builder: (BuildContext context, StateSetter setState) {
+                            return AlertDialog(
+                              backgroundColor: Colors.white,
+                              title: const Text(
+                                "Agregar donación a tu inventario",
+                                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                              content: SingleChildScrollView(
+                                child: isSuccess
+                                    ? Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Image.asset(
+                                      'images/bamx-logo.png',
+                                      width: 150,
+                                      height: 150,
+                                    ),
+                                    const SizedBox(height: 20),
+                                    const Text(
+                                      '¡Donación registrada exitosamente!',
+                                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(height: 20),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        Future.delayed(const Duration(seconds: 4));
+                                        setState(() {
+                                          isSuccess = false;
+                                        });
+                                        _donationController.clear();
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: const Color(0xFFEF3030),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      child: const Text(
+                                        'CERRAR',
+                                        style: TextStyle(fontSize: 20, color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                                    : Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text(
+                                      '¿Cuál fue la cantidad (En kilogramos) que fue donada?',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    const SizedBox(height: 20),
+                                    TextField(
+                                      controller: _donationController,
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                          borderSide: BorderSide.none,
+                                        ),
+                                        hintText: 'Ej. 123.456',
+                                        hintStyle: const TextStyle(
+                                          color: Color(0xFFA0A5BA),
+                                          fontSize: 30,
+                                        ),
+                                        filled: true,
+                                        fillColor: const Color(0xFFF0F5FA),
+                                      ),
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        color: Color(0xFF4A4A4A),
+                                        fontSize: 30,
+                                      ),
+                                      inputFormatters: [
+                                        DecimalInputFormatter(),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    ElevatedButton(
+                                      onPressed: ()async {
+                                        if (_donationController.text.isEmpty) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(
+                                              content: Text('Escribe una cantidad.'),
+                                              duration: Duration(seconds: 2),
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          );
+                                          return;
+                                        }
+                                        try {
+                                          await addDonation();
+                                          setState(() {
+                                            isSuccess = true;
+                                          });
+                                        } catch (e) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(
+                                              content: Text('Error al registrar la donación.'),
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: const Color(0xFFEF3030),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      child: const Text(
+                                        'REGISTRAR DONACIÓN',
+                                        style: TextStyle(fontSize: 20, color: Colors.white),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        _donationController.clear();
+                                      },
+                                      child: const Text(
+                                        "Cancelar",
+                                        style: TextStyle(fontSize: 20, color: Colors.grey),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    );
                   },
                 ),
                 OptionCard(
                   icon: FontAwesomeIcons.clipboardCheck,
                   text: "Ver status del Centro",
                   onTap: () {
-                    // Acción para este botón
-                    print("Ver status");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => StatusCenter(
+                          centerId: centerInfo['id'],
+                        ),
+                      ),
+                    );
                   },
                 ),
                 OptionCard(
@@ -235,12 +372,6 @@ class _CenterHome extends State<CenterHome> {
                   context,
                   MaterialPageRoute(builder: (context) => UserHomeScreen(userId: widget.userId, isBamxAdmin: false, isCenterAdmin: true,)),
                 );
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.person_outline_rounded, color: Colors.black),
-              onPressed: () {
-                // Acción para ir al perfil
               },
             ),
             IconButton(
