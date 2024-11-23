@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -9,13 +10,14 @@ import 'user_profile.dart';
 import 'more_info_center.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../bamxscreens/notifications_screen.dart';
+import '../center_screens/center_home.dart';
 
 class UserHomeScreen extends StatefulWidget {
   final int userId;
   final bool isCenterAdmin;
   final bool isBamxAdmin;
 
-  const UserHomeScreen({required this.userId, required this.isBamxAdmin, required this.isCenterAdmin ,super.key});
+  const UserHomeScreen({required this.userId, required this.isBamxAdmin, required this.isCenterAdmin,super.key});
 
   @override
   _UserHomeScreenState createState() => _UserHomeScreenState();
@@ -50,6 +52,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     target: LatLng(20.67471511804876, -103.43224564816127),
     zoom: 15,
   );
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    fetchData();
+  }
 
   Future<void> fetchData() async {
     final url =
@@ -178,7 +186,16 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             adminId: widget.userId,
           )),
     );
+  }
 
+  void _goToCenterDashboard(){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => CenterHome(
+            userId: widget.userId,
+          )),
+    );
 
   }
 
@@ -352,6 +369,24 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   ),
                 ),
               ),
+            if(widget.isCenterAdmin)
+              Positioned(
+                top: 50,
+                left: 20,
+                child: GestureDetector(
+                  onTap: _goToCenterDashboard,
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xFFEF3030),
+                    ),
+                    child: const Icon(FontAwesomeIcons.box, color: Colors.white, size: 50,),
+                  ),
+                ),
+              ),
+
             Positioned(
               top: 50,
               right: 20,

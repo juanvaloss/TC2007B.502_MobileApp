@@ -1,8 +1,11 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../user_screens/user_home_screen.dart';
 
 class CenterHome extends StatefulWidget {
   final int userId;
@@ -14,9 +17,88 @@ class CenterHome extends StatefulWidget {
 }
 
 class _CenterHome extends State<CenterHome> {
+  Map<String, dynamic> userInfo = {};
+  Map<String, dynamic> centerInfo = {};
+  Uint8List? _imageFile;
+  late var firstNameOfC;
+
   @override
   void initState() {
     super.initState();
+    fetchUserInfo();
+
+  }
+
+  Future<void> fetchUserInfo()async{
+    try {
+      final url1 = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/users/userInfo');
+      final url2 = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/users/userCenters');
+
+      Map<String, dynamic> jsonData = {
+        'userId': widget.userId,
+      };
+
+      final response1 = await http.post(
+        url1,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(jsonData),
+      );
+
+      final response2 = await http.post(
+        url2,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(jsonData),
+      );
+
+      if (response1.statusCode == 200 && response2.statusCode == 200) {
+        final responseData1 = json.decode(response1.body);
+        final responseData2 = json.decode(response2.body);
+        setState(() {
+          userInfo = {
+            "nombre": responseData1['name'],
+            "email": responseData1['email'],
+          };
+          centerInfo = responseData2;
+          firstNameOfC = removeDiacritics(responseData2['centerName'].split(' ').first);
+        });
+
+        final supabase =
+        SupabaseClient(dotenv.env['SUPABASE_URL']!, dotenv.env['SUPABASE_ANON_KEY']!);
+        final storageResponse = await supabase
+            .storage
+            .from('imagesOfCenters')
+            .download('center${widget.userId}${firstNameOfC}.jpg');
+
+        setState(() {
+          _imageFile = storageResponse;
+        });
+
+      } else {
+        print('Failed to fetch user information. Please try again.');
+      }
+
+
+    } catch (e) {
+      print('An error occurred: $e');
+    }
+  }
+
+  String removeDiacritics(String str) {
+    var withDiacritics = 'áéíóúÁÉÍÓÚ';
+    var withoutDiacritics = 'aeiouAEIOU';
+
+    String result = '';
+
+    for (int i = 0; i < str.length; i++) {
+      int index = withDiacritics.indexOf(str[i]);
+      if (index != -1) {
+        result += withoutDiacritics[index];
+      } else {
+        result += str[i];
+      }
+    }
+
+    return result;
   }
 
   @override
@@ -37,7 +119,7 @@ class _CenterHome extends State<CenterHome> {
               children: [
                 Flexible(
                   child: Text(
-                    "Buenas Tardes, Usuario ${widget.userId}!",
+                    "Bienvenido ${userInfo['nombre']}!",
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 20,
@@ -73,12 +155,32 @@ class _CenterHome extends State<CenterHome> {
                     ),
                   ],
                 ),
-                child: const Text(
-                  "WALMART",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Image
+                    if (_imageFile != null)
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.memory(
+                          _imageFile!,
+                          width: 40,
+                          height: 40,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    else
+                      const SizedBox(),
+                    const SizedBox(width: 10), // Add spacing between image and text
+                    // Text
+                    Text(
+                      "${centerInfo['centerName']}",
+                      style: const TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -127,9 +229,12 @@ class _CenterHome extends State<CenterHome> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             IconButton(
-              icon: const Icon(Icons.home_outlined, color: Colors.black),
+              icon: const Icon(Icons.map, color: Colors.black),
               onPressed: () {
-                // Acción para ir a la pantalla de inicio
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserHomeScreen(userId: widget.userId, isBamxAdmin: false, isCenterAdmin: true,)),
+                );
               },
             ),
             IconButton(

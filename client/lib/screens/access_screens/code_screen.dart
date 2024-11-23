@@ -94,7 +94,7 @@ class MfaScreen extends StatelessWidget {
           const SnackBar(
             content: Text(
                 "Se ha enviado un nuevo código, revisa tu correo electrónico."),
-            backgroundColor: Colors.red,
+            backgroundColor: Colors.green,
             duration: Duration(seconds: 3),
           ),
         );

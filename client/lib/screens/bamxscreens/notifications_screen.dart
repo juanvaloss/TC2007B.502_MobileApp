@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import '../user_screens/user_home_screen.dart';
 
 class NotificationsScreen extends StatefulWidget {
   final int adminId;
@@ -15,8 +16,8 @@ class NotificationsScreen extends StatefulWidget {
 }
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
-  String selectedOption = 'Solicitudes'; // Opción seleccionada por defecto
-  List<Map<String, dynamic>> requests = []; // Lista para almacenar las solicitudes
+  String selectedOption = 'Solicitudes';
+  List<Map<String, dynamic>> requests = [];
 
   @override
   void initState() {
@@ -25,7 +26,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     _requestPermission();
     FirebaseMessaging.onMessage.listen((payload) {
       final notification = payload.notification;
-      print(notification);
       if (notification != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -34,6 +34,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         );
       }
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    fetchRequests();
   }
 
   // Método para obtener las solicitudes desde el servidor
@@ -94,8 +100,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(
+            Navigator.pushAndRemoveUntil(
               context,
+              MaterialPageRoute(builder: (context) => UserHomeScreen(userId: widget.adminId, isBamxAdmin: true, isCenterAdmin: false,)),
+                  (Route<dynamic> route) => false,
             );
           },
         ),
@@ -162,8 +170,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           ),
           const SizedBox(height: 20),
           if (selectedOption == 'Centros de acopio')
-            Column(
-              children: const [
+            const Column(
+              children: [
                 Text(
                   'Ventura',
                   style: TextStyle(fontSize: 16),

@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:typed_data';
+import 'notifications_screen.dart';
 
 class ApplicationDetailsScreen extends StatefulWidget {
   final int applicationId;
@@ -134,8 +135,10 @@ class _ApplicationDetailsScreen extends State<ApplicationDetailsScreen> {
       );
 
       if(response.statusCode == 200 && response2.statusCode == 200){
-        Navigator.pop(
-            context
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => NotificationsScreen(adminId: widget.adminId,)),
+              (Route<dynamic> route) => route.isFirst,
         );
       }
     }catch(e){
@@ -159,8 +162,10 @@ class _ApplicationDetailsScreen extends State<ApplicationDetailsScreen> {
       );
 
       if(response.statusCode == 200){
-        Navigator.pop(
-          context
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => NotificationsScreen(adminId: widget.adminId,)),
+              (Route<dynamic> route) => route.isFirst,
         );
       }
     }catch(e){
