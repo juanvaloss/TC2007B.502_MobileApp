@@ -30,16 +30,27 @@ const createApplication = async(req, res) => {
     }
 }
 
-const deleteApplication = async(req, res) =>{
-    const { applicationId } = req.body;
+const deleteAllAplicationsFromUser = async(req, res) =>{
+    const { solicitor } = req.body;
     try {
-        const response = await applicationModel.deleteApplication( applicationId );
+        const response = await applicationModel.deleteAllAplicationsFromUser( solicitor );
         res.json(response);
        
     } catch (err) {
         console.error('Error deleting an application.', err);
         res.status(500).json({ success: false, message: 'Server error' });
     } 
+}
+
+const deleteApplication = async(req, res) =>{
+    const { applicationId } = req.body;
+    try {
+        const response = await applicationModel.deleteApplication( applicationId );
+        res.json(response);
+    } catch (err) {
+        console.error('Error deleting an application.', err);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
 }
 
 const getAllApplications = async(req, res) => {
@@ -52,4 +63,4 @@ const getAllApplications = async(req, res) => {
     }
 }
 
-module.exports = { getApplicationInfo ,createApplication, deleteApplication, getAllApplications}
+module.exports = { getApplicationInfo ,createApplication, deleteAllAplicationsFromUser, deleteApplication,getAllApplications}

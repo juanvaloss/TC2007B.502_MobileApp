@@ -28,7 +28,6 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
   void initState() {
     super.initState();
     futureCenterInfo();
-    calculateCapacity();
   }
 
   Future<void> futureCenterInfo() async {
@@ -50,6 +49,10 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
           centerInfo = responseData;
           centerAdmin = responseData['centerAdmin'];
           firstNameOfC = removeDiacritics(responseData['centerName'].split(' ').first);
+        });
+
+        setState(() {
+          result = (100 * (centerInfo['currentCapacity'] ?? 0)) / ((centerInfo['totalCapacity'] ?? 1).toDouble());
         });
 
         final supabase =
@@ -92,13 +95,6 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
     return result;
   }
 
-  void calculateCapacity() {
-    setState(() {
-      result = (100 * (centerInfo['currentCapacity'] ?? 0)) /
-          ((centerInfo['totalCapacity'] ?? 1).toDouble());
-    });
-  }
-
   IconData getIcon() {
     if (result < 30) {
       return Icons.sentiment_dissatisfied;
@@ -127,14 +123,14 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
         Column(
           children: [
             Container(
-              decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.25),
+              decoration: const BoxDecoration(
+                color: Color(0xFFEF3030),
                 shape: BoxShape.circle,
               ),
               padding: const EdgeInsets.all(10),
               child: const Icon(
                 FontAwesomeIcons.drumstickBite,
-                color: Color(0xFF747783),
+                color: Colors.white,
                 size: 40,
               ),
             ),
@@ -152,14 +148,14 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
         Column(
           children: [
             Container(
-              decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.25),
+              decoration: const BoxDecoration(
+                color: Color(0xFFEF3030),
                 shape: BoxShape.circle,
               ),
               padding: const EdgeInsets.all(10),
               child: const Icon(
                 FontAwesomeIcons.carrot,
-                color: Color(0xFF747783),
+                color: Colors.white,
                 size: 40,
               ),
             ),
@@ -177,14 +173,14 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
         Column(
           children: [
             Container(
-              decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.25),
+              decoration: const BoxDecoration(
+                color: Color(0xFFEF3030),
                 shape: BoxShape.circle,
               ),
               padding: const EdgeInsets.all(10),
               child: const Icon(
                 FontAwesomeIcons.bucket,
-                color: Color(0xFF747783),
+                color: Colors.white,
                 size: 40,
               ),
             ),

@@ -12,10 +12,10 @@ import '../bamxscreens/notifications_screen.dart';
 
 class UserHomeScreen extends StatefulWidget {
   final int userId;
+  final bool isCenterAdmin;
   final bool isBamxAdmin;
 
-  const UserHomeScreen(
-      {required this.userId, required this.isBamxAdmin, super.key});
+  const UserHomeScreen({required this.userId, required this.isBamxAdmin, required this.isCenterAdmin ,super.key});
 
   @override
   _UserHomeScreenState createState() => _UserHomeScreenState();
@@ -42,8 +42,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   String? _selectedMarkerTitle;
   String? _selectedMarkerSnippet;
 
-  final Completer<GoogleMapController> _mapController =
-      Completer<GoogleMapController>();
+  final Completer<GoogleMapController> _mapController = Completer<GoogleMapController>();
   final PanelController _panelController = PanelController();
   final Set<Marker> _markers = {};
 

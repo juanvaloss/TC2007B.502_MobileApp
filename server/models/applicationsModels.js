@@ -40,6 +40,25 @@ const createApplication = async (userId, centerNa, centerAdd, capac, acceptsM, a
   }
 };
 
+const deleteAllAplicationsFromUser = async(solicitor) =>{
+  try{
+    const { data, error } = await supabase
+    .from('applications')
+    .delete()
+    .eq('solicitor', solicitor);
+
+    if(error){
+      throw new Error(`Error executing query: ${error.message}`);
+    }
+
+    return data
+
+  }catch(err){
+    console.error('Error deleting application:', err);
+    throw err;
+  }
+}
+
 const deleteApplication = async(applicationId) =>{
   try{
     const { data, error } = await supabase
@@ -50,8 +69,6 @@ const deleteApplication = async(applicationId) =>{
     if(error){
       throw new Error(`Error executing query: ${error.message}`);
     }
-
-    return data
 
   }catch(err){
     console.error('Error deleting application:', err);
@@ -76,4 +93,4 @@ const getAllApplications = async () => {
   }
 }
 
-module.exports = { getApplicationInfo ,createApplication, deleteApplication, getAllApplications };
+module.exports = { getApplicationInfo ,createApplication, deleteAllAplicationsFromUser, deleteApplication,getAllApplications };

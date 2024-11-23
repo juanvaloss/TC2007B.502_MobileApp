@@ -21,8 +21,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   @override
   void initState() {
-
-    fetchUserInfo();
+    _fetchInfo();
     super.initState();
 
   }
@@ -44,66 +43,95 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         builder: (context) => ApplicationScreen(userId: widget.userId,), // Replace with your screen widget
       ),
     );
-
-
   }
 
-  Future<void> fetchUserInfo() async {
-    try {
-      final url1 = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/users/userInfo');
-      final url2 = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/users/userCenters');
+  Future<void> _fetchInfo() async{
+    if(!widget.isBamxAdmin){
+      try {
+        final url1 = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/users/userInfo');
+        final url2 = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/users/userCenters');
 
-      Map<String, dynamic> jsonData = {
-        'userId': widget.userId,
-      };
+        Map<String, dynamic> jsonData = {
+          'userId': widget.userId,
+        };
 
-      final response1 = await http.post(
-        url1,
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(jsonData),
-      );
+        final response1 = await http.post(
+          url1,
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(jsonData),
+        );
 
-      final response2 = await http.post(
-        url2,
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(jsonData),
-      );
+        final response2 = await http.post(
+          url2,
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(jsonData),
+        );
 
-      if (response1.statusCode == 200 && response1.body.isNotEmpty) {
-        final responseData1 = json.decode(response1.body);
-        setState(() {
-          userInfo = {
-            "nombre": responseData1['name'],
-            "email": responseData1['email'],
-            "isCenterAdmin": responseData1['isCenterAdmin'],
-          };
-        });
-      } else {
-        print('Failed to fetch user information. Please try again.');
-      }
+        if (response1.statusCode == 200 && response1.body.isNotEmpty) {
+          final responseData1 = json.decode(response1.body);
+          setState(() {
+            userInfo = {
+              "nombre": responseData1['name'],
+              "email": responseData1['email'],
+              "isCenterAdmin": responseData1['isCenterAdmin'],
+            };
+          });
+        } else {
+          print('Failed to fetch user information. Please try again.');
+        }
 
-      if (response2.statusCode == 200 && response2.body.isNotEmpty) {
-        final List<dynamic> responseData2 = json.decode(response2.body);
-        final List<Map<String, dynamic>> centers = responseData2.map((item) {
-          return {
-            "centerName": item['centerName'],
-            "centerAddress": item['centerAddress'],
-            "latitude": item['latitude'],
-            "longitude": item['longitude'],
-          };
-        }).toList();
+        if (response2.statusCode == 200 && response2.body.isNotEmpty) {
+          final List<dynamic> responseData2 = json.decode(response2.body);
+          final List<Map<String, dynamic>> centers = responseData2.map((item) {
+            return {
+              "centerName": item['centerName'],
+              "centerAddress": item['centerAddress'],
+              "latitude": item['latitude'],
+              "longitude": item['longitude'],
+            };
+          }).toList();
 
-        setState(() {
-          centerInfo = centers;
-        });
-      } else {
-        print('No information available.');
-      }
+          setState(() {
+            centerInfo = centers;
+          });
+        } else {
+          print('No information available.');
+        }
 
 
-    } catch (e) {
+      } catch (e) {
         print('An error occurred: $e');
+      }
+    }else{
+      try {
+        final url1 = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/admins/adminInfo');
+        Map<String, dynamic> jsonData = {
+          'userId': widget.userId,
+        };
+
+        final response1 = await http.post(
+          url1,
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(jsonData),
+        );
+
+        if (response1.statusCode == 200 && response1.body.isNotEmpty) {
+          final responseData1 = json.decode(response1.body);
+          setState(() {
+            userInfo = {
+              "nombre": responseData1['name'],
+              "email": responseData1['email'],
+              "isCenterAdmin": false
+            };
+          });
+        } else {
+          print('Failed to fetch admin information. Please try again.');
+        }
+      } catch (e) {
+        print('An error occurred: $e');
+      }
     }
+
   }
 
   Future<void> _deleteUserAccount()async{
@@ -195,7 +223,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 ],
               ),
             ),
-            if (userInfo['isCenterAdmin'] == true) ...[
+            if (userInfo['isCenterAdmin'] == true && !widget.isBamxAdmin) ...[
               const Text(
                 'Información de tu centro:',
                 style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
@@ -242,7 +270,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               ),
             ],
             const SizedBox(height: 8),
-            if (!userInfo['isCenterAdmin'])
+            if (!userInfo['isCenterAdmin'] && !widget.isBamxAdmin)
               SizedBox(
                 width: double.infinity,
                 height: 50,

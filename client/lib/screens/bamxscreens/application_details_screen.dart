@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:typed_data';
-import './notifications_screen.dart';
 
 class ApplicationDetailsScreen extends StatefulWidget {
   final int applicationId;
@@ -23,6 +22,7 @@ class _ApplicationDetailsScreen extends State<ApplicationDetailsScreen> {
   Map<String, dynamic> applicationInfo = {};
   late String firstNameOfC;
   Uint8List? _imageFile;
+  late bool needsReloading;
 
 
   Future<void> _getApplicationInfo() async {
@@ -99,6 +99,7 @@ class _ApplicationDetailsScreen extends State<ApplicationDetailsScreen> {
 
   Future<void> _acceptApplication() async{
     final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/centers/create');
+    final url2 = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/applications/deleteAll');
 
     Map<String, dynamic> jsonData = {
       'userId': widget.solicitorId,
@@ -110,7 +111,10 @@ class _ApplicationDetailsScreen extends State<ApplicationDetailsScreen> {
       'acceptsV': applicationInfo['acceptsVegetables'],
       'acceptsC': applicationInfo['acceptsCans']
     };
-    print(jsonData);
+
+    Map<String, dynamic> jsonSolicitor = {
+      'solicitor': widget.solicitorId
+    };
 
     try{
       final response = await http.post(
@@ -121,24 +125,47 @@ class _ApplicationDetailsScreen extends State<ApplicationDetailsScreen> {
         body: json.encode(jsonData),
       );
 
-      if(response.statusCode == 200){
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => NotificationsScreen(
-              adminId: widget.adminId,
-            ),
-          ), (Route<dynamic> route) => false,
+      final response2 = await http.post(
+        url2,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(jsonSolicitor),
+      );
+
+      if(response.statusCode == 200 && response2.statusCode == 200){
+        Navigator.pop(
+            context
         );
       }
-
-
-
     }catch(e){
       print(e);
     }
+  }
 
+  Future<void> _rejectApplication() async{
+    final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/applications/delete');
+    Map<String, dynamic> jsonSolicitor = {
+      'applicationId': widget.applicationId
+    };
 
+    try{
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(jsonSolicitor),
+      );
+
+      if(response.statusCode == 200){
+        Navigator.pop(
+          context
+        );
+      }
+    }catch(e){
+      print(e);
+    }
   }
 
   @override
@@ -273,9 +300,7 @@ class _ApplicationDetailsScreen extends State<ApplicationDetailsScreen> {
                         ),
                         padding: const EdgeInsets.all(16),
                       ),
-                      onPressed: () {
-                        // Handle Reject Action
-                      },
+                      onPressed: _rejectApplication,
                       child: const Text(
                         "RECHAZAR",
                         style: TextStyle(fontSize: 18, color: Colors.white),

@@ -242,11 +242,6 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                     ),
                   ),
                   textAlign: TextAlign.center,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(
-                      //WIP
-                        RegExp(r'^\d*\.\d*$')),
-                  ],
                 ),
                 const SizedBox(height: 30),
                 ElevatedButton(

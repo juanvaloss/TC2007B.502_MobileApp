@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screens/bamxscreens/application_details_screen.dart';
-//import 'package:flutter_application_1/screens/bamxscreens/bamx_admin_home.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -16,7 +15,7 @@ class NotificationsScreen extends StatefulWidget {
 }
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
-  String selectedOption = 'Centros de acopio'; // Opción seleccionada por defecto
+  String selectedOption = 'Solicitudes'; // Opción seleccionada por defecto
   List<Map<String, dynamic>> requests = []; // Lista para almacenar las solicitudes
 
   @override
