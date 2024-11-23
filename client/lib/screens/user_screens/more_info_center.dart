@@ -173,7 +173,7 @@ List<Widget> getAcceptedItems() {
             shape: BoxShape.circle,
           ),
           padding: const EdgeInsets.all(10),
-        child: const Icon(FontAwesomeIcons.solidTrashCan, color: Color(0xFF747783), size: 40),
+        child: const Icon(FontAwesomeIcons.bucket, color: Color(0xFF747783), size: 40),
         ),
         const Text('Latas', style: TextStyle(fontSize: 16))
       ],

@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const StartingPage(),
         //'/': (context) => const ApplicationScreen(userId: 10),
-        //'/': (context) => const UserHomeScreen(userId: 2, isBamxAdmin: true,),
+        //'/': (context) => const UserHomeScreen(userId: 8, isBamxAdmin: false,),
 
 
 
