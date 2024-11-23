@@ -7,9 +7,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CenterHome extends StatefulWidget {
   final int userId;
-  final int centerId;
 
-  const CenterHome({required this.userId, required this.centerId, super.key});
+  const CenterHome({required this.userId, super.key});
 
   @override
   _CenterHome createState() => _CenterHome();

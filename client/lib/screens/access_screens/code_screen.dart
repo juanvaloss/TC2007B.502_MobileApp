@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import '../user_screens/user_home_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import '../center_screens/center_home.dart';
 
 class MfaScreen extends StatelessWidget {
   final int userId;
@@ -38,13 +39,26 @@ class MfaScreen extends StatelessWidget {
         final userIdResponse = responseData['userId'];
         final bool isBamxAdmin = responseData['isBamxAdmin'];
         final bool isCenterAdmin = responseData['isCenterAdmin'] ?? false;
+        print(isCenterAdmin);
 
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-              builder: (context) => UserHomeScreen(userId: userIdResponse, isBamxAdmin: isBamxAdmin,)),
-              (Route<dynamic> route) => false,
-        );
+        if(isCenterAdmin){
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CenterHome(userId: userIdResponse)),
+                (Route<dynamic> route) => false,
+          );
+        }else{
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => UserHomeScreen(userId: userIdResponse, isBamxAdmin: isBamxAdmin,)),
+                (Route<dynamic> route) => false,
+          );
+
+        }
+
+
 
 
       } else {

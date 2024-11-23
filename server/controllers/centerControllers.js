@@ -35,7 +35,7 @@ const createCenter = async(req, res) =>{
         await userModel.updateAdminValue(userId, true);
         
         const {lat, lng } = await getCoordinatesBAddress(centerAdd);
-        const response = await centerModel.createCenter( userId, adminId, centerNa, centerAdd, currentCapac ,totalCapac, acceptsM, acceptsV, acceptsC, lat, lng);
+        const response = await centerModel.createCenter( userId, adminId, centerNa, centerAdd ,totalCapac, acceptsM, acceptsV, acceptsC, lat, lng);
         res.json(response);
 
         

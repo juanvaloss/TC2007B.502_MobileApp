@@ -59,8 +59,6 @@ class _CheckApplicationState extends State<CheckApplication> {
     }
   }
 
-
-
   // Function to get icon based on completion status
   Icon getIcon(bool? completed) {
     return Icon(

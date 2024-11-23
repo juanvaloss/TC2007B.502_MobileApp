@@ -5,12 +5,14 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:typed_data';
+import './notifications_screen.dart';
 
 class ApplicationDetailsScreen extends StatefulWidget {
   final int applicationId;
   final int solicitorId;
+  final int adminId;
 
-  ApplicationDetailsScreen({required this.applicationId, required this.solicitorId ,super.key});
+  ApplicationDetailsScreen({required this.applicationId, required this.solicitorId, required this.adminId,super.key});
 
   @override
   _ApplicationDetailsScreen createState() => _ApplicationDetailsScreen();
@@ -45,6 +47,8 @@ class _ApplicationDetailsScreen extends State<ApplicationDetailsScreen> {
           applicationInfo = responseData;
           firstNameOfC = responseData['centerName'].split(' ').first;
         });
+
+        print(applicationInfo);
       }
 
       final supabase = SupabaseClient(dotenv.env['SUPABASE_URL']!, dotenv.env['SUPABASE_ANON_KEY']!);
@@ -95,9 +99,45 @@ class _ApplicationDetailsScreen extends State<ApplicationDetailsScreen> {
 
   Future<void> _acceptApplication() async{
     final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/centers/create');
+
     Map<String, dynamic> jsonData = {
       'userId': widget.solicitorId,
+      'adminId': widget.adminId,
+      'centerNa': applicationInfo['centerName'],
+      'centerAdd': applicationInfo['centerAddress'],
+      'totalCapac': applicationInfo['capacity'],
+      'acceptsM': applicationInfo['acceptsMeat'],
+      'acceptsV': applicationInfo['acceptsVegetables'],
+      'acceptsC': applicationInfo['acceptsCans']
     };
+    print(jsonData);
+
+    try{
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(jsonData),
+      );
+
+      if(response.statusCode == 200){
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NotificationsScreen(
+              adminId: widget.adminId,
+            ),
+          ), (Route<dynamic> route) => false,
+        );
+      }
+
+
+
+    }catch(e){
+      print(e);
+    }
+
 
   }
 
@@ -210,7 +250,7 @@ class _ApplicationDetailsScreen extends State<ApplicationDetailsScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         _CategoryIcon(icon: Icons.restaurant_menu, label: "Carne", acceptsX: applicationInfo['acceptsMeat']?? false,),
-                        _CategoryIcon(icon: Icons.eco, label: "Verduras", acceptsX: applicationInfo['acceptsVegetable']?? false),
+                        _CategoryIcon(icon: Icons.eco, label: "Verduras", acceptsX: applicationInfo['acceptsVegetables']?? false),
                         _CategoryIcon(icon: FontAwesomeIcons.bucket, label: "Enlatados", acceptsX: applicationInfo['acceptsCans']?? false),
                       ],
                     ),
@@ -253,9 +293,7 @@ class _ApplicationDetailsScreen extends State<ApplicationDetailsScreen> {
                         ),
                         padding: const EdgeInsets.all(16),
                       ),
-                      onPressed: () {
-                        // Handle Accept Action
-                      },
+                      onPressed: _acceptApplication,
                       child: const Text(
                         "ACEPTAR",
                         style: TextStyle(fontSize: 18, color: Colors.white),

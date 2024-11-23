@@ -8,8 +8,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class NotificationsScreen extends StatefulWidget {
-  final int userId;
-  const NotificationsScreen({required this.userId, super.key});
+  final int adminId;
+  const NotificationsScreen({required this.adminId, super.key});
 
   @override
   _NotificationsScreenState createState() => _NotificationsScreenState();
@@ -82,7 +82,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
     await supabase
         .from('admins')
-        .update({'fcm_token': fcm_token}).eq('id', widget.userId);
+        .update({'fcm_token': fcm_token}).eq('id', widget.adminId);
   }
 
   @override
@@ -185,6 +185,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           builder: (context) => ApplicationDetailsScreen(
                             applicationId: request['id'],
                             solicitorId:  request['solicitor'],
+                            adminId: widget.adminId,
                           ),
                         ),
                       );

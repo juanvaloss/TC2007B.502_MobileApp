@@ -176,7 +176,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       context,
       MaterialPageRoute(
           builder: (context) => NotificationsScreen(
-            userId: widget.userId,
+            adminId: widget.userId,
           )),
     );
 
