@@ -1,4 +1,4 @@
-import 'dart:convert'; // For converting data to JSON format
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -21,7 +21,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
 
-  void sendJsonData(context) async {
+  void sendJsonData() async {
+
+    if(passwordController.text.isEmpty  || emailController.text.isEmpty || nameController.text.isEmpty || confirmPasswordController.text.isEmpty){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+              'Por favor llena todos los campos requeridos'),
+        ),
+      );
+      return;
+    }
+    if (passwordController.text != confirmPasswordController.text){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+              'Las contraseñas no coinciden'),
+        ),
+      );
+      return;
+    }
+
     final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/users/create');
 
     String name = nameController.text;
@@ -71,10 +91,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String name = nameController.text;
-    String email = emailController.text;
-    String password = passwordController.text;
-    String confirmPassword = confirmPasswordController.text;
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -83,10 +99,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.of(context).pop(); // Acción del botón de regreso
+            Navigator.pop(context);
           },
         ),
-        elevation: 0, // Sin sombra para el AppBar
+        elevation: 0,
       ),
       body: Stack(
         children: [
@@ -117,8 +133,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
             ),
           ),
-
-          // Bottom Section with Form
           Column(
             children: [
               Expanded(
@@ -299,7 +313,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     ),
                                   ],
                                 ),
-
+                                // Button
                                 // Button
                                 const SizedBox(height: 10),
                                 SizedBox(
@@ -307,43 +321,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   height: 50,
                                   child: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFFEF3030),
+                                      backgroundColor: isChecked ? const Color(0xFFEF3030) : Colors.grey, // Disable color when unchecked
+                                      foregroundColor: Colors.white,
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10.0),
+                                        borderRadius: BorderRadius.circular(15),
                                       ),
                                     ),
-                                    onPressed: () {
-                                    if(password.isEmpty  || email.isEmpty || name.isEmpty || confirmPassword.isEmpty){
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                                'Por favor llena todos los campos requeridos'),
-                                          ),
-                                          );
+                                    onPressed: isChecked
+                                        ? () {
+                                      sendJsonData();
                                     }
-                                    else{
-                                      if (isChecked) {
-                                        if (password != confirmPassword){
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                                'Las contraseñas no coinciden'),
-                                          ),
-                                          );
-                                        }
-                                        else{
-                                        sendJsonData(context);
-                                        }
-                                      } else {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                                'Debes aceptar las políticas de privacidad'),
-                                          ),
-                                        );
-                                      }
-                                    }
-                                    },
+                                        : null, // Disabled if the checkbox is not checked
                                     child: const Text(
                                       'INGRESAR',
                                       style: TextStyle(

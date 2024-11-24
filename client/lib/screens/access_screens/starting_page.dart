@@ -72,7 +72,7 @@ class StartingPage extends StatelessWidget{
               onPressed: (){
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => GuestContract()));
+                    MaterialPageRoute(builder: (context) => const GuestContract()));
               },
               style: OutlinedButton.styleFrom(
                 foregroundColor: const Color(0xFFEF3030),

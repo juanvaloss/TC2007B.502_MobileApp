@@ -167,14 +167,17 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     );
   }
 
-  void _goToMoreInfoCenter(int cId) {
+  void _goToMoreInfoCenter(int cId, LatLng centerPos) {
     Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => MoreInfoCenter(
                 userId: widget.userId,
                 centerId: cId,
-              )),
+                currentUserPosition: _initialPosition.target,
+                centerPosition: centerPos,
+
+          )),
     );
   }
 
@@ -333,7 +336,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       const SizedBox(height: 8),
                       ElevatedButton(
                         onPressed: () {
-                          _goToMoreInfoCenter(_selectedMarkerId!);
+                          _goToMoreInfoCenter(_selectedMarkerId!, _selectedMarkerPosition!);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFEF3030),

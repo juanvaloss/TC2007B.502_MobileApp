@@ -1,16 +1,20 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MoreInfoCenter extends StatefulWidget {
   final int userId;
   final int centerId;
+  final LatLng currentUserPosition;
+  final LatLng centerPosition;
 
-  const MoreInfoCenter({required this.userId, super.key, required this.centerId});
+  const MoreInfoCenter({required this.userId, super.key, required this.centerId, required this.currentUserPosition, required this.centerPosition});
 
   @override
   _MoreInfoCenterState createState() => _MoreInfoCenterState();
@@ -302,7 +306,14 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () async {
+                    Uri googleMapsUrl = Uri.parse("https://www.google.com/maps/dir/?api=1&origin=${widget.currentUserPosition.latitude},${widget.currentUserPosition.longitude}&destination=${widget.centerPosition.latitude},${widget.centerPosition.longitude}&travelmode=driving");
+                    if (await canLaunchUrl(googleMapsUrl)) {
+                    await canLaunchUrl(googleMapsUrl);
+                    } else {
+                    throw 'Could not launch $googleMapsUrl';
+                    }
+                  },
                   child: const Text(
                     'ENCONTRAR RUTA',
                     style: TextStyle(

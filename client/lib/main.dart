@@ -3,13 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-
-import 'package:flutter_application_1/screens/user_screens/application_screen.dart';
 import './screens/access_screens/starting_page.dart';
-import './screens/user_screens/user_home_screen.dart';
-import './screens/bamxscreens/notifications_screen.dart';
-import './screens/center_screens/center_home.dart';
-import './screens/center_screens/add_donation.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

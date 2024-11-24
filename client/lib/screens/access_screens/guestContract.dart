@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../access_screens/privacyNoticeScreen.dart';
+import '../user_screens/user_home_screen.dart';
 
 class GuestContract extends StatefulWidget {
   const GuestContract({super.key});
@@ -10,21 +10,19 @@ class GuestContract extends StatefulWidget {
 }
 
 class _GuestContractState extends State<GuestContract> {
-  bool isChecked = false; // Estado inicial del Checkbox
+  bool isChecked = false;
 
   @override
   Widget build(BuildContext context) {
-    //double screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.of(context).pop(); // Acción del botón de regreso
+            Navigator.of(context).pop();
           },
         ),
-        elevation: 0, // Sin sombra para el AppBar
+        elevation: 0,
       ),
       body: Center(
         child: Column(
@@ -62,20 +60,20 @@ class _GuestContractState extends State<GuestContract> {
                 RichText(
                   text: TextSpan(
                     text: "He leído y acepto la ",
-                    style: TextStyle(color: Colors.black),
+                    style: const TextStyle(color: Colors.black),
                     children: [
                       WidgetSpan(
                         child: GestureDetector(
                           onTap: () {
                             Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => PrivacyNoticeScreen()));
+                                MaterialPageRoute(builder: (context) => const PrivacyNoticeScreen()));
                           },
                           child: const Text(
                             "política de privacidad",
                             style: TextStyle(
                               color: Color(0xFFEF3030),
-                              decoration: TextDecoration.underline, // Subrayar el texto
+                              decoration: TextDecoration.underline,
                             ),
                           ),
                         ),
@@ -89,8 +87,14 @@ class _GuestContractState extends State<GuestContract> {
             ElevatedButton(
               onPressed: isChecked
                   ? () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const UserHomeScreen(userId: 0, isCenterAdmin: false, isBamxAdmin: false,)),
+                          (Route<dynamic> route) => false,
+                    );
               }
-                  : null, // Deshabilitado si el checkbox no está marcado
+                  : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFEF3030),
                 foregroundColor: Colors.white,

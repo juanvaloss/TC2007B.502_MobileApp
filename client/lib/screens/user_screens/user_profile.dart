@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/screens/access_screens/login_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../access_screens/starting_page.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import './application_screen.dart';
+import '../access_screens/register_screen.dart';
 
 class UserProfileScreen extends StatefulWidget {
   final int userId;
@@ -46,6 +48,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Future<void> _fetchInfo() async{
+    if(widget.userId == 0){
+      return;
+    }
     if(!widget.isBamxAdmin){
       try {
         final url1 = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/users/userInfo');
@@ -160,8 +165,109 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-
+    if(widget.userId == 0) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Perfil de Usuario',
+            style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          iconTheme: const IconThemeData(color: Colors.black),
+        ),
+        backgroundColor: Colors.white,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Add a welcome illustration or icon
+              Icon(
+                Icons.person_outline,
+                size: 100,
+                color: Colors.grey[400],
+              ),
+              const SizedBox(height: 30),
+              const Text(
+                '¡Hola, visitante!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                'Regístrate para crear y administrar tu centro de acopio.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(height: 40),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFEF3030),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 5,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const RegisterScreen()),);
+                  },
+                  child: const Text(
+                    'Regístrate',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 40),
+              RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  text: "O si ya cuentas con una cuenta, ",
+                  style: TextStyle(color: Colors.grey[400], fontSize: 20),
+                  children: [
+                    WidgetSpan(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => LoginScreen()));
+                        },
+                        child: const Text(
+                          "¡inicia sesión aquí!",
+                          style: TextStyle(
+                            color: Colors.blue,
+                              decoration: TextDecoration.underline,
+                              fontSize: 20
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      return Scaffold(
       appBar: AppBar(title: const Text('Perfil de usuario'), backgroundColor: Colors.white,),
       backgroundColor: Colors.white,
       body: userInfo.isNotEmpty
@@ -307,7 +413,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     MaterialPageRoute(builder: (context) => StartingPage()),
                         (Route<dynamic> route) => false,
                   );
-                  print('Session closed');
                 },
                 child: const Text(
                   'Cerrar Sesión',
@@ -370,5 +475,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         child: CircularProgressIndicator(),
       ),
     );
+    }
   }
 }
