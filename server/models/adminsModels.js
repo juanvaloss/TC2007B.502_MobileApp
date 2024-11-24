@@ -42,6 +42,37 @@ const isInAdmins = async (email, plainPassword) => {
     }
 };
 
+
+const alreadyExists = async (email) => {
+  try {
+    const { data, error } = await supabase
+      .from('admins')
+      .select('id')
+      .eq('email', email);
+
+    if (error) {
+      throw new Error(`Error executing query: ${error.message}`);
+    }
+
+    if (data.length > 0) {
+      console.log('Admin found');
+      return true;
+    }
+
+    else{
+      console.log('Admin not found');
+      return false;
+    }
+
+    
+  } catch (err) {
+    console.error('Error fetching user:', err);
+    throw err;
+  }
+
+};
+
+
 //Won't be available to the end user
 const createAdmin = async (name, email, plainPassword) => {
     try {

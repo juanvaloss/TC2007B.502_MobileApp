@@ -8,12 +8,15 @@ const createUser = async (req, res) => {
     
     try {
         const userInfo = await userModel.alreadyExists(email);
+        const adminInfo = await adminModel.alreadyExistsAdmin(email);
         console.log(userInfo);
     
-        if (userInfo === true) {
-            res.status(400).json({ success: false, message: 'Email used by another account, login!' });
+        if (userInfo === true || adminInfo === true) {
+            res.status(403).json({ success: false, message: 'Email used by another account, login!' });
             return;
         }
+
+
 
         const response = await userModel.createUser(name, email, plainPassword);
         const otpCode = await sendOTP(email);
