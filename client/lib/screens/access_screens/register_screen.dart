@@ -46,7 +46,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
         final int userIdResponse = responseData['userId'];
-        print(responseData);
 
         Navigator.push(
           context,

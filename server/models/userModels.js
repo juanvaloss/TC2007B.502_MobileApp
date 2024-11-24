@@ -88,7 +88,7 @@ const createUser = async (name, email, plainPassword) => {
         let { data, error } = await supabase
           .from('users')
           .insert([{ name, email, password: hashedPassword }])
-          .select('*');
+          .select('id, name, email, isCenterAdmin');
     
         if (error) {
           throw new Error(`Error executing query: ${error.message}`);
