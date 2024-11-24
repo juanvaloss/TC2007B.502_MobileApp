@@ -7,6 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import './application_screen.dart';
 import '../access_screens/register_screen.dart';
 import './check_application.dart';
+import '../testing_screens/cat.dart';
 
 class UserProfileScreen extends StatefulWidget {
   final int userId;
@@ -22,12 +23,28 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   Map<String, dynamic> userInfo = {};
   Map<String, dynamic> centerInfo = {};
   late int applicationId = 0;
+  int _tapCount = 0;
 
   @override
   void initState() {
     _fetchInfo();
     super.initState();
+  }
 
+  void _onIconTapped() {
+    setState(() {
+      _tapCount++;
+      if (_tapCount == 10) {
+        // Navigate to another screen after 10 taps
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Cat(),
+          ),
+        );
+        _tapCount = 0; // Reset counter after navigation
+      }
+    });
   }
 
   String _capitalizeFirstLetter(String text) {
@@ -199,12 +216,20 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Add a welcome illustration or icon
-              Icon(
-                Icons.person_outline,
-                size: 100,
-                color: Colors.grey[400],
+              GestureDetector(
+                onTap: _onIconTapped,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.person_outline,
+                      size: 100,
+                      color: Colors.grey[400],
+                    ),
+                  ],
+                ),
               ),
+              // Add a welcome illustration or icon
               const SizedBox(height: 30),
               const Text(
                 '¡Hola, visitante!',
