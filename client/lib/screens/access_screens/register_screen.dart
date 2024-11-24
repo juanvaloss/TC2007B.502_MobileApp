@@ -5,6 +5,22 @@ import 'package:http/http.dart' as http;
 import '../access_screens/code_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+class EmailInputFormatter extends TextInputFormatter {
+  // Regex for a valid email
+  final RegExp _emailRegex = RegExp(
+    r'^[a-zA-Z0-9._%+-]*@?[a-zA-Z0-9.-]*\.?[a-zA-Z]*$',
+  );
+
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    if (_emailRegex.hasMatch(newValue.text) || newValue.text.isEmpty) {
+      return newValue;
+    }
+    return oldValue;
+  }
+}
+
+
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -213,7 +229,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               color: Color(0xFFA0A5BA),
                             ),
                             inputFormatters: [
-                              FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9_.@ ]'))
+                              EmailInputFormatter()
                             ],
                           ),
 

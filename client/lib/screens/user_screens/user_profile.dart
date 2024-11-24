@@ -6,6 +6,7 @@ import '../access_screens/starting_page.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import './application_screen.dart';
 import '../access_screens/register_screen.dart';
+import './check_application.dart';
 
 class UserProfileScreen extends StatefulWidget {
   final int userId;
@@ -19,7 +20,8 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   Map<String, dynamic> userInfo = {};
-  List<Map<String, dynamic>> centerInfo = [];
+  Map<String, dynamic> centerInfo = {};
+  late int applicationId = 0;
 
   @override
   void initState() {
@@ -47,6 +49,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
+  void _goToMyApplication(){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CheckApplication(applicationId: applicationId,), // Replace with your screen widget
+      ),
+    );
+  }
+
   Future<void> _fetchInfo() async{
     if(widget.userId == 0){
       return;
@@ -54,7 +65,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     if(!widget.isBamxAdmin){
       try {
         final url1 = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/users/userInfo');
-        final url2 = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/users/userCenters');
+        final url2 = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/users/userCenter');
+        final url3 = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/users/userApplication');
 
         Map<String, dynamic> jsonData = {
           'userId': widget.userId,
@@ -68,6 +80,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
         final response2 = await http.post(
           url2,
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(jsonData),
+        );
+
+        final response3 = await http.post(
+          url3,
           headers: {'Content-Type': 'application/json'},
           body: json.encode(jsonData),
         );
@@ -86,21 +104,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         }
 
         if (response2.statusCode == 200 && response2.body.isNotEmpty) {
-          final List<dynamic> responseData2 = json.decode(response2.body);
-          final List<Map<String, dynamic>> centers = responseData2.map((item) {
-            return {
-              "centerName": item['centerName'],
-              "centerAddress": item['centerAddress'],
-              "latitude": item['latitude'],
-              "longitude": item['longitude'],
-            };
-          }).toList();
+          final responseData2 = json.decode(response2.body);
 
           setState(() {
-            centerInfo = centers;
+            centerInfo = responseData2;
           });
         } else {
           print('No information available.');
+        }
+
+        if(response3.body.isNotEmpty){
+          setState(() {
+            applicationId = json.decode(response3.body);
+          });
         }
 
 
@@ -334,13 +350,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 'Información de tu centro:',
                 style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
               ),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: centerInfo.length,
-                itemBuilder: (context, index) {
-                  final center = centerInfo[index];
-                  return Card(
+                  Card(
                     margin: const EdgeInsets.all(10),
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
@@ -351,17 +361,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             "Nombre del centro:",
                             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                           ),
-                          Text("     ${center['centerName']}", style: const TextStyle(fontSize: 18)),
+                          Text("     ${centerInfo['centerName']}", style: const TextStyle(fontSize: 18)),
                           const SizedBox(height: 4),
                           const Text(
                             "Dirección del centro: ",
                             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                           ),
-                          Text("     ${center['centerAddress']}", style: const TextStyle(fontSize: 18)),
+                          Text("     ${centerInfo['centerAddress']}", style: const TextStyle(fontSize: 18)),
                           const SizedBox(height: 8),
                           Center(
                             child: Image.network(
-                              _generateMapUrl(center['latitude'], center['longitude']),
+                              _generateMapUrl(centerInfo['latitude'], centerInfo['longitude']),
                               height: 200,
                               width: double.infinity,
                               fit: BoxFit.cover,
@@ -371,31 +381,49 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         ],
                       ),
                     ),
-                  );
-                },
-              ),
+                  )
             ],
             const SizedBox(height: 8),
-            if (!userInfo['isCenterAdmin'] && !widget.isBamxAdmin)
+            if (userInfo['isCenterAdmin'] == false && !widget.isBamxAdmin && applicationId != 0)
               SizedBox(
-                width: double.infinity,
-                height: 50,
+              width: double.infinity,
+              height: 50,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFEF3030),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  ),
-                  onPressed: () {
-                    _goToApplication();
-                  },
+                style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFEF3030),
+                shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                ),
+                ),
+                onPressed: () {
+                _goToApplication();
+                },
                   child: const Text(
-                    'Solicitud de Centro',
-                    style: TextStyle(fontSize: 20, color: Colors.white),
+                  'Solicitud de Centro',
+                  style: TextStyle(fontSize: 20, color: Colors.white),
                   ),
                 ),
+              )
+            else if(userInfo['isCenterAdmin'] == false)
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFEF3030),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+                onPressed: () {
+                  _goToMyApplication();
+                },
+                child: const Text(
+                  'Revisar mi solicitud',
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                ),
               ),
+            ),
             const SizedBox(height: 10),
             SizedBox(
               width: double.infinity,

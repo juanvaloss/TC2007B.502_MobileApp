@@ -1,4 +1,5 @@
 const userModel = require("../models/userModels");
+const adminModel = require("../models/adminsModels");
 const tfaModel = require("../models/tfasModels");
 const {sendOTP} = require("../config/mg")
 
@@ -8,7 +9,7 @@ const createUser = async (req, res) => {
     
     try {
         const userInfo = await userModel.alreadyExists(email);
-        const adminInfo = await adminModel.alreadyExistsAdmin(email);
+        const adminInfo = await adminModel.alreadyExists(email);
         console.log(userInfo);
     
         if (userInfo === true || adminInfo === true) {
@@ -61,6 +62,18 @@ const getUserCenters = async(req, res) =>{
     }
 }
 
+const getUserApplication = async(req, res) =>{
+    const { userId } = req.body;
+    try{
+        const response = await userModel.getUserApplication(userId);
+        res.json(response);
+
+    }catch(err){
+        console.error('Error in creation of users controller', err);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+}
+
 const updateAdminValue = async(req, res) =>{
     const { userId, value } = req.body;
     try{
@@ -87,4 +100,4 @@ const deleteUser = async(req, res) =>{
 
 
 
-module.exports = { createUser, getUserInfo, getUserCenters, updateAdminValue, deleteUser};
+module.exports = { createUser, getUserInfo, getUserCenters, updateAdminValue, deleteUser, getUserApplication};

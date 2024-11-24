@@ -15,7 +15,6 @@ const createAdmin = async (req, res) => {
       }
 };
   
-
 const getAdminApprovedCenters = async(req, res) =>{
     const { adminId } = req.body;
     try{

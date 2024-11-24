@@ -4,9 +4,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class CheckApplication extends StatefulWidget {
-  final int userId;
+  final int applicationId;
 
-  const CheckApplication({required this.userId, super.key});
+  const CheckApplication({required this.applicationId, super.key});
 
   @override
   _CheckApplicationState createState() => _CheckApplicationState();
@@ -22,11 +22,10 @@ class _CheckApplicationState extends State<CheckApplication> {
     checkApplicationInfo();
   }
 
-  // Function to fetch application information
   Future<void> checkApplicationInfo() async {
     try {
-      final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/requests/getReqInfo');
-      Map<String, dynamic> jsonData = {'userId': widget.userId.toString()};
+      final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/applications/getApplicationInfo');
+      Map<String, dynamic> jsonData = {'userId': widget.applicationId};
 
       final response = await http.post(
         url,

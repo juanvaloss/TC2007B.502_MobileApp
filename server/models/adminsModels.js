@@ -124,4 +124,4 @@ const getAdminInfo = async (userId) => {
 };
 
 
-module.exports = {isInAdmins, createAdmin, getAdminInfo};
+module.exports = {isInAdmins, createAdmin, getAdminInfo, alreadyExists};

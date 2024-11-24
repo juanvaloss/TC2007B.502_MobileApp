@@ -31,7 +31,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       _mapStyleString = string;
     });
     BitmapDescriptor.asset(
-        const ImageConfiguration(size: Size(30, 30)), 'images/arrow.png')
+        const ImageConfiguration(size: Size(35, 35)), 'images/arrow.png')
         .then((onValue) {
       myIcon = onValue;
     });

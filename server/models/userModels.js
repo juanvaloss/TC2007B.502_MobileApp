@@ -145,14 +145,30 @@ const getUserCenters = async (userId) => {
       if (error) {
         throw new Error(`Error fetching user centers: ${error.message}`);
       }
-
-      
-  
       return data;
     } catch (err) {
       console.error('Error fetching user centers:', err);
       throw err;
     }
+};
+
+const getUserApplication = async (userId) => {
+  try {
+    const { data, error } = await supabase
+      .from('applications')
+      .select('id')
+      .eq('solicitor', userId)
+      .single();
+
+    if (error) {
+      throw new Error(`Error fetching user applications: ${error.message}`);
+    }
+
+    return data;
+  } catch (err) {
+    console.error('Error fetching user applications:', err);
+    throw err;
+  }
 };
 
 const updateAdminValue = async(userId, value) => {
@@ -194,4 +210,4 @@ const deleteUser = async (userId) => {
 
   
 
-module.exports = { createUser, isInUsers, getUserInfo, getUserCenters, updateAdminValue, deleteUser, alreadyExists };
+module.exports = { createUser, isInUsers, getUserInfo, getUserCenters, updateAdminValue, deleteUser, alreadyExists, getUserApplication};

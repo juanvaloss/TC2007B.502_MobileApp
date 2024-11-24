@@ -54,6 +54,8 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
   }
 
   Future<void> _sendApplication() async {
+
+
     final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/applications/create');
     final centerName = _centerNameController.text.trim();
     final centerAddress = _addressController.text.trim();

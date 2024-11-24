@@ -64,12 +64,7 @@ class _AddDonation extends State<AddDonation> {
     }catch(e){
       print(e);
     }
-
-
-
   }
-
-
 
   @override
   Widget build(BuildContext context) {

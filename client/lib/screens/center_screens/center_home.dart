@@ -64,7 +64,7 @@ class _CenterHome extends State<CenterHome> {
   Future<void> fetchUserInfo()async{
     try {
       final url1 = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/users/userInfo');
-      final url2 = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/users/userCenters');
+      final url2 = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/users/userCenter');
 
       Map<String, dynamic> jsonData = {
         'userId': widget.userId,
