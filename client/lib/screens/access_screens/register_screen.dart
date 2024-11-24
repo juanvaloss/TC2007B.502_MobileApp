@@ -53,15 +53,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
             builder: (context) => MfaScreen(userId: userIdResponse, typeOfUser: 1, userEmail: email),
           ),
         );
-      } else {
+      } else if(response.statusCode == 403) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Algo salió mal, inténtalo de nuevo."),
+            content: Text("Esta cuenta ya está registrada, intenta iniciar sesión."),
             backgroundColor: Colors.red,
             duration: Duration(seconds: 3),
           ),
         );
       }
+
+      
     } catch (e) {
       print('Error: $e');
     }
