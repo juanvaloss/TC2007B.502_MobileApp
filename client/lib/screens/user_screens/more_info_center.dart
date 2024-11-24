@@ -309,9 +309,9 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
                   onPressed: () async {
                     Uri googleMapsUrl = Uri.parse("https://www.google.com/maps/dir/?api=1&origin=${widget.currentUserPosition.latitude},${widget.currentUserPosition.longitude}&destination=${widget.centerPosition.latitude},${widget.centerPosition.longitude}&travelmode=driving");
                     if (await canLaunchUrl(googleMapsUrl)) {
-                    await canLaunchUrl(googleMapsUrl);
+                      await launchUrl(googleMapsUrl);
                     } else {
-                    throw 'Could not launch $googleMapsUrl';
+                      throw 'Could not launch $googleMapsUrl';
                     }
                   },
                   child: const Text(

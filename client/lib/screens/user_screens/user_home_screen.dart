@@ -30,8 +30,15 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     rootBundle.loadString('assets/map_style.json').then((string) {
       _mapStyleString = string;
     });
+    BitmapDescriptor.asset(
+        const ImageConfiguration(size: Size(30, 30)), 'images/arrow.png')
+        .then((onValue) {
+      myIcon = onValue;
+    });
     fetchData();
   }
+
+  late BitmapDescriptor myIcon;
 
   List<List<dynamic>> centers = [];
   late String _mapStyleString;
@@ -47,6 +54,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   final Completer<GoogleMapController> _mapController = Completer<GoogleMapController>();
   final PanelController _panelController = PanelController();
   final Set<Marker> _markers = {};
+  late final Marker _initialMarker = Marker(
+    markerId: const MarkerId('initial_marker'),
+    position: const LatLng(20.67471511804876, -103.43224564816127),
+    infoWindow: const InfoWindow(title: 'Initial Location'),
+    icon: myIcon
+  );
 
   static const CameraPosition _initialPosition = CameraPosition(
     target: LatLng(20.67471511804876, -103.43224564816127),
@@ -88,6 +101,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           final latitude = center[3];
           final longitude = center[4];
 
+
           _markers.add(
             Marker(
                 markerId: MarkerId(id.toString()),
@@ -99,6 +113,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       address,
                     )),
           );
+
+          _markers.add(_initialMarker);
+
         }
       } else {
         print('Error: ${response.statusCode}');
