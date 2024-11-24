@@ -129,7 +129,6 @@ const getUserInfo = async (userId) => {
     }
 };
 
-//Might get changed to a single query ...
 const getUserCenters = async (userId) => {
     try {
       const { data, error } = await supabase
@@ -137,10 +136,17 @@ const getUserCenters = async (userId) => {
         .select('id, centerName, centerAddress, latitude, longitude')
         .eq('centerAdmin', userId)
         .single();
+
+      if(data == null){
+        console.log('No centers found');
+        return 0;
+      }  
   
       if (error) {
         throw new Error(`Error fetching user centers: ${error.message}`);
       }
+
+      
   
       return data;
     } catch (err) {

@@ -63,7 +63,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         );
       }
 
-      
+
     } catch (e) {
       print('Error: $e');
     }
