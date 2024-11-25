@@ -13,6 +13,7 @@ const applicationRoutes = require("./routes/applicationsRoutes");
 const donationRoutes = require("./routes/donationsRoutes");
 const tfaRoutes = require("./routes/tfasRoutes");
 const loginRoutes = require("./routes/loginRoutes");
+const collectionRoutes = require("./routes/collectionRoutes");
 
 
 app.use(cors());
@@ -30,4 +31,5 @@ app.use("/applications",applicationRoutes)
 app.use("/donations",donationRoutes)
 app.use("/tfa", tfaRoutes)
 app.use("/login", loginRoutes)
+app.use("/collections", collectionRoutes)
 

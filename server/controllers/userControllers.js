@@ -2,8 +2,6 @@ const userModel = require("../models/userModels");
 const adminModel = require("../models/adminsModels");
 const tfaModel = require("../models/tfasModels");
 const {sendOTP} = require("../config/mg");
-const { application } = require("express");
-
 
 const createUser = async (req, res) => {
     const { name, email, plainPassword } = req.body;

@@ -107,9 +107,31 @@ class _CenterHome extends State<CenterHome> {
   }
 
   Future<void> _sendCollectionRequest()async{
-    final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/users/userInfo');
+    final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/collections/register');
+    final result = (100 * (centerInfo['currentCapacity'] ?? 0)) / ((centerInfo['totalCapacity'] ?? 1).toDouble());
+
+    Map<String, dynamic> jsonData = {
+      'centerId': centerInfo['id'],
+      'centerName': centerInfo['centerName'],
+      'status': result
+    };
+
+    try{
+
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(jsonData)
+      );
+
+      if(response.statusCode == 200){
+
+      }
 
 
+    }catch(e){
+      print(e);
+    }
 
   }
 
