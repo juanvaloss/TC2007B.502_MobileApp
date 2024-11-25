@@ -24,8 +24,8 @@ class _CheckApplicationState extends State<CheckApplication> {
 
   Future<void> checkApplicationInfo() async {
     try {
-      final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/applications/getApplicationInfo');
-      Map<String, dynamic> jsonData = {'userId': widget.applicationId};
+      final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/applications/getReqInfo');
+      Map<String, dynamic> jsonData = {'applicationId': widget.applicationId};
 
       final response = await http.post(
         url,
@@ -36,24 +36,28 @@ class _CheckApplicationState extends State<CheckApplication> {
       if (response.statusCode == 200 && response.body.isNotEmpty) {
         final responseData = json.decode(response.body);
 
-        if (responseData is List && responseData.isNotEmpty) {
+        if (responseData.isNotEmpty) {
           setState(() {
-            applicationInfo = responseData[0];
+            applicationInfo = responseData;
+            print(applicationInfo);
           });
         } else {
           setState(() {
             errorMessage = 'No se encontró información del centro.';
+            print(errorMessage);
           });
         }
       } else {
         setState(() {
           errorMessage =
               'Error ${response.statusCode}: no se pudo cargar la información del centro.';
+              print(errorMessage);
         });
       }
     } catch (e) {
       setState(() {
         errorMessage = 'Error: $e - No se pudo cargar la información del centro.';
+        print(errorMessage);
       });
     }
   }
@@ -126,7 +130,7 @@ class _CheckApplicationState extends State<CheckApplication> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             const SizedBox(width: 10),
-            // Circle container with an icon
+           
             Container(
               decoration: BoxDecoration(
                 color: getContainerColor(applicationInfo?['completedCourse2']),
@@ -135,7 +139,7 @@ class _CheckApplicationState extends State<CheckApplication> {
               padding: const EdgeInsets.all(10),
               child: getIcon(applicationInfo?['completedCourse2']),
             ),
-            // Elevated button acting as a course item
+            
             SizedBox(
               width: 300,
               height: 50,
