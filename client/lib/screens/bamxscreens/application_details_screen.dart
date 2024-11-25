@@ -184,9 +184,9 @@ class _ApplicationDetailsScreen extends State<ApplicationDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.grey[100],
+        backgroundColor: Colors.white,
         elevation: 0,
         title: const Text(
           "Detalles de solicitud",
@@ -212,13 +212,8 @@ class _ApplicationDetailsScreen extends State<ApplicationDetailsScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+                  
+                  
                 ),
                 child: Column(
                   children: [
@@ -266,26 +261,41 @@ class _ApplicationDetailsScreen extends State<ApplicationDetailsScreen> {
                     _buildInfoRow(Icons.person, "Nombre completo:", "${userInfo['name']}"),
                     const SizedBox(height: 12),
                     _buildInfoRow(Icons.email, "Email", "${userInfo['email']}"),
-
-                    const SizedBox(height: 14),
+                    const SizedBox(height: 20),
+                    const Divider(color: Colors.grey),
+                    const SizedBox(height: 20),
                     _buildSectionHeader("Detalles Del Centro"),
                     const SizedBox(height: 12),
                     _buildInfoRow(
                         Icons.location_on, "Dirección del Centro", "${applicationInfo['centerAddress']}"),
                     const SizedBox(height: 12),
                     _buildInfoRow(Icons.scale, "Capacidad en KG", "${applicationInfo['capacity']}"),
-
+                    const SizedBox(height: 14),
+                    const Divider(color: Colors.grey),
                     const SizedBox(height: 14),
                     _buildSectionHeader("ACEPTA:"),
                     const SizedBox(height: 12),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _CategoryIcon(icon: Icons.restaurant_menu, label: "Carne", acceptsX: applicationInfo['acceptsMeat']?? false,),
-                        _CategoryIcon(icon: Icons.eco, label: "Verduras", acceptsX: applicationInfo['acceptsVegetables']?? false),
-                        _CategoryIcon(icon: FontAwesomeIcons.bucket, label: "Enlatados", acceptsX: applicationInfo['acceptsCans']?? false),
-                      ],
-                    ),
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      if (applicationInfo['acceptsMeat'] ?? false)
+                        const _CategoryIcon(
+                          icon: FontAwesomeIcons.drumstickBite,
+                          label: "Carne",
+                        ),
+                      if (applicationInfo['acceptsVegetables'] ?? false)
+                        const _CategoryIcon(
+                          icon: FontAwesomeIcons.carrot,
+                          label: "Verduras",
+                        ),
+                      if (applicationInfo['acceptsCans'] ?? false)
+                        const _CategoryIcon(
+                          icon: FontAwesomeIcons.bucket,
+                          label: "Enlatados",
+                        ),
+                    ],
+                  ),
+
                   ],
                 ),
               ),
@@ -299,7 +309,7 @@ class _ApplicationDetailsScreen extends State<ApplicationDetailsScreen> {
                   Expanded(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
+                        backgroundColor: const Color(0XFFEF3030),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
@@ -354,10 +364,10 @@ class _ApplicationDetailsScreen extends State<ApplicationDetailsScreen> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CircleAvatar(
-          backgroundColor: Colors.red,
-          radius: 20,
-          child: Icon(icon, color: Colors.white),
+        Icon(
+          icon,
+          color: const Color(0XFFEF3030),
+          size: 24,
         ),
         const SizedBox(width: 16),
         Expanded(
@@ -392,9 +402,8 @@ class _ApplicationDetailsScreen extends State<ApplicationDetailsScreen> {
 class _CategoryIcon extends StatelessWidget {
   final IconData icon;
   final String label;
-  final bool acceptsX;
 
-  const _CategoryIcon({required this.icon, required this.label, required this.acceptsX});
+  const _CategoryIcon({required this.icon, required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -402,20 +411,20 @@ class _CategoryIcon extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 30,
-          backgroundColor: acceptsX ? Colors.red : Colors.red.withOpacity(0.1),
+          backgroundColor: const Color(0XFFEF3030), // Always red for accepted items
           child: Icon(
             icon,
             size: 30,
-            color: acceptsX ? Colors.white : Colors.red,
+            color: Colors.white,
           ),
         ),
         const SizedBox(height: 8),
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: acceptsX ? Colors.red : Colors.black,
+            color: const Color(0XFFEF3030),
           ),
         ),
       ],
