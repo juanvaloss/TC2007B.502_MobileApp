@@ -1,7 +1,8 @@
 const userModel = require("../models/userModels");
 const adminModel = require("../models/adminsModels");
 const tfaModel = require("../models/tfasModels");
-const {sendOTP} = require("../config/mg")
+const {sendOTP} = require("../config/mg");
+const { application } = require("express");
 
 
 const createUser = async (req, res) => {
@@ -54,6 +55,10 @@ const getUserCenters = async(req, res) =>{
     const { userId } = req.body;
     try{
         const response = await userModel.getUserCenters(userId);
+        if (response === null){
+            res.status(404).json({message: 'No centers found' });
+            return;
+        }
         res.json(response);
 
     }catch(err){
@@ -66,6 +71,10 @@ const getUserApplication = async(req, res) =>{
     const { userId } = req.body;
     try{
         const response = await userModel.getUserApplication(userId);
+        if (response === null){
+            res.status(404).json({id: 0});
+            return;
+        }
         res.json(response);
 
     }catch(err){

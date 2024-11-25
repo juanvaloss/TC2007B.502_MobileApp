@@ -22,7 +22,7 @@ class UserProfileScreen extends StatefulWidget {
 class _UserProfileScreenState extends State<UserProfileScreen> {
   Map<String, dynamic> userInfo = {};
   Map<String, dynamic> centerInfo = {};
-  late int applicationId = 0;
+  int applicationId = 0;
   int _tapCount = 0;
 
   @override
@@ -35,14 +35,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     setState(() {
       _tapCount++;
       if (_tapCount == 10) {
-        // Navigate to another screen after 10 taps
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => Cat(),
           ),
         );
-        _tapCount = 0; // Reset counter after navigation
+        _tapCount = 0;
       }
     });
   }
@@ -101,13 +100,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           body: json.encode(jsonData),
         );
 
-        final response3 = await http.post(
-          url3,
-          headers: {'Content-Type': 'application/json'},
-          body: json.encode(jsonData),
-        );
-
-        if (response1.statusCode == 200 && response1.body.isNotEmpty) {
+        if (response1.statusCode == 200) {
           final responseData1 = json.decode(response1.body);
           setState(() {
             userInfo = {
@@ -120,21 +113,37 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           print('Failed to fetch user information. Please try again.');
         }
 
-        if (response2.statusCode == 200 && response2.body.isNotEmpty) {
-          final responseData2 = json.decode(response2.body);
+        print("Response 2 ${response2.body}");
 
+        if (response2.statusCode == 200) {
+          final responseData2 = json.decode(response2.body);
           setState(() {
             centerInfo = responseData2;
           });
         } else {
-          print('No information available.');
+          print('No center information available.');
         }
 
-        if(response3.body.isNotEmpty){
-          setState(() {
-            applicationId = json.decode(response3.body);
-          });
-        }
+       try{
+         final response3 = await http.post(
+           url3,
+           headers: {'Content-Type': 'application/json'},
+           body: json.encode(jsonData),
+         );
+
+         if(response3.statusCode == 200){
+           final responseData3 = json.decode(response3.body);
+           setState(() {
+             applicationId = responseData3['id'];
+
+           });
+         }
+
+
+
+       }catch(e){
+          print('Error fetching applications. ${e}' );
+       }
 
 
       } catch (e) {
@@ -409,7 +418,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   )
             ],
             const SizedBox(height: 8),
-            if (userInfo['isCenterAdmin'] == false && !widget.isBamxAdmin && applicationId != 0)
+            if (userInfo['isCenterAdmin'] == false && !widget.isBamxAdmin && applicationId == 0)
               SizedBox(
               width: double.infinity,
               height: 50,
@@ -429,7 +438,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   ),
                 ),
               )
-            else if(userInfo['isCenterAdmin'] == false)
+            else if(applicationId != 0)
             SizedBox(
               width: double.infinity,
               height: 50,
@@ -454,7 +463,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
+                  backgroundColor: const Color(0xFFEF3030),
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),

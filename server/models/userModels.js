@@ -139,7 +139,7 @@ const getUserCenters = async (userId) => {
 
       if(data == null){
         console.log('No centers found');
-        return 0;
+        return data;
       }  
   
       if (error) {
@@ -159,6 +159,12 @@ const getUserApplication = async (userId) => {
       .select('id')
       .eq('solicitor', userId)
       .single();
+
+    if (data === null){
+      console.log('No applications found');
+      return data;
+
+    }
 
     if (error) {
       throw new Error(`Error fetching user applications: ${error.message}`);

@@ -106,6 +106,13 @@ class _CenterHome extends State<CenterHome> {
     }
   }
 
+  Future<void> _sendCollectionRequest()async{
+    final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/users/userInfo');
+
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -348,8 +355,7 @@ class _CenterHome extends State<CenterHome> {
                   icon: FontAwesomeIcons.truck,
                   text: "Solicitar envío",
                   onTap: () {
-                    // Acción para este botón
-                    print("Solicitar envío");
+                    _sendCollectionRequest;
                   },
                 ),
               ],
@@ -357,16 +363,15 @@ class _CenterHome extends State<CenterHome> {
           ),
         ],
       ),
-      // BottomAppBar en lugar del BottomNavigationBar
       bottomNavigationBar: BottomAppBar(
         color: Colors.white,
         shape: const CircularNotchedRectangle(),
-        notchMargin: 8.0,
+        padding: const EdgeInsets.only(bottom: 60),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             IconButton(
-              icon: const Icon(Icons.map, color: Colors.black),
+              icon: const Icon(Icons.map, color: Colors.black,size: 50,),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -374,14 +379,9 @@ class _CenterHome extends State<CenterHome> {
                 );
               },
             ),
-            IconButton(
-              icon: const Icon(Icons.notifications_none_outlined, color: Colors.black),
-              onPressed: () {
-                // Acción para notificaciones
-              },
-            ),
           ],
         ),
+        
       ),
     );
   }

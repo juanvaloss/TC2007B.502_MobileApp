@@ -27,7 +27,7 @@ class _ApplicationDetailsScreen extends State<ApplicationDetailsScreen> {
 
 
   Future<void> _getApplicationInfo() async {
-    final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/applications/getReqInfo');
+    final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/applications/getApplicationInfo');
     Map<String, dynamic> jsonData = {
       'applicationId': widget.applicationId,
     };
