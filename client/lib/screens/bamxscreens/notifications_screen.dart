@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screens/bamxscreens/application_details_screen.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import '../user_screens/user_home_screen.dart';
+import '/screens/user_screens/more_info_center.dart';
 
 class NotificationsScreen extends StatefulWidget {
   final int adminId;
@@ -18,6 +20,8 @@ class NotificationsScreen extends StatefulWidget {
 class _NotificationsScreenState extends State<NotificationsScreen> {
   String selectedOption = 'Solicitudes';
   List<Map<String, dynamic>> requests = [];
+  List<Map<String, dynamic>> collections = [];
+  LatLng current = const LatLng(20.67471511804876, -103.43224564816127);
 
   @override
   void initState() {
@@ -35,6 +39,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       }
     });
   }
+  
+
 
   @override
   void didChangeDependencies() {
@@ -68,6 +74,47 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     }
   }
 
+Future<void> _goToCollectionRequest(int centerId) async{
+
+  final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/centers/centerCoordinates');
+
+    Map<String, dynamic> body = {
+      'centerId': centerId,
+    };
+
+  try{
+    final response = await http.post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(body),
+    );
+
+
+    if(response.statusCode == 200){
+      print("llegamos aquí");
+      final Map<String, dynamic> data = json.decode(response.body);
+      LatLng la = LatLng(data['latitude'], data['longitude']);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MoreInfoCenter(
+            centerId: centerId,
+            userId: widget.adminId,
+            currentUserPosition: current,
+            centerPosition: la,
+          )
+        ),
+      );
+      print(data);
+    }
+  }
+  catch(e){
+    print('Error fetching requests: $e');
+  }
+}
+
   Future<void> _requestPermission() async {
     await FirebaseMessaging.instance.requestPermission();
     final fcm_token = await FirebaseMessaging.instance.getToken();
@@ -88,6 +135,28 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     await supabase
         .from('admins')
         .update({'fcm_token': fcm_token}).eq('id', widget.adminId);
+  }
+
+  Future <void> _getAllCollectionRequests() async {
+    final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/collections/getAll');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      setState(() {
+        collections = data.map((collection) {
+          return {
+            "id": collection['id'],
+            "whenReceived": collection['whenReceived'],
+            "centerRequesting": collection['centerRequesting'],
+            "centerStatus": collection['centerStatus'],
+            "centerName": collection['centerName'],
+          };
+        }).toList();
+      });
+    } else {
+      print('Failed to load requests');
+    }
   }
 
   @override
@@ -117,20 +186,21 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
-                      selectedOption = 'Centros de acopio';
+                      selectedOption = 'Recolecciones pendientes';
+                         _getAllCollectionRequests();
                     });
                   },
                   child: Column(
                     children: [
                       Text(
-                        'Centros de acopio',
+                        'Recolecciones pendientes',
                         style: TextStyle(
-                          color: selectedOption == 'Centros de acopio' ? Colors.red : Colors.black,
+                          color: selectedOption == 'Recolecciones pendientes' ? Colors.red : Colors.black,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      if (selectedOption == 'Centros de acopio')
+                      if (selectedOption == 'Recolecciones pendientes')
                         Container(
                           height: 2,
                           color: Colors.red,
@@ -169,14 +239,42 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             ],
           ),
           const SizedBox(height: 20),
-          if (selectedOption == 'Centros de acopio')
-            const Column(
-              children: [
-                Text(
-                  'Ventura',
-                  style: TextStyle(fontSize: 16),
-                ),
-              ],
+          if (selectedOption == 'Recolecciones pendientes')
+            Expanded(
+              child: ListView.builder(
+                itemCount: collections.length,
+                itemBuilder: (context, index){
+                  final collection = collections[index];
+                  return GestureDetector(
+                    onTap: (){
+                      print(collection['centerRequesting']);
+                      _goToCollectionRequest(collection['centerRequesting']);
+                    },
+                    child: Card(
+                      margin: const EdgeInsets.all(10),
+                      color: const Color(0xFFF6F8FA),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              collection['centerName'],
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text('Se encuentra al ${collection['centerStatus']}% de su capacidad máxima', style: const TextStyle(color: Colors.black),),
+                          ],
+                        ),
+                      ),
+                    )
+                  );
+                }
+              )
             ),
           if (selectedOption == 'Solicitudes')
             Expanded(
@@ -199,7 +297,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     },
                     child: Card(
                       margin: const EdgeInsets.all(10),
-                      color: const Color(0xFFEF3030),
+                      color: const Color(0xFFF6F8FA),
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Column(
@@ -210,11 +308,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white
+                                color: Colors.black,
                               ),
                             ),
                             const SizedBox(height: 4),
-                            const Text('Presiona para ver más información', style: TextStyle(color: Colors.white),),
+                            const Text('Presiona para ver más información', style: TextStyle(color: Colors.black),),
                           ],
                         ),
                       ),

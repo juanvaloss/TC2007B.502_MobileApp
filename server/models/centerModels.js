@@ -74,4 +74,24 @@ const getCenterInfo = async (centerId) => {
   }
 };
 
-module.exports = { createCenter, getAllCoordinates, getAdminApprovedCenters, getCenterInfo };
+const getCoordinatesById = async (centerId) => {
+  try {
+    const { data, error } = await supabase
+      .from('centers')
+      .select('latitude, longitude')
+      .eq('id', centerId)
+      .single();
+
+    if (error) {
+      throw new Error(`Error fetching coordinates by ID: ${error.message}`);
+    }
+
+    return data;
+  }
+  catch(err){
+    console.error('Error fetching coordinates by ID:', err);
+    throw err;
+  }
+};
+
+module.exports = { createCenter, getAllCoordinates, getAdminApprovedCenters, getCenterInfo, getCoordinatesById};
