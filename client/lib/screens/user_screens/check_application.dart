@@ -20,11 +20,12 @@ class _CheckApplicationState extends State<CheckApplication> {
   void initState() {
     super.initState();
     checkApplicationInfo();
+    print(widget.applicationId);
   }
 
   Future<void> checkApplicationInfo() async {
     try {
-      final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/applications/getReqInfo');
+      final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/applications/getApplicationInfo');
       Map<String, dynamic> jsonData = {'applicationId': widget.applicationId};
 
       final response = await http.post(
@@ -327,9 +328,10 @@ class _CheckApplicationState extends State<CheckApplication> {
               children: [
                 const SizedBox(height: 100),
                 const Text(
-                  'Cursos para tu centro de acopio',
+                  'Prepárate para tu nuevo centro de acopio',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 26,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold
                   ),
                 ),

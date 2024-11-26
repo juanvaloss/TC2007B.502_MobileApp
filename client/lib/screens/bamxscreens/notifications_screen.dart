@@ -366,7 +366,7 @@ Widget build(BuildContext context) {
                     color: const Color(0xFFFFFFFF),
                     elevation: 0.0, // Sin sombra
                     child: Padding(
-                      padding: const EdgeInsets.all(12.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children: [
                           Row(
@@ -413,7 +413,7 @@ Widget build(BuildContext context) {
                                     );
                                   },
                                   icon: const Icon(
-                                    Icons.arrow_forward,
+                                    Icons.arrow_forward_ios,
                                     color: Colors.white,
                                   ),
                                   iconSize: 20,

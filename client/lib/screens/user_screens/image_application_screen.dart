@@ -71,7 +71,7 @@ class _ImageApplicationScreenState extends State<ImageApplicationScreen> {
               'Error subiendo la imagen: $e',
               style: const TextStyle(fontSize: 17),
             ),
-            backgroundColor: Colors.red,
+            backgroundColor: const Color(0XFFEF3030),
           ),
         );
       } finally {

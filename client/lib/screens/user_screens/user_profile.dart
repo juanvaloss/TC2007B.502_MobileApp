@@ -69,7 +69,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CheckApplication(applicationId: applicationId,), // Replace with your screen widget
+        builder: (context) => CheckApplication(applicationId: applicationId), // Replace with your screen widget
       ),
     );
   }
@@ -135,7 +135,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
            final responseData3 = json.decode(response3.body);
            setState(() {
              applicationId = responseData3['id'];
-
+             print(applicationId);
            });
          }
 
@@ -230,10 +230,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.person_outline,
-                      size: 100,
-                      color: Colors.grey[400],
+                    Image.asset(
+                      'images/bamx-logo.png',
+                      width: 600,
+                      height: 200,
                     ),
                   ],
                 ),
@@ -241,7 +241,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               // Add a welcome illustration or icon
               const SizedBox(height: 30),
               const Text(
-                '¡Hola, visitante!',
+                '¡Hola, Invitado!',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 26,
@@ -251,7 +251,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               ),
               const SizedBox(height: 10),
               const Text(
-                'Regístrate para crear y administrar tu centro de acopio.',
+                'Regístrate para formar parte de Kanan.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20,
@@ -289,7 +289,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
-                  text: "O si ya cuentas con una cuenta, ",
+                  text: "Si ya tienes una cuenta, ",
                   style: TextStyle(color: Colors.grey[400], fontSize: 20),
                   children: [
                     WidgetSpan(
@@ -302,7 +302,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         child: const Text(
                           "¡inicia sesión aquí!",
                           style: TextStyle(
-                            color: Colors.blue,
+                            color: Color(0xFFEF3030),
                               decoration: TextDecoration.underline,
                               fontSize: 20
                           ),

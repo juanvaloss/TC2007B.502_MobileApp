@@ -111,12 +111,12 @@ List<Widget> getAcceptedItems() {
     items.add(Column(
       children: [
         Container(
-          decoration: BoxDecoration(
-            color: const Color(0xFFEF3030).withOpacity(0.25),
+          decoration: const BoxDecoration(
+            color:  Color(0xFFEF3030),
             shape: BoxShape.circle,
           ),
           padding: const EdgeInsets.all(10),
-        child: const Icon(FontAwesomeIcons.drumstickBite, color: Color(0xFF747783), size: 25),
+        child: const Icon(FontAwesomeIcons.drumstickBite, color: Colors.white, size: 25),
         ),
         const Text('Carne', style: TextStyle(fontSize: 16),),
       ],
@@ -127,12 +127,12 @@ List<Widget> getAcceptedItems() {
     items.add(Column(
       children: [
         Container(
-          decoration: BoxDecoration(
-            color: const Color(0xFFEF3030).withOpacity(0.25),
+          decoration: const BoxDecoration(
+            color: Color(0xFFEF3030),
             shape: BoxShape.circle,
           ),
           padding: const EdgeInsets.all(10),
-       child: const Icon(FontAwesomeIcons.carrot, color: Color(0xFF747783), size: 25),
+       child: const Icon(FontAwesomeIcons.carrot, color: Colors.white, size: 25),
         ),
         const Text('Vegetales',style: TextStyle(fontSize: 16))
       ],
@@ -143,12 +143,12 @@ List<Widget> getAcceptedItems() {
     items.add(Column(
       children: [
         Container(
-          decoration: BoxDecoration(
-            color: const Color(0xFFEF3030).withOpacity(0.25),
+          decoration: const BoxDecoration(
+            color:  Color(0xFFEF3030),
             shape: BoxShape.circle,
           ),
           padding: const EdgeInsets.all(10),
-        child: const Icon(FontAwesomeIcons.solidTrashCan, color: Color(0xFF747783), size: 25),
+        child: const Icon(FontAwesomeIcons.solidTrashCan, color: Colors.white, size: 25),
         ),
         const Text('Latas', style: TextStyle(fontSize: 16))
       ],
