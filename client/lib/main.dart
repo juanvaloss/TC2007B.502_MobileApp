@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import './screens/access_screens/starting_page.dart';
+import './screens/user_screens/user_home_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,9 +29,8 @@ class MyApp extends StatelessWidget {
       title: 'KANAAAAAAAAAAN!!!!',
       initialRoute: '/',
       routes: {
-        '/': (context) => const StartingPage(),
-        //'/': (context) => const NotificationsScreen(adminId: 2),
-        //'/': (context) => const UserHomeScreen(userId: 8, isBamxAdmin: false,),
+        //'/': (context) => const StartingPage(),
+        '/': (context) => const UserHomeScreen(userId: 2, isCenterAdmin: false, isBamxAdmin: true),
 
 
 

@@ -72,6 +72,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     fetchData();
   }
 
+  double calculateCapacity(double currentCapacity, double totalCapacity) {
+    return (currentCapacity / totalCapacity) * 100;
+    }
+  
   Future<void> fetchData() async {
     final url =
         Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/centers/coordinates');
@@ -89,7 +93,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     item['centerName'],
                     item['centerAddress'],
                     item['latitude'],
-                    item['longitude']
+                    item['longitude'],
+                    calculateCapacity(item['currentCapacity'].toDouble(), item['totalCapacity'].toDouble()),
                   ])
               .toList();
         });
@@ -217,6 +222,17 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
   }
 
+  Color _calculateCardColor(double capacity) {
+    if (capacity > 80) {
+      return const Color(0xFF027760);
+    } else if (capacity < 80 && capacity > 50) {
+      return const Color(0xFFFF9500);
+    } else {
+      return const Color(0xFFEF3030);
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -231,25 +247,26 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     itemBuilder: (context, index) {
                       final center = centers[index];
                       return Card(
-                        color: const Color(0xFFEF3030),
-                        margin: const EdgeInsets.symmetric(vertical: 8.0),
+                        color: _calculateCardColor(center[5].toDouble()),
+                        margin: const EdgeInsets.symmetric(vertical: 3.0),
                         child: ListTile(
-                          title: Text(
-                            '${center[1]}', // Center name
-                            style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
-                          subtitle: const Text('Toca para ir al centro',
-                              style: const TextStyle(
-                                  color: Colors.white) // Coordinates
+                              title: Text(
+                                '${center[1]}', // Center name
+                                style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
                               ),
-                          onTap: () {
-                            _goToCenter(center[0], center[3], center[4],
-                                center[1], center[2]);
-                          },
-                        ),
+                              subtitle: Text(
+                                '${center[5].toStringAsFixed(0)}% lleno',
+                                style: const TextStyle(
+                                    color: Colors.white) // Coordinates
+                              ),
+                              onTap: () {
+                                _goToCenter(center[0], center[3], center[4],
+                                    center[1], center[2]);
+                              },
+                            ),
                       );
                     },
                   ),
