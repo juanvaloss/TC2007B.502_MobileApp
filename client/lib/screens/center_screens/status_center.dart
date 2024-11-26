@@ -182,8 +182,8 @@ List<Widget> getAcceptedItems() {
                 borderRadius: BorderRadius.circular(12),
                 child: Image.memory(
                   _imageFile!,
-                  width: 200,
-                  height: 200,
+                  width: 250,
+                  height: 150,
                   fit: BoxFit.cover,
                 ),
               )
@@ -197,7 +197,7 @@ List<Widget> getAcceptedItems() {
             const SizedBox(height: 20),
             Text(
             '${centerInfo['centerName'] ?? 'No disponible'}',
-             style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+             style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
              
              const SizedBox(height: 20),
 
