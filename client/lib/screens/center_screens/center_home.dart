@@ -434,32 +434,52 @@ class _CenterHome extends State<CenterHome> {
       bottomNavigationBar: BottomAppBar(
         color: Colors.white,
         shape: const CircularNotchedRectangle(),
-        padding: const EdgeInsets.only(bottom: 60),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            IconButton(
-              icon: const Icon(Icons.map, color: Colors.black,size: 50,),
-              onPressed: () {
+            GestureDetector(
+              onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => UserHomeScreen(userId: widget.userId, isBamxAdmin: false, isCenterAdmin: true,)),
+                  MaterialPageRoute(
+                    builder: (context) => UserHomeScreen(
+                      userId: widget.userId,
+                      isBamxAdmin: false,
+                      isCenterAdmin: true,
+                    ),
+                  ),
                 );
               },
+              child: Container(
+                width: 80, // Ancho del hitbox
+                height: 80, // Altura del hitbox
+                alignment: Alignment.center,
+                child: const Icon(Icons.map, color: Colors.black, size: 50),
+              ),
             ),
-            IconButton(
-              icon: const Icon(Icons.person, color: Colors.black,size: 50,),
-              onPressed: () {
+            GestureDetector(
+              onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => UserProfileScreen(userId: widget.userId, isBamxAdmin: false)),
+                  MaterialPageRoute(
+                    builder: (context) => UserProfileScreen(
+                      userId: widget.userId,
+                      isBamxAdmin: false,
+                    ),
+                  ),
                 );
               },
+              child: Container(
+                width: 80, // Ancho del hitbox
+                height: 80, // Altura del hitbox
+                alignment: Alignment.center,
+                child: const Icon(Icons.person, color: Colors.black, size: 50),
+              ),
             ),
           ],
         ),
-        
       ),
+
     );
   }
 }
