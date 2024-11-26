@@ -101,11 +101,11 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
 
   IconData getIcon() {
     if (result < 30) {
-      return Icons.sentiment_dissatisfied;
+      return Icons.sentiment_dissatisfied_outlined;
     } else if (result >= 30 && result < 70) {
-      return Icons.sentiment_neutral;
+      return Icons.sentiment_neutral_outlined;
     } else {
-      return Icons.sentiment_satisfied;
+      return Icons.sentiment_satisfied_alt_outlined;
     }
   }
 

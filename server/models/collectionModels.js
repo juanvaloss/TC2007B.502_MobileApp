@@ -53,4 +53,21 @@ const registerCollection = async (centerId, centerName,status) => {
 
 }
 
-module.exports = { getAllCollections, registerCollection, hasCenterSolicited }
+const deleteCollection = async(collectionId) =>{
+    try{
+      const { data, error } = await supabase
+      .from('collectionRequests')
+      .delete()
+      .eq('id', collectionId);
+  
+      if(error){
+        throw new Error(`Error executing query: ${error.message}`);
+      }
+  
+    }catch(err){
+      console.error('Error deleting collection:', err);
+      throw err;
+    }
+  }
+
+module.exports = { getAllCollections, registerCollection, hasCenterSolicited, deleteCollection }

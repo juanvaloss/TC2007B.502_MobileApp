@@ -29,4 +29,17 @@ const registerCollection = async (req, res) => {
     }
 }
 
-module.exports = { registerCollection, getAllCollections }
+const deleteCollection = async (req, res) => {
+    const { collectionId } = req.body;
+
+    try {
+        await collectionModel.deleteCollection(collectionId);
+        res.status(200).json({ message: 'Collection deleted' });
+
+    } catch (err) {
+        console.error('Error in creation of collection controller', err);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+}
+
+module.exports = { registerCollection, getAllCollections, deleteCollection }

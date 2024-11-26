@@ -159,170 +159,279 @@ Future<void> _goToCollectionRequest(int centerId) async{
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Future <void> _deleteCollectionRequest(int collectionId) async{
+    final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/collections/deleteCollection');
+    Map<String, dynamic> body = {
+      'collectionId': collectionId,
+    };
+
+    try{
+      final response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(body),
+      );
+
+      if(response.statusCode == 200){
+        print("Solicitud eliminada");
+        _getAllCollectionRequests();
+      }
+    }
+    catch(e){
+      print('Error fetching requests: $e');
+    }
+  }
+
+ @override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: Colors.white,
+    appBar: AppBar(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text('Notificaciones'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => UserHomeScreen(userId: widget.adminId, isBamxAdmin: true, isCenterAdmin: false,)),
-                  (Route<dynamic> route) => false,
-            );
-          },
-        ),
-      ),
-      body: Column(
-        children: [
-          const SizedBox(height: 20), // Espacio adicional antes de los botones
-          Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedOption = 'Recolecciones';
-                         _getAllCollectionRequests();
-                    });
-                  },
-                  child: Column(
-                    children: [
-                      Text(
-                        'Recolecciones',
-                        style: TextStyle(
-                          color: selectedOption == 'Recolecciones' ? Colors.red : Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      if (selectedOption == 'Recolecciones')
-                        Container(
-                          height: 2,
-                          color: Colors.red,
-                        ),
-                    ],
-                  ),
-                ),
+      title: const Text('Notificaciones'),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => UserHomeScreen(
+                userId: widget.adminId,
+                isBamxAdmin: true,
+                isCenterAdmin: false,
               ),
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedOption = 'Solicitudes';
-                      fetchRequests(); // Cargar solicitudes cuando se selecciona la opción
-                    });
-                  },
-                  child: Column(
-                    children: [
-                      Text(
-                        'Solicitudes',
-                        style: TextStyle(
-                          color: selectedOption == 'Solicitudes' ? const Color(0xFFEF3030) : Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      if (selectedOption == 'Solicitudes')
-                        Container(
-                          height: 2,
-                          color: Colors.red,
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          if (selectedOption == 'Recolecciones')
-            Expanded(
-              child: ListView.builder(
-                itemCount: collections.length,
-                itemBuilder: (context, index){
-                  final collection = collections[index];
-                  return GestureDetector(
-                    onTap: (){
-                      print(collection['centerRequesting']);
-                      _goToCollectionRequest(collection['centerRequesting']);
-                    },
-                    child: Card(
-                      margin: const EdgeInsets.all(10),
-                      color: const Color(0xFFF6F8FA),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              collection['centerName'],
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text('Se encuentra al ${collection['centerStatus']}% de su capacidad máxima', style: const TextStyle(color: Colors.black),),
-                          ],
-                        ),
-                      ),
-                    )
-                  );
-                }
-              )
             ),
-          if (selectedOption == 'Solicitudes')
+            (Route<dynamic> route) => false,
+          );
+        },
+      ),
+    ),
+    body: Column(
+      children: [
+        const SizedBox(height: 20), // Espacio adicional antes de los botones
+        Row(
+          children: [
             Expanded(
-              child: ListView.builder(
-                itemCount: requests.length,
-                itemBuilder: (context, index) {
-                  final request = requests[index];
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ApplicationDetailsScreen(
-                            applicationId: request['id'],
-                            solicitorId:  request['solicitor'],
-                            adminId: widget.adminId,
-                          ),
-                        ),
-                      );
-                    },
-                    child: Card(
-                      margin: const EdgeInsets.all(10),
-                      color: const Color(0xFFF6F8FA),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              request['centerName'],
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            const Text('Presiona para ver más información', style: TextStyle(color: Colors.black),),
-                          ],
-                        ),
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selectedOption = 'Recolecciones';
+                    _getAllCollectionRequests();
+                  });
+                },
+                child: Column(
+                  children: [
+                    Text(
+                      'Recolecciones',
+                      style: TextStyle(
+                        color: selectedOption == 'Recolecciones'
+                            ? const Color(0XFFEF3030)
+                            : Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  );
-                },
+                    if (selectedOption == 'Recolecciones')
+                      Container(
+                        height: 2,
+                        color: const Color(0XFFEF3030),
+                      ),
+                  ],
+                ),
               ),
             ),
-        ],
-      ),
-    );
-  }
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selectedOption = 'Solicitudes';
+                    fetchRequests();
+                  });
+                },
+                child: Column(
+                  children: [
+                    Text(
+                      'Solicitudes',
+                      style: TextStyle(
+                        color: selectedOption == 'Solicitudes'
+                            ? const Color(0xFFEF3030)
+                            : Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    if (selectedOption == 'Solicitudes')
+                      Container(
+                        height: 2,
+                        color: const Color(0xFFEF3030),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        if (selectedOption == 'Recolecciones')
+          Expanded(
+            child: ListView.builder(
+              itemCount: collections.length,
+              itemBuilder: (context, index) {
+                final collection = collections[index];
+                return GestureDetector(
+                  onTap: () {
+                    print(collection['centerRequesting']);
+                    _goToCollectionRequest(collection['centerRequesting']);
+                  },
+                  child: Card(
+                    margin: const EdgeInsets.all(7),
+                    color: const Color(0xFFFFFFFF),
+                    elevation: 0.0, // Sin sombra
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    collection['centerName'],
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    'Se encuentra al ${collection['centerStatus']}% de su capacidad máxima',
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                width: 35,
+                                height: 35,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: const Color(0xFFEF3030)
+                                      .withOpacity(0.8), // Fondo rojo
+                                ),
+                                child: IconButton(
+                                  onPressed: () {
+                                    _deleteCollectionRequest(collection['id']);
+                                  },
+                                  icon: const Icon(Icons.close),
+                                  color: Colors.white, // Icono blanco
+                                  iconSize: 20,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Divider(color: Colors.black.withOpacity(0.5)),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        if (selectedOption == 'Solicitudes')
+          Expanded(
+            child: ListView.builder(
+              itemCount: requests.length,
+              itemBuilder: (context, index) {
+                final request = requests[index];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ApplicationDetailsScreen(
+                          applicationId: request['id'],
+                          solicitorId: request['solicitor'],
+                          adminId: widget.adminId,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Card(
+                    margin: const EdgeInsets.all(7),
+                    color: const Color(0xFFFFFFFF),
+                    elevation: 0.0, // Sin sombra
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    request['centerName'],
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  const Text(
+                                    'Presiona para ver más información',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                width: 35,
+                                height: 35,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: const Color(0xFF98A8B8)
+                                      .withOpacity(0.8), // Fondo gris
+                                ),
+                                child: IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ApplicationDetailsScreen(
+                                          applicationId: request['id'],
+                                          solicitorId: request['solicitor'],
+                                          adminId: widget.adminId,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  icon: const Icon(
+                                    Icons.arrow_forward,
+                                    color: Colors.white,
+                                  ),
+                                  iconSize: 20,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Divider(color: Colors.black.withOpacity(0.5)),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+      ],
+    ),
+  );
+}
 }
