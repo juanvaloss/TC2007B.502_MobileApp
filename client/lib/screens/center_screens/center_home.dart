@@ -42,7 +42,7 @@ class _CenterHome extends State<CenterHome> {
 
   }
 
-  Future<void> addDonation() async{
+  Future<bool> addDonation() async{
     final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/donations/register');
     Map<String, dynamic> jsonData = {
       'receivIn': centerInfo['id'],
@@ -56,10 +56,15 @@ class _CenterHome extends State<CenterHome> {
         body: json.encode(jsonData),
       );
 
-      print(response.body);
+      if(response.statusCode == 200){
+        return true;
+      }else{
+        return false;
+      }
 
     }catch(e){
       print(e);
+      return false;
     }
   }
 
@@ -105,7 +110,36 @@ class _CenterHome extends State<CenterHome> {
 
   Future<void> _sendCollectionRequest()async{
     final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/collections/register');
-    final result = (100 * (centerInfo['currentCapacity'] ?? 0)) / ((centerInfo['totalCapacity'] ?? 1).toDouble());
+    final url2 = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/users/userCenter');
+
+    Map<String, dynamic> jsonData2 = {
+      'userId': widget.userId,
+    };
+
+    final response2 = await http.post(
+      url2,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(jsonData2),
+    );
+
+    final responseData2 = json.decode(response2.body);
+
+    setState(() {
+      centerInfo = responseData2;
+    });
+
+    final result = (100 * (centerInfo['currentCapacity'])) / ((centerInfo['totalCapacity']).toDouble());
+
+    if(result < 80){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No se puede solicitar un envío si se cuenta con menos del 80% de capacidad del centro. ', style: TextStyle(fontSize: 20),),
+          duration: Duration(seconds: 4),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
 
     Map<String, dynamic> jsonData = {
       'centerId': centerInfo['id'],
@@ -114,7 +148,6 @@ class _CenterHome extends State<CenterHome> {
     };
 
     try{
-
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
@@ -122,10 +155,14 @@ class _CenterHome extends State<CenterHome> {
       );
 
       if(response.statusCode == 200){
-
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Se ha solicitado un envío de manera correcta!', style: TextStyle(fontSize: 20),),
+            duration: Duration(seconds: 4),
+            backgroundColor: Colors.green,
+          ),
+        );
       }
-
-
     }catch(e){
       print(e);
     }
@@ -310,10 +347,21 @@ class _CenterHome extends State<CenterHome> {
                                           );
                                           return;
                                         }
-                                        await addDonation();
-                                        setState(() {
-                                          isSuccess = true;
-                                        });
+                                        var localBool = await addDonation();
+                                        if(localBool){
+                                          setState(() {
+                                            isSuccess = localBool;
+                                          });
+                                        } else{
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(
+                                              content: Text('Capacidad excedida, solicite un envío antes de añadir más al inventario.'),
+                                              duration: Duration(seconds: 4),
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          );
+                                        }
+
                                       },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: const Color(0xFFEF3030),
@@ -365,7 +413,7 @@ class _CenterHome extends State<CenterHome> {
                   icon: FontAwesomeIcons.truck,
                   text: "Solicitar envío",
                   onTap: () {
-                    _sendCollectionRequest;
+                    _sendCollectionRequest();
                   },
                 ),
               ],

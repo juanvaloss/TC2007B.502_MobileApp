@@ -133,7 +133,7 @@ const getUserCenters = async (userId) => {
     try {
       const { data, error } = await supabase
         .from('centers')
-        .select('id, centerName, centerAddress, latitude, longitude')
+        .select('id, centerName, centerAddress, latitude, longitude, currentCapacity, totalCapacity')
         .eq('centerAdmin', userId)
         .single();
 

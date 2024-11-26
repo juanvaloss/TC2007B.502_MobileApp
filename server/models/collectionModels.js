@@ -21,15 +21,13 @@ const getAllCollections = async () => {
 
 const registerCollection = async (centerId, centerName,status) => {
     try {
-        let { data, error } = await supabase
+        let { error } = await supabase
             .from('collectionRequests')
-            .insert([{ centerId: centerId, centerName: centerName, status: status }]);
+            .insert([{ centerRequesting: centerId, centerName: centerName, centerStatus: status }]);
 
         if (error) {
             throw new Error(`Error executing query: ${error.message}`);
         }
-
-        console.log('Collection registered:', data);
 
     } catch (err) {
         console.error('Error register the collection:', err);
