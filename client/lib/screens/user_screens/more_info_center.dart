@@ -14,7 +14,12 @@ class MoreInfoCenter extends StatefulWidget {
   final LatLng currentUserPosition;
   final LatLng centerPosition;
 
-  const MoreInfoCenter({required this.userId, super.key, required this.centerId, required this.currentUserPosition, required this.centerPosition});
+  const MoreInfoCenter(
+      {required this.userId,
+      super.key,
+      required this.centerId,
+      required this.currentUserPosition,
+      required this.centerPosition});
 
   @override
   _MoreInfoCenterState createState() => _MoreInfoCenterState();
@@ -36,7 +41,8 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
 
   Future<void> futureCenterInfo() async {
     try {
-      final url = Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/centers/centerInfo');
+      final url =
+          Uri.parse('http://${dotenv.env['LOCAL_IP']}:3000/centers/centerInfo');
 
       Map<String, dynamic> jsonData = {'centerId': widget.centerId};
 
@@ -52,17 +58,18 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
         setState(() {
           centerInfo = responseData;
           centerAdmin = responseData['centerAdmin'];
-          firstNameOfC = removeDiacritics(responseData['centerName'].split(' ').first);
+          firstNameOfC =
+              removeDiacritics(responseData['centerName'].split(' ').first);
         });
 
         setState(() {
-          result = (100 * (centerInfo['currentCapacity'] ?? 0)) / ((centerInfo['totalCapacity'] ?? 1).toDouble());
+          result = (100 * (centerInfo['currentCapacity'] ?? 0)) /
+              ((centerInfo['totalCapacity'] ?? 1).toDouble());
         });
 
-        final supabase =
-            SupabaseClient(dotenv.env['SUPABASE_URL']!, dotenv.env['SUPABASE_ANON_KEY']!);
-        final storageResponse = await supabase
-            .storage
+        final supabase = SupabaseClient(
+            dotenv.env['SUPABASE_URL']!, dotenv.env['SUPABASE_ANON_KEY']!);
+        final storageResponse = await supabase.storage
             .from('imagesOfCenters')
             .download('center${centerAdmin}${firstNameOfC}.jpg');
 
@@ -71,12 +78,14 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
         });
       } else {
         setState(() {
-          errormessage = 'Error ${response.statusCode}: no se pudo cargar la información del centro.';
+          errormessage =
+              'Error ${response.statusCode}: no se pudo cargar la información del centro.';
         });
       }
     } catch (e) {
       setState(() {
-        errormessage = 'Error ${e}: no se pudo cargar la información del centro ayuda.';
+        errormessage =
+            'Error ${e}: no se pudo cargar la información del centro ayuda.';
       });
     }
   }
@@ -239,7 +248,7 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                '${centerInfo?['centerName'] ?? 'No disponible'}',
+                '${centerInfo['centerName'] ?? 'No disponible'}',
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -250,7 +259,7 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Dirección: ${centerInfo?['centerAddress'] ?? 'No disponible'}',
+                'Dirección: ${centerInfo['centerAddress'] ?? 'No disponible'}',
                 style: const TextStyle(
                   fontSize: 17,
                   color: Colors.grey,
@@ -264,7 +273,7 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     errormessage,
-                    style: const TextStyle(color:  Color(0XFFEF3030)),
+                    style: const TextStyle(color: Color(0XFFEF3030)),
                   ),
                 ),
               ),
@@ -307,7 +316,8 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
                     ),
                   ),
                   onPressed: () async {
-                    Uri googleMapsUrl = Uri.parse("https://www.google.com/maps/dir/?api=1&origin=${widget.currentUserPosition.latitude},${widget.currentUserPosition.longitude}&destination=${widget.centerPosition.latitude},${widget.centerPosition.longitude}&travelmode=driving");
+                    Uri googleMapsUrl = Uri.parse(
+                        "https://www.google.com/maps/dir/?api=1&origin=${widget.currentUserPosition.latitude},${widget.currentUserPosition.longitude}&destination=${widget.centerPosition.latitude},${widget.centerPosition.longitude}&travelmode=driving");
                     if (await canLaunchUrl(googleMapsUrl)) {
                       await launchUrl(googleMapsUrl);
                     } else {

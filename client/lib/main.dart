@@ -4,7 +4,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import './screens/access_screens/starting_page.dart';
-import './screens/user_screens/check_application.dart'; 
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,11 +29,6 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const StartingPage(),
-        //'/': (context) => const CheckApplication(applicationId: 49)
-        //'/': (context) => const UserHomeScreen(userId: 2, isCenterAdmin: false, isBamxAdmin: true),
-
-
-
       },
     );
   }
