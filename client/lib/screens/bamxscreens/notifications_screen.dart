@@ -186,21 +186,21 @@ Future<void> _goToCollectionRequest(int centerId) async{
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
-                      selectedOption = 'Recolecciones pendientes';
+                      selectedOption = 'Recolecciones';
                          _getAllCollectionRequests();
                     });
                   },
                   child: Column(
                     children: [
                       Text(
-                        'Recolecciones pendientes',
+                        'Recolecciones',
                         style: TextStyle(
-                          color: selectedOption == 'Recolecciones pendientes' ? Colors.red : Colors.black,
+                          color: selectedOption == 'Recolecciones' ? Colors.red : Colors.black,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      if (selectedOption == 'Recolecciones pendientes')
+                      if (selectedOption == 'Recolecciones')
                         Container(
                           height: 2,
                           color: Colors.red,
@@ -239,7 +239,7 @@ Future<void> _goToCollectionRequest(int centerId) async{
             ],
           ),
           const SizedBox(height: 20),
-          if (selectedOption == 'Recolecciones pendientes')
+          if (selectedOption == 'Recolecciones')
             Expanded(
               child: ListView.builder(
                 itemCount: collections.length,

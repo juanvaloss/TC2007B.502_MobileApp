@@ -29,8 +29,8 @@ class MyApp extends StatelessWidget {
       title: 'KANAAAAAAAAAAN!!!!',
       initialRoute: '/',
       routes: {
-        //'/': (context) => const StartingPage(),
-        '/': (context) => const UserHomeScreen(userId: 2, isCenterAdmin: false, isBamxAdmin: true),
+        '/': (context) => const StartingPage(),
+        //'/': (context) => const UserHomeScreen(userId: 2, isCenterAdmin: false, isBamxAdmin: true),
 
 
 
