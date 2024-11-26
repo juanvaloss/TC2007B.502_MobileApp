@@ -91,7 +91,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Esta cuenta ya está registrada, intenta iniciar sesión."),
-            backgroundColor: Colors.red,
+            backgroundColor: Color(0XFFEF3030),
             duration: Duration(seconds: 3),
           ),
         );

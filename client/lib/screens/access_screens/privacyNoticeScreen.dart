@@ -110,7 +110,7 @@ class PrivacyNoticeScreen extends StatelessWidget {
                 height: 50,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red, // Color rojo
+                    backgroundColor: const Color(0XFFEF3030), // Color rojo
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),

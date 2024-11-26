@@ -136,7 +136,7 @@ class _CenterHome extends State<CenterHome> {
         const SnackBar(
           content: Text('No se puede solicitar un envío si se cuenta con menos del 80% de capacidad del centro. ', style: TextStyle(fontSize: 20),),
           duration: Duration(seconds: 4),
-          backgroundColor: Colors.red,
+          backgroundColor: Color(0XFFEF3030),
         ),
       );
       return;
@@ -168,7 +168,7 @@ class _CenterHome extends State<CenterHome> {
           const SnackBar(
             content: Text('Ya se ha solicitado una recolección, espera a que el BAMX pase por las donaciones!', style: TextStyle(fontSize: 20),),
             duration: Duration(seconds: 4),
-            backgroundColor: Colors.red,
+            backgroundColor: Color(0XFFEF3030),
           ),
         );
 
@@ -352,7 +352,7 @@ class _CenterHome extends State<CenterHome> {
                                             const SnackBar(
                                               content: Text('Escribe una cantidad.'),
                                               duration: Duration(seconds: 2),
-                                              backgroundColor: Colors.red,
+                                              backgroundColor: Color(0XFFEF3030),
                                             ),
                                           );
                                           return;
@@ -367,7 +367,7 @@ class _CenterHome extends State<CenterHome> {
                                             const SnackBar(
                                               content: Text('Capacidad excedida, solicite un envío antes de añadir más al inventario.'),
                                               duration: Duration(seconds: 4),
-                                              backgroundColor: Colors.red,
+                                              backgroundColor: Color(0XFFEF3030),
                                             ),
                                           );
                                         }

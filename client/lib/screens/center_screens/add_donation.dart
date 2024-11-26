@@ -53,7 +53,7 @@ class _AddDonation extends State<AddDonation> {
         const SnackBar(
           content: Text('Selecciona al menos un tipo de alimento'),
           duration: Duration(seconds: 2),
-          backgroundColor: Colors.red,
+          backgroundColor: Color(0XFFEF3030),
         ),
       );
       return;

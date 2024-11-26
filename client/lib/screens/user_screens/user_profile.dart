@@ -330,8 +330,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           children: [
             CircleAvatar(
               radius: 40,
-              backgroundColor: Colors.red[200],
-              child: Icon(Icons.person, size: 40, color: Colors.white),
+              backgroundColor: const Color(0XFFEF3030).withOpacity(0.8),
+              child: const Icon(Icons.person, size: 40, color: Colors.white),
             ),
             const SizedBox(height: 16),
             const Text(
@@ -508,7 +508,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             child: const Text("Cancelar", style: TextStyle(fontSize: 18)),
                           ),
                           ElevatedButton(
-                            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                            style: ElevatedButton.styleFrom(backgroundColor: const Color(0XFFEF3030)),
                             onPressed: () {
                               // Add your delete account logic here
                               Navigator.of(context).pop();

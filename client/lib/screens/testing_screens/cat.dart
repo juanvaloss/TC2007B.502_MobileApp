@@ -63,7 +63,7 @@ class _Cat extends State<Cat> {
               },
               child: const Text(
                 'Close',
-                style: TextStyle(fontSize: 16, color: Colors.red),
+                style: TextStyle(fontSize: 16, color: Color(0XFFEF3030)),
               ),
             ),
           ],
@@ -77,7 +77,7 @@ class _Cat extends State<Cat> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('KITTTTYYYYYYYYYYY!'),
-        backgroundColor: Colors.red,
+        backgroundColor: const Color(0XFFEF3030),
       ),
       body: Column(
         children: [

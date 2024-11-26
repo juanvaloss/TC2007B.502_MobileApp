@@ -65,7 +65,7 @@ class MfaScreen extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Algo salió mal, inténtalo de nuevo."),
-            backgroundColor: Colors.red,
+            backgroundColor: Color(0XFFEF3030),
             duration: Duration(seconds: 3),
           ),
         );
@@ -103,7 +103,7 @@ class MfaScreen extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Algo salió mal, inténtalo de nuevo."),
-            backgroundColor: Colors.red,
+            backgroundColor: const Color(0XFFEF3030),
             duration: Duration(seconds: 3),
           ),
         );

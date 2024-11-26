@@ -64,7 +64,7 @@ class LoginScreen extends StatelessWidget {
           const SnackBar(
             content: Text(
                 'Invalid Credentials!. Please check the email and password and try again.'),
-            backgroundColor: Colors.red,
+            backgroundColor: Color(0XFFEF3030),
             duration: Duration(seconds: 3),
           ),
         );
@@ -238,13 +238,13 @@ class LoginScreen extends StatelessWidget {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    RegisterScreen()));
+                                                    const RegisterScreen()));
                                       },
                                       child: const Text(
                                         "REGISTRATE",
                                         style: TextStyle(
                                           fontSize: 18.7,
-                                          color: Colors.red,
+                                          color: Color(0XFFEF3030),
                                         ),
                                       ),
                                     ),
