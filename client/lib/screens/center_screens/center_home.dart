@@ -6,6 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../user_screens/user_home_screen.dart';
 import './status_center.dart';
+import '../user_screens/user_profile.dart';
 
 class DecimalInputFormatter extends TextInputFormatter {
   final RegExp _regex = RegExp(r'^\d{0,10}(\.\d{0,10})?$');
@@ -251,7 +252,6 @@ class _CenterHome extends State<CenterHome> {
             ),
           ),
 
-          // Lista de botones
           Expanded(
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -444,6 +444,15 @@ class _CenterHome extends State<CenterHome> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => UserHomeScreen(userId: widget.userId, isBamxAdmin: false, isCenterAdmin: true,)),
+                );
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.person, color: Colors.black,size: 50,),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserProfileScreen(userId: widget.userId, isBamxAdmin: false)),
                 );
               },
             ),
