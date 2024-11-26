@@ -162,6 +162,16 @@ class _CenterHome extends State<CenterHome> {
             backgroundColor: Colors.green,
           ),
         );
+      } else if(response.statusCode == 400){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Ya se ha solicitado una recolección, espera a que el BAMX pase por las donaciones!', style: TextStyle(fontSize: 20),),
+            duration: Duration(seconds: 4),
+            backgroundColor: Colors.red,
+          ),
+        );
+
+
       }
     }catch(e){
       print(e);

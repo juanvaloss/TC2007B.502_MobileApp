@@ -20,4 +20,4 @@ const registerDonation = async(receivIn, quan) =>{
       }
 }
 
-module.exports = { registerDonation }
+module.exports = { registerDonation}

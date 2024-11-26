@@ -197,7 +197,7 @@ List<Widget> getAcceptedItems() {
             const SizedBox(height: 20),
             Text(
             '${centerInfo['centerName'] ?? 'No disponible'}',
-             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+             style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
              
              const SizedBox(height: 20),
 
@@ -216,45 +216,45 @@ List<Widget> getAcceptedItems() {
                       children: [
                         Icon(Icons.archive, color: Color(0xFF369BFF)),
                         SizedBox(width: 10),
-                        Text('Almacenacimiento', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        Text('Almacenacimiento', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                       ]
                     ),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('${result.round()} % lleno', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        Text('${result.round()} % lleno', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                         const SizedBox(width: 20),
-                        Text('${centerInfo?['currentCapacity'] ?? -1} / ${centerInfo?['totalCapacity'] ?? -1} Kg', style: const TextStyle(fontSize: 16)),
+                        Text('${centerInfo?['currentCapacity'] ?? -1} / ${centerInfo?['totalCapacity'] ?? -1} Kg', style: const TextStyle(fontSize: 22)),
 
 
                     ],),
 
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 15),
 
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.map, color: Color(0xFF413DFB)),
                         SizedBox(width: 10),
-                        Text('Dirección', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))
+                        Text('Dirección', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))
                       ],
                     ),
 
+                    const SizedBox(height: 10),
+
+                    Text('${centerInfo?['centerAddress'] ?? 'No disponible'}', textAlign: TextAlign.center, style: const TextStyle(fontSize: 22)),
+
                     const SizedBox(height: 20),
-
-                    Text('${centerInfo?['centerAddress'] ?? 'No disponible'}', textAlign: TextAlign.center, style: const TextStyle(fontSize: 12)),
-
-                    const SizedBox(height: 40),
 
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         SizedBox(width: 10),
                         Icon(Icons.restaurant, color: Color(0xFFEF3030)),
-                        Text('Comida aceptada', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        Text('Comida aceptada', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                         SizedBox(width: 10),
                       ],
                     ),
@@ -265,8 +265,6 @@ List<Widget> getAcceptedItems() {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: getAcceptedItems(),
                     ),
-
-
                   ],
                 ),
               )
@@ -276,31 +274,6 @@ List<Widget> getAcceptedItems() {
         )
       )
       ),
-      //bottom appbar starts
-       bottomNavigationBar: BottomAppBar(
-    color: Colors.white,
-    shape: const CircularNotchedRectangle(), 
-    notchMargin: 8.0, 
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround, 
-      children: [
-        IconButton(
-          icon: const Icon(Icons.home_outlined, color: Colors.black),
-          onPressed: () {
-            // Action for home
-          },
-        ),
-        IconButton(
-          icon: const Icon(Icons.notifications_none_outlined, color: Colors.black),
-          onPressed: () {
-            // Action for notifications
-          },
-        ),
-        
-      ],
-    ),
-  ),
-  //bottom appbar ends
 );
   }
 }

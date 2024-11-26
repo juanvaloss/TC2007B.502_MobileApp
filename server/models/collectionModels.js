@@ -1,6 +1,23 @@
 const { supabase } = require('../config/db');
 
 
+const hasCenterSolicited = async (centerId) => {
+    try {
+      const { data, error } = await supabase
+        .from('collectionRequests')
+        .select('*')
+        .eq('centerRequesting', centerId);
+      if (error) {
+        throw new Error(`Error fetching collections: ${error.message}`);
+      }
+  
+      return data;
+      } catch (err) {
+        console.error('Error fetching collections:', err);
+        throw err;
+    }
+}
+
 const getAllCollections = async () => {
     try {
         const { data, error } = await supabase
@@ -36,4 +53,4 @@ const registerCollection = async (centerId, centerName,status) => {
 
 }
 
-module.exports = { getAllCollections, registerCollection }
+module.exports = { getAllCollections, registerCollection, hasCenterSolicited }

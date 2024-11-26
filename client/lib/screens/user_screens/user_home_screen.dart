@@ -113,9 +113,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       address,
                     )),
           );
-
           _markers.add(_initialMarker);
-
         }
       } else {
         print('Error: ${response.statusCode}');
@@ -134,7 +132,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     );
     await controller.animateCamera(CameraUpdate.newCameraPosition(newPosition));
 
-    Future.delayed(Duration(milliseconds: 500), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       if (_panelController.isPanelOpen) {
         _panelController.close();
       }
