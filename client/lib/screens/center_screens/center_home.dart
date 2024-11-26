@@ -55,7 +55,9 @@ class _CenterHome extends State<CenterHome> {
         headers: {'Content-Type': 'application/json'},
         body: json.encode(jsonData),
       );
-      print(response);
+
+      print(response.body);
+
     }catch(e){
       print(e);
     }
@@ -93,14 +95,9 @@ class _CenterHome extends State<CenterHome> {
           centerInfo = responseData2;
 
         });
-
-
-
       } else {
         print('Failed to fetch user information. Please try again.');
       }
-
-
     } catch (e) {
       print('An error occurred: $e');
     }
@@ -313,19 +310,10 @@ class _CenterHome extends State<CenterHome> {
                                           );
                                           return;
                                         }
-                                        try {
-                                          await addDonation();
-                                          setState(() {
-                                            isSuccess = true;
-                                          });
-                                        } catch (e) {
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            const SnackBar(
-                                              content: Text('Error al registrar la donación.'),
-                                              backgroundColor: Colors.red,
-                                            ),
-                                          );
-                                        }
+                                        await addDonation();
+                                        setState(() {
+                                          isSuccess = true;
+                                        });
                                       },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: const Color(0xFFEF3030),

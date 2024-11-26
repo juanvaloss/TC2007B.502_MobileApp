@@ -4,9 +4,13 @@ const centerModel = require("../models/centerModels")
 const registerDonation = async( req, res ) =>{
     const { receivIn, quan } = req.body;
 
+    quantity = parseInt(quan);
+
     try{
         const centerInfo = await centerModel.getCenterInfo(receivIn);
-        if(centerInfo.currentCapacity + quan > centerInfo.totalCapacity){
+        console.log(centerInfo.currentCapacity + quantity);
+
+        if(centerInfo.currentCapacity + quantity > centerInfo.totalCapacity){
             return res.status(400).json({ success: false, message: 'Capacity exceeded' });
         }
         
