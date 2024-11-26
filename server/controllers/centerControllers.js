@@ -65,4 +65,14 @@ const getCenterInfo = async(req, res) =>{
     }
 }
 
-module.exports = {createCenter, getAllCoordinates, getCenterInfo}
+const getCoordinatesById = async(req, res) =>{
+    const {centerId} = req.body;
+    try{
+        const center = await centerModel.getCoordinatesById(centerId);
+        res.json(center);
+    }catch(err){
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+}
+
+module.exports = {createCenter, getAllCoordinates, getCenterInfo, getCoordinatesById}
