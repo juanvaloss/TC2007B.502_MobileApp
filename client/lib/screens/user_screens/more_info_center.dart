@@ -111,7 +111,7 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
 
   Color getColor() {
     if (result < 30) {
-      return Colors.red;
+      return const Color(0XFFEF3030);
     } else if (result >= 30 && result < 70) {
       return Colors.yellow;
     } else {
@@ -264,7 +264,7 @@ class _MoreInfoCenterState extends State<MoreInfoCenter> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     errormessage,
-                    style: const TextStyle(color: Colors.red),
+                    style: const TextStyle(color:  Color(0XFFEF3030)),
                   ),
                 ),
               ),
