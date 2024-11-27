@@ -14,12 +14,14 @@ const getAllCollections = async (req, res) => {
 const registerCollection = async (req, res) => {
     const { centerId, centerName, status } = req.body;
 
-    if(collectionModel.hasCenterSolicited(centerId) != null){
+    if(await collectionModel.hasCenterSolicited(centerId) != null){
+        console.log('Center already solicited');
         res.status(400).json({ message: 'Center already solicited' });
         return;
     }
 
     try {
+        console.log('Center hasn\'t solicited');
         await collectionModel.registerCollection(centerId, centerName, status);
         res.status(200).json({ message: 'Collection registered' });
 

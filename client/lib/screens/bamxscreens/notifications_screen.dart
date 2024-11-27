@@ -326,7 +326,7 @@ Widget build(BuildContext context) {
                                   onPressed: () {
                                     _deleteCollectionRequest(collection['id']);
                                   },
-                                  icon: const Icon(Icons.close),
+                                  icon: const Icon(Icons.check),
                                   color: Colors.white, // Icono blanco
                                   iconSize: 20,
                                 ),

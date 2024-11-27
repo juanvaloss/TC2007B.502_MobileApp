@@ -6,12 +6,20 @@ const hasCenterSolicited = async (centerId) => {
       const { data, error } = await supabase
         .from('collectionRequests')
         .select('*')
-        .eq('centerRequesting', centerId);
-      if (error) {
-        throw new Error(`Error fetching collections: ${error.message}`);
-      }
-  
-      return data;
+        .eq('centerRequesting', centerId)
+        .single();
+
+        if(data == null){
+            return null;
+        }
+
+        if (error) {
+            throw new Error(`Error fetching collections: ${error.message}`);
+        }
+
+        return data;
+    
+      
       } catch (err) {
         console.error('Error fetching collections:', err);
         throw err;
