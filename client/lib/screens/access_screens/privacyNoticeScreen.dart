@@ -119,7 +119,7 @@ class PrivacyNoticeScreen extends StatelessWidget {
                     Navigator.of(context).pop(); // Acción para regresar
                   },
                   child: const Text(
-                    'Aceptar',
+                    'CERRAR',
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.white, // Texto blanco

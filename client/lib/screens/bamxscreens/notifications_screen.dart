@@ -326,7 +326,7 @@ Widget build(BuildContext context) {
                                   onPressed: () {
                                     _deleteCollectionRequest(collection['id']);
                                   },
-                                  icon: const Icon(Icons.check),
+                                  icon: const Icon(Icons.close),
                                   color: Colors.white, // Icono blanco
                                   iconSize: 20,
                                 ),
@@ -421,7 +421,7 @@ Widget build(BuildContext context) {
                               ),
                             ],
                           ),
-                          Divider(color: Colors.black.withOpacity(0.5)),
+                          Divider(color: Colors.grey[800]),
                         ],
                       ),
                     ),
